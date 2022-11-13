@@ -1,9 +1,9 @@
 # Codename bAPi mark 2 DEV:RC1
 
 **PLEASE NOTE DEV RC1**
-this is a early dev:demo for feedback: no .desktop files yet items in test need installing but should build into bap-source broken I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
+this is a early dev:demo for feedback: no .desktop files yet working on stability etc..
 
-PI3 setting cores to 2 for default, without cooling locks up - with cooling 3 or 4 seems ok.
+pi3 set to 2 cores file:bin/set-enviroment.sh:line:86 has the setting to change if you dont have active cooling the pi3 will lock up for me at 3core used
 
 ## Description
 
