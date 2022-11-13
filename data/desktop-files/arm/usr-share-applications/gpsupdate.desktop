@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=GPS Update Tool
+GenericName=Used to change between GPS units
+Comment=Used to change between GPS units
+Exec=/home/pi/bin/gpsupdate
+Terminal=false
+Type=Application
+Categories=Utility

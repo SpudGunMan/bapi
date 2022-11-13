@@ -1,0 +1,80 @@
+BAPP=4
+ID=JS8CALL
+Name=JS8CALL
+Comment='JS8CALL Project'
+VerLocal=0
+VerRemote=0
+W3='http://js8call.com'
+Author='spud'
+NOTE='installs to /bin/local'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libfftw3-dev >> errors/apt.log
+    sudo apt-get -y install qtdeclarative5-dev >> errors/apt.log
+    sudo apt-get -y install asciidoc >> errors/apt.log
+    sudo apt-get -y install ntp >> errors/apt.log
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+        FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+        #increase swap file if less than 3G memory
+        if [ ${FREEMEM} -lt 3000 ]; then
+            echo "Increasing Swap size for build"
+            #increase swap size
+            sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+            sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+            sudo /etc/init.d/dphys-swapfile restart
+            sleep 10
+        fi
+    fi
+
+    #https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
+
+    cd ${BAPSRC}
+   
+    JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
+    JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
+    JS8DIR=$(echo $JS8PKG | sed 's/.tgz//')
+
+    wget --tries 2 --connect-timeout=60 http://files.js8call.com/$JS8VERSION/$JS8PKG
+    tar -xvf $JS8PKG
+    rm -f $JS8PKG
+    cd js8call
+
+    cmake -D CMAKE_INSTALL_PREFIX=${BAPSRC}/js8call/release/
+    cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
+	sudo cmake --build . --target install -j$BAPCORE
+    
+    #cd $JS8DIR
+    #sudo cp js8 js8call /usr/local/bin
+    #sudo cp js8call.desktop /usr/share/applications
+    #sudo cp ./artwork/icon_128.svg /usr/share/pixmaps/js8call_icon.svg
+
+     # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+        #reset swap size to default
+        if [ ${FREEMEM} -lt 3000 ]; then
+            echo "Resetting swap size to default"
+            #increase swap size
+            sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+            sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+            sudo /etc/init.d/dphys-swapfile restart
+            sleep 10
+        fi
+    fi
+}
+
+VERSION(){
+    if [[ $(whereis js8call drats | grep bin) ]];then
+        CURRENT=fix
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5)
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+    #apt-gets will be checked on app-check
+}

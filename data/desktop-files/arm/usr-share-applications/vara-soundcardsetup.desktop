@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=VARA Soundcard Setup
+GenericName=VARA Soundcard Setup
+Comment=This script helps users set up soundcards for VARA
+Exec=/home/pi/winelink/VARA\ Soundcard\ Setup
+Type=Application
+StartupNotify=true
+Categories=vara

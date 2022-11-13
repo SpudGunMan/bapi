@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=flmsg
+GenericName=Amateur Radio Message Generator
+Comment=Amateur Radio Communications
+Exec=flmsg
+Icon=flmsg
+Terminal=false
+Type=Application
+Categories=flsuite

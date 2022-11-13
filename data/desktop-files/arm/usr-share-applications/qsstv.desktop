@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=QSSTV
+Comment=Slow Scan TV
+GenericName=QSSTV
+Exec=/usr/local/bin/qsstv
+Icon=qsstv.png
+Type=Application
+Terminal=false
+Categories=HamRadio;

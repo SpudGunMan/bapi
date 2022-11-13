@@ -1,0 +1,52 @@
+BAPP=4
+ID=CHIRP
+Name=CHIRP
+Comment='Chirp Radio Programmer'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='this will also delay menu load because chirp -version is slow'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libfuse2 >> errors/apt.log
+    sudo apt-get -y install fuse >> errors/apt.log
+    
+    cd ${BAPSRC}
+    CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+    #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+        #determine if ARM 32/64 bit and set download link accordingly.
+        if [ `getconf LONG_BIT` = '32' ]; then
+            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+        else
+            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-aarch64.AppImage"
+            
+        fi
+    else
+        # danplanet LINK=https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
+        LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-x86_64.AppImage"
+    fi
+    wget --tries 2 --connect-timeout=60 $LINK
+
+	CHIRP=$(ls | grep Chirp-daily)
+	sudo mv $CHIRP /usr/local/bin/chirp
+	sudo chmod +x /usr/local/bin/chirp
+}
+
+VERSION(){
+    if [[ $(whereis chirp | grep bin) ]];then
+		CURRENT=$(chirp --version | awk '{ print $2 }' | sed 's/daily-//')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,44 @@
+BAPP=4
+ID=GridCalc
+Name=KM4GridCalc
+Comment='KM4ACK Grid Calculating Tool'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='no cross compile scripts tested'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y wwl >> errors/apt.log
+    sudo apt-get install -y bc >> errors/apt.log
+
+    cd ${BAPSRC}
+
+    if [ -d "km4ack-tools" ];then
+        cd km4ack-tools
+        git fetch --all
+        git reset --hard origin/master
+        git pull
+    else
+        git clone https://github.com/km4ack/pi-scripts km4ack-tools
+        cd km4ack-tools
+    fi
+
+	chmod +x grid-calc
+    sudo cp grid-calc /usr/local/bin/grid-calc
+}
+
+VERSION(){
+    if [[ $(whereis grid-calc | grep bin) ]];then
+        CURRENT=git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20  -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/grid-calc | grep VERSION | head -1 | sed 's/VERSION=//')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

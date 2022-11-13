@@ -1,0 +1,45 @@
+BAPP=4
+ID=TNCGAMES
+Name=TNCGAMES
+Comment='Chess and Checkers for your AX25 TNC'
+VerLocal=0
+VerRemote=0
+W3='http://uz7.ho.ua'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+    cd ${BAPSRC} || return
+    rm -rf tncgames
+    mkdir tncgames
+    wget --tries 2 --connect-timeout=60  http://uz7.ho.ua/apps/checkers6.zip
+    unzip *.zip
+    rm *.zip
+    wget --tries 2 --connect-timeout=60  http://uz7.ho.ua/apps/chess10.zip
+    unzip *.zip
+    rm *.zip
+
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir -p ${HOME}/.wine/drive_c/tnc_games
+        cp *.exe ${HOME}/.wine/drive_c/tnc_games
+    fi
+
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/tnc_games/checkers.exe
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/tnc_games/chess.exe
+    
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/tnc_games ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}

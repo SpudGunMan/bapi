@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Log Viewer
+GenericName=KM4ACK Log Viewer
+Comment=Log File Viewer
+Exec=/home/pi/bin/showlog
+Icon=/usr/share/icons/PiXflat/48x48/apps/fm-details.png
+Terminal=false
+Type=Application
+Categories=Utility

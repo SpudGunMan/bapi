@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PiQtTermTCP
+GenericName=PiQtTermTCP
+Comment=Terminal Program
+Exec=/usr/local/bin/piQtTermTCP
+Icon=/usr/share/icons/gnome/22x22/apps/xscreensaver.png
+Terminal=false
+Type=Application
+Categories=Utility

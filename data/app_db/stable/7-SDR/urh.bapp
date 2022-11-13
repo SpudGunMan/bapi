@@ -1,0 +1,79 @@
+BAPP=4
+ID=URH
+Name=RadioHacker
+Comment='Universal Radio RF hacker Tool'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/jopohl/urh'
+Author='spud'
+NOTE='installs soapy etc..'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install python3-pip >> errors/apt.log
+    sudo apt-get -y install soapysdr-tools >> errors/apt.log
+    sudo apt-get -y install hackrf >> errors/apt.log
+    sudo apt-get -y install airspy >> errors/apt.log
+    sudo apt-get -y install rtl-sdr >> errors/apt.log
+    sudo apt-get -y install soapysdr-tools >> errors/apt.log
+    sudo apt-get -y install soapysdr-module-all >> errors/apt.log
+    sudo apt-get -y install soapysdr0.8-module-all 2>&1 >> errors/apt.log
+    sudo apt-get -y install libsoapysdr0.8 2>&1 >> errors/apt.log
+    sudo apt-get -y install gnuradio-dev >> errors/apt.log
+    sudo apt-get -y install gr-osmosdr >> errors/apt.log
+
+    #sudo pip install urh
+    #sudo pip install --upgrade urh
+    
+    sudo pip install cython
+
+    cd ${BAPSRC}
+	rm -rf urh
+	mkdir uhr
+	cd urh
+
+    mv ${HOME}/urh ./urh.bak
+
+    #dev rules
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/keenerd/rtl-sdr/master/rtl-sdr.rules
+    wget --tries 2 --connect-timeout=60 https://raw.githubusercontent.com/EttusResearch/uhd/master/host/utils/uhd-usrp.rules
+
+    # following is rules for SDR use non sudo if you need more get them here ... https://github.com/jopohl/urh/wiki/SDR-udev-rules
+    echo "ATTR{idVendor}=="1d50", ATTR{idProduct}=="60a1", SYMLINK+="airspy-%k", TAG+="uaccess" " > 52-airspy.rules
+
+    echo "ATTR{idVendor}=="1d50", ATTR{idProduct}=="604b", SYMLINK+="hackrf-jawbreaker-%k", TAG+="uaccess" " > 53-hackrf.rules
+    echo "ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", TAG+="uaccess" " >> 53-hackrf.rules
+    echo "ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", SYMLINK+="hackrf-one-%k", TAG+="uaccess" " >> 53-hackrf.rules
+    echo "ATTR{idVendor}=="1d50", ATTR{idProduct}=="cc15", SYMLINK+="rad1o-%k", TAG+="uaccess" " >> 53-hackrf.rules
+    echo "ATTR{idVendor}=="1fc9", ATTR{idProduct}=="000c", SYMLINK+="nxp-dfu-%k", TAG+="uaccess" " >> 53-hackrf.rules
+
+    echo "SUBSYSTEM=="usb", PROGRAM=="/bin/sh -c '/usr/bin/iio_info -s | grep %s{idVendor}:%s{idProduct}'", RESULT!="", MODE="666" " > 90-libiio.rules
+
+    sudo cp *.rules /etc/udev/rules.d/
+    sudo udevadm control --reload-rules
+
+    #install
+    git clone https://github.com/jopohl/urh/ ${HOME}/urh
+    
+    cd ${HOME}/urh
+    python3 setup.py install
+
+    echo -e "#!/bin/bash" > Install-URH.sh
+	echo -e "python3 setup.py install \n" >>  Install-URH.sh
+	chmod +x  Install-URH.sh
+}
+
+VERSION(){
+    if [ -f ${HOME}/urh/README.md ];then
+		CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

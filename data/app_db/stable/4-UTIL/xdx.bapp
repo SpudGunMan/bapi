@@ -1,0 +1,47 @@
+BAPP=4
+ID=XDX
+Name=Xdx
+Comment='DX Cluster Spotting app'
+VerLocal=0
+VerRemote=0
+W3='https://sourceforge.net/projects/xdxclusterclient/'
+Author='spud'
+NOTE='non functioning TODO'
+
+INSTALL(){
+    #echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libgtk-3-dev >> errors/apt.log
+
+    cd ${BAPSRC} || return
+    rm -rf xdx
+    mkdir xdx
+    cd xdx
+
+    code=$(curl -s https://sourceforge.net/projects/xdxclusterclient/files/ | grep -m 1 .tar.gz | sed 's/^.*title=\"\///' | cut -f1 -d ":")
+    wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/xdxclusterclient/files/$code"
+
+    tar -zxvf xdx*.tar.gz
+    rm *.tar.gz
+    cd xdx*
+
+    ./configure
+    make
+    sudo make install
+
+
+
+}
+
+VERSION(){
+    if [[ $(whereis xdx | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/xdxclusterclient/files/ | grep -m 1 .tar.gz | sed 's/^.*title=\"\///' | cut -f1 -d ":" | cut -f1 -d "/")
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

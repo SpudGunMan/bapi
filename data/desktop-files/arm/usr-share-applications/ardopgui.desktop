@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=ARDOP GUI
+GenericName=ARDOP GUI
+Comment=Graphical User Interface for ARDOP modem
+Exec=/home/pi/ardop/piARDOP_GUI
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;

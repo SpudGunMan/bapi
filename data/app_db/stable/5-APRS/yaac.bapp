@@ -1,0 +1,53 @@
+BAPP=4
+ID=YAAC
+Name=YAAC
+Comment='Yet Anotter APRS Client JAVA'
+VerLocal=0
+VerRemote=0
+W3='https://www.ka2ddo.org/ka2ddo/YAAC.html'
+Author='spud'
+NOTE='this will install java and the jre packages'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y librxtx-java >> errors/apt.log
+	sudo apt-get install -y openjdk-10-dbg >> errors/apt.log
+
+    cd ${BAPSRC}
+	rm -rf yaac
+	mkdir yaac
+	cd yaac
+
+	## wget --tries 2 --connect-timeout=60 https://sourceforge.net/projects/yetanotheraprsc/files/YAAC.zip/
+	wget --tries 2 --connect-timeout=60 https://www.ka2ddo.org/ka2ddo/YAAC.zip
+
+	#backup to src directory and allow wipe out next time
+	if [ -f ${HOME}/YAAC/YAAC ]; then
+		mv ${HOME}/YAAC ./YAAC.BAK
+	fi
+
+	unzip -o YAAC.zip -d ${HOME}/YAAC
+
+	echo -e "#!/bin/bash" > YAAC
+	echo -e "java -jar ${HOME}/YAAC/YAAC.jar\n" >> YAAC
+	chmod +x YAAC
+	sudo cp YAAC /usr/local/bin/YAAC
+	cp YAAC ${HOME}/YAAC/run_yaac.sh
+
+}
+
+VERSION(){
+    if [ -f ${HOME}/YAAC/YAAC.jar ];then
+		CURRENT=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
+    else
+        CURRENT=NONE
+    fi
+
+	wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
+    NEWVER=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

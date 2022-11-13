@@ -1,0 +1,181 @@
+#!/bin/bash
+
+#20200515 km4ack
+
+BAPINSTALL_FILE=cache/install-path.bap
+cd $(cat $BAPINSTALL_FILE)
+LOGO=data/ico/logo.png
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+There are over 8000 lines of code in Build-a-Pi mark ii"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+When Jason, KM4ACK released his first video, he had never written a bash script"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK studied for a week and then drove 1 1/2 hours to take the technician exam because it was the closest test location that weekend."
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+A year after passing the tech exam, Jason, KM4ACK passed the extra exam!"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+He doesn't know CW. dit dit"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK released his first ham radio video on YouTube in 2018"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+The Emergency Email Server was the first and last thing Jason, KM4ACK programmed in PHP"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason's, KM4ACK Jeep is a trail rated 2007 Wrangler X"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Yes. Jason, KM4ACK has a Raspberry Pi in the Jeep"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+The Jeep also houses an 857D for HF and a FTM400 for 2M and 440"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+There is also a Yaesu FT65r on the sun visor ready to grab and go"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+The Yaesu 891 was the first HF rig Jason, KM4ACK purchased new"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK built a copper J-Pole as his first 2M 440 antenna"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+He has never had formal computer programming training"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Yet continues his studies at <b>The School of Hard Knocks</b>"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, grew up in North Alabama. ROLL TIDE!!"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK moved to Tennessee after meeting his wife Pj"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+His first radio was a Baofeng that Jason, KM4ACK purchased before he had a license"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+As of June 2020 Jason, KM4ACK owns 9 Raspberry Pi's. All but 1 is in use."
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+One pi runs a PBX server over AREDN serving roughly 40 hams VOIP phone service"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Another pi runs an APRS digipeater"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason's, KM4ACK favorite digital mode is JS8Call"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK got interested in EMCOMM because he lost cell service after a tornado outbreak in his home town"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK used Windows from 3.1 to WIN10. He now runs a Mac as his work machine and Raspberry Pi's for all things ham radio"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Two of Jason's, KM4ACK favorite ham YouTubers are Ham Radio Crash Course and K8MRD Radio"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason's, KM4ACK favorite non ham Youtuber is Wranglerstar"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Jason, KM4ACK has gone thru over 50 SD-CARDS on this project!"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+Enough about KM4ACK! Go grab a coffee or do something fun while your system is built"
+
+if [ $? -eq 252 ];then exit 0;fi
+
+yad --width=400 --height=200 --title="Fun Facts" --timeout=30 --image ${LOGO} --text-align=center --skip-taskbar --image-on-top \
+    --wrap --no-buttons --center --window-icon=${LOGO} --text="<big><big><big><b>Fun Facts</b></big></big></big>\r\r \
+A beta tester, Troy on build-a-pi two made his first contacts on HF using only the house gutters"
+
+if [ $? -eq 252 ];then exit 0;fi

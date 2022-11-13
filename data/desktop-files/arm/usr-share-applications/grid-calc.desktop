@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Grid Calc
+GenericName=Check distance and bearing between 2 grids
+Comment=Check distance and bearing between 2 grids
+Exec=/home/pi/bin/grid-calc
+Icon=/usr/share/icons/gnome/32x32/apps/kcalc.png
+Terminal=false
+Type=Application
+Categories=Utility;HamRadio

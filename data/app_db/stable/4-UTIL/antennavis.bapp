@@ -1,0 +1,41 @@
+BAPP=4
+ID=ANTVIS
+Name=antennavis
+Comment='antenna radiation pattern visualization'
+VerLocal=0
+VerRemote=0
+W3='http://www.include.gr/antennavis.html'
+Author='spud'
+NOTE='deb package has a lot of depends'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install antennavis >> errors/apt.log
+
+    cd ${BAPSRC} || return
+    #rm -rf antennavis
+    #mkdir antennavis
+    #cd antennavis
+    
+    #wget --tries 2 --connect-timeout=60 http://www.include.gr/antennavis-0.3.1-3.tar.gz
+    #tar -xzvf antennavis*.tar.gz
+    #rm *.tar.gz
+    #cd antennavis*
+
+    #./configure
+    #make install
+}
+
+VERSION(){
+    if [[ $(whereis antennavis | grep bin) ]];then
+        CURRENT=0.3.1-3
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-deb
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=AGW-Term
+GenericName=AGW-Term
+Comment=AGW-Term TNC emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.agwterm/agwterm.exe
+Type=Application
+StartupNotify=true
+Icon=F302_VARA.0
+StartupWMClass=agwterm.exe
+Categories=HamRadio

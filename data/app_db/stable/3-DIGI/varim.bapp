@@ -1,0 +1,43 @@
+BAPP=4
+ID=VARIM
+Name=vARIM
+Comment='Vara AR-IM'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='needs VARA modem but not required'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get install -y libfltk1.1-dev  >> errors/apt.log
+	sudo apt-get install -y libfltk1.3-dev  >> errors/apt.log
+    
+	VPKG=$(curl -s https://www.whitemesa.net/varim/src/ | grep tar.gz | tail -1 | sed 's/^.*varim/varim/' | sed 's/tar.gz.*$/tar.gz/')
+
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/$VPKG
+	tar -xzvf $VPKG
+    rm *.gz
+	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make -j$BAPCORE
+	sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis varim | grep bin) ]];then
+        CURRENT=$(varim --version | head -n1 | awk -F ' ' '{print $2}')
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/varim/varim.html | grep -m 1 "armv7l.tar.gz" | awk -F '-' '{print $2}')
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

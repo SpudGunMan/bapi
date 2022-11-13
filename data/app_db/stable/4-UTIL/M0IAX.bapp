@@ -1,0 +1,68 @@
+BAPP=4
+ID=M0IAX
+Name=JS8CALLTools
+Comment='m0iax Tools for JS8CALL'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='git clone no good version details found yet'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install python3-pip >> errors/apt.log
+	sudo apt-get -y install python3-dev >> errors/apt.log
+    sudo apt-get -y install python3-tk >> errors/apt.log
+    pip install maidenhead 
+    pip install astroid
+    pip install colorama
+    pip install gps
+    pip install isort
+    pip install lazy-object-proxy
+    pip install maidenhead
+    pip install mccabe
+    pip install pylint
+    pip install pyserial
+    pip install toml
+    pip install wrapt
+    pip install tk
+
+    #pip install astroid==2.5.2
+    #pip install colorama==0.4.4
+    #pip install gps==3.19
+    #pip install isort==5.8.0
+    #pip install lazy-object-proxy==1.6.0
+    #pip install maidenhead==1.6.0
+    #pip install mccabe==0.6.1
+    #pip install pylint==2.7.4
+    #pip install pyserial==3.5
+    #pip install toml==0.10.2
+    #pip install wrapt==1.12.1
+
+    cd ${BAPSRC}
+
+ 	if [ -f ${HOME}/JS8CallUtilities/JS8CallUtils_v2.py ] ; then
+ 		cd ${HOME}/JS8CallUtilities
+ 		git pull
+ 	else
+ 		cd ${HOME}/
+ 		git clone https://github.com/m0iax/JS8CallUtilities_V2 ${HOME}/JS8CallUtilities
+        cd ${HOME}/JS8CallUtilities
+        chmod +x JS8CallUtils_v2.py
+        sudo ln -s ${HOME}/JS8CallUtilities/JS8CallUtils_v2.py /usr/local/bin/JS8CallUtils_v2.py
+ 	fi
+}
+
+VERSION(){
+    if [ -f ${HOME}/JS8CallUtilities/JS8CallUtils_v2.py ];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

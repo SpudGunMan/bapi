@@ -1,0 +1,39 @@
+BAPP=4
+ID=GARIM
+Name=GARIM
+Comment='ARDOP AR-IM'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='needs ARDOP modem but not required'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+	GPKG=$(curl -s https://www.whitemesa.net/garim/src/ | grep tar.gz | tail -1 | sed 's/^.*garim/garim/' | sed 's/tar.gz.*$/tar.gz/')
+	cd ${BUILDDIR} || return
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/garim/src/$GPKG
+	tar -xzvf $GPKG
+    rm *.gz
+	DIRR=$(echo $GPKG | sed 's/.tar.gz//')
+	cd ${DIRR} || return
+	./configure
+	make -j$BAPCORE
+	sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis garim | grep bin) ]];then
+        CURRENT=$(garim --version | head -n1 | awk -F ' ' '{print $2}')
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://www.whitemesa.net/garim/garim.html | grep -m 1 "armv7l.tar.gz" | awk -F '-' '{print $2}')
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

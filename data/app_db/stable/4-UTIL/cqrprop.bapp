@@ -1,0 +1,49 @@
+BAPP=4
+ID=CQRPROP
+Name=HAMQSL-Propigation
+Comment='N0NBH Propigation Tool'
+VerLocal=0
+VerRemote=0
+W3='http://www.hamqsl.com/solar.html'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install >> errors/apt.log
+    sudo apt-get -y install lazarus-ide >> errors/apt.log
+    sudo apt-get -y install lcl lcl-gtk2 >> errors/apt.log
+    sudo apt-get -y install lcl-nogui >> errors/apt.log
+    sudo apt-get -y install lcl-units >> errors/apt.log
+    sudo apt-get -y install lcl-utils >> errors/apt.log
+    sudo apt-get -y install lazarus >> errors/apt.log
+    sudo apt-get -y install lazarus-doc  >> errors/apt.log
+    sudo apt-get -y install lazarus-src >> errors/apt.log
+    sudo apt-get -y install fp-units-misc >> errors/apt.log
+    sudo apt-get -y install fp-units-rtl >> errors/apt.log
+    sudo apt-get -y install fp-utils >> errors/apt.log
+    sudo apt-get -y install fpc >> errors/apt.log
+    sudo apt-get -y install fpc-source >> errors/apt.log
+    sudo apt-get -y install libssl-dev >> errors/apt.log
+
+    cd ${BAPSRC} || return
+    rm -rf cqrprop
+    git clone https://github.com/ok2cqr/cqrprop.git
+    cd cqrprop
+    make 
+    sudo make install 
+}
+
+VERSION(){
+    if [[ $(whereis cqrprop | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

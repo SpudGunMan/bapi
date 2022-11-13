@@ -1,0 +1,50 @@
+BAPP=4
+ID=SDRTRUNK
+Name='SDR TRUNK'
+Comment='SDR Trunking Decoder'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/DSheirer/sdrtrunk'
+Author='spud'
+NOTE='statc web link to release packages'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+	rm -rf sdrtrunk
+	mkdir sdrtrunk
+    mv ${HOME}/sdr-trunk ./sdr-trunk.bak
+    
+	cd sdrtrunk
+    
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        if [[ "$BAPCPU" == *"arm"* ]]; then
+            echo -e "INFORMATIONAL: only supported is for 64bit or Pi4 Only"
+            LINK=''
+        else
+            LINK=https://github.com/DSheirer/sdrtrunk/releases/download/v0.5.0-beta.5/sdr-trunk-linux-aarch64-v0.5.0-beta5.zip
+        fi
+    else
+        LINK=https://github.com/DSheirer/sdrtrunk/releases/download/v0.5.0-beta.5/sdr-trunk-linux-x86_64-v0.5.0-beta5.zip
+    fi
+
+    wget --tries 2 --connect-timeout=30 $LINK
+    unzip sdr-trunk*.zip
+    rm sdr-trunk*.zip
+    mv sdr-trunk* ${HOME}/sdr-trunk
+}
+
+VERSION(){
+    if [[ -f "${HOME}/sdr-trunk/release" ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

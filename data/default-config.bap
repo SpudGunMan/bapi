@@ -1,0 +1,2 @@
+BAPAPPS_FILES_LOC="apps/stable/*.bapp apps/stable/**/*.bapp apps/experimental/*.bapp apps/experimental/**/*.bapp"
+#$(grep -m 1 -e '^[[:blank:]]*BAPAPPS_FILES_LOC' data/default-config.bap | cut -d = -f 2)

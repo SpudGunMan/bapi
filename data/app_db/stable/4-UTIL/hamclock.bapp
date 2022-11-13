@@ -1,0 +1,71 @@
+BAPP=4
+ID=HAMCLOCK
+Name=HAMCLOCK
+Comment='ClearSky Ham CLock'
+VerLocal=0
+VerRemote=0
+W3='http://www.clearskyinstitute.com/ham/HamClock'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+	sudo apt-get -y install libx11-dev
+
+	cd ${BAPSRC} || return
+	rm -f HamClock
+	mkdir HamClock
+	cd HamClock
+
+	curl -o ESPHamClock.zip http://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.zip
+	unzip ESPHamClock.zip
+	rm ESPHamClock.zip
+	cd ESPHamClock || return
+
+	action=$(yad --center --title "Question" --image "dialog-question"\
+        --button="Large:0" --button="Small:2" \
+        --text "Build Large 1600x960 or \n Small 800x480?") return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+		#make large
+		sudo make -j$BAPCORE hamclock-1600x960
+		sudo chmod +s hamclock-1600x960
+		sudo mv hamclock-1600x960 /usr/local/bin/hamclock
+		rm -rf "${DIR}/ESPHamClock"
+	else
+		#make small
+		sudo make -j$BAPCORE hamclock-800x480
+		sudo chmod +s hamclock-800x480
+		sudo mv hamclock-800x480 /usr/local/bin/hamclock
+		rm -rf "${DIR}/ESPHamClock"
+	fi
+
+
+	cat >${HOME}/Downloads/hamclock.desktop <<EOF
+[Desktop Entry]
+Name=HamClock
+GenericName=Ham Clock
+Comment=Ham Clock
+Exec=hamclock
+Icon=/usr/share/icons/Adwaita/scalable/apps/preferences-system-time-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;
+EOF
+
+	sudo mv ${HOME}/Downloads/hamclock.desktop /usr/share/applications/
+}
+
+VERSION(){
+    if [[ $(whereis Artemis | grep bin) ]];then
+        CURRENT=fix
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

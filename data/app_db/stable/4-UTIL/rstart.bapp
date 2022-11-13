@@ -1,0 +1,39 @@
+BAPP=4
+ID=RSTART
+Name=Repeater-START
+Comment='view nearby ham radio repeaters'
+VerLocal=0
+VerRemote=0
+W3='https://sourceforge.net/projects/repeater-start/'
+Author='spud'
+NOTE='sf clone no good version details found yet'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install gir1.2-osmgpsmap-1.0 >> errors/apt.log
+    sudo apt-get -y install gir1.2-geoclue-2.0 >> errors/apt.log
+    sudo apt-get -y install libosmgpsmap-1.0-1 >> errors/apt.log
+    
+    REPEAT_LATEST=$(curl -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//')
+    cd ${BAPSRC}
+    rm -rf rstart
+    mkdir rstart
+    cd rstart
+    
+    wget https://sourceforge.net/projects/repeater-start/files/$REPEAT_LATEST
+    sudo dpkg -i $REPEAT_LATEST
+}
+
+VERSION(){
+    if [[ $(whereis rstarter | grep bin) ]];then
+        CURRENT=0-sf
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/repeater-start/files/ | grep all.deb | head -1 | sed 's/.*repeater/repeater/;s/".*//' | sed 's/repeater-start_//' | sed 's/_all.deb//')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

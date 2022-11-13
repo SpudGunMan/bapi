@@ -1,0 +1,53 @@
+BAPP=4
+ID=DROID
+Name=DroidStar
+Comment='DroidStar DMR, P25, NXDN, D-STAR (REF/XRF/DCS)'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/nostar/DroidStar'
+Author='spud'
+NOTE='builds where to put it now'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    #sudo apt-get -y install qt5-default >> errors/apt.log
+    #sudo apt-get -y install qtcreator >> errors/apt.log
+    #sudo apt-get -y install qtdeclarative5-dev >> errors/apt.log
+    #sudo apt-get -y install qtquickcontrols2-5-dev >> errors/apt.log
+    sudo apt-get -y install qml-module-qtquick-dialogs >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+    rm -rf imbe_vocoder
+    git clone https://github.com/nostar/imbe_vocoder
+    cd imbe_vocoder
+    make
+    sudo make install
+    sudo ldconfig
+    cd ..
+
+    rm -rf DroidStar
+    git clone https://github.com/nostar/DroidStar
+    cd DroidStar
+    mkdir build
+    cd build
+    qmake ..
+    make
+    sudo make install
+    # installs /opt/DroidStar/bin/DroidStar
+
+}
+
+VERSION(){
+    if [ -f /opt/DroidStar/bin/DroidStar ];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

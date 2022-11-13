@@ -1,0 +1,65 @@
+BAPP=4
+ID=HAMRS
+Name=HAM-RS-Logger
+Comment='HAM RS Logging Software'
+VerLocal=0
+VerRemote=0
+W3='https://www.hamrs.app'
+Author='spud'
+NOTE='cross package install on pi4:64 as there is no binary. no source.'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libfuse2 >> errors/apt.log
+    sudo apt-get -y install fuse >> errors/apt.log
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        #as of Nov 2022 there is no ARM-64 bit version of HAMRS.
+        if [ `getconf LONG_BIT` = '64' ]; then
+            sudo dpkg --add-architecture armhf 
+            sudo apt-get update >> errors/apt.log
+            sudo apt-get -y install libasound2:armhf >> errors/apt.log
+            sudo apt-get -y install zlib1g-dev:armhf >> errors/apt.log 
+            sudo apt-get -y install fuse:armhf >> errors/apt.log 
+            sudo apt-get -y install libglib2.0-0:armhf >> errors/apt.log 
+            sudo apt-get -y install libnss3:armhf >> errors/apt.log
+            sudo apt-get -y install libatk1.0-0:armhf >> errors/apt.log
+            sudo apt-get -y install libatk-bridge2.0-0:armhf >> errors/apt.log 
+            sudo apt-get -y install libx11-xcb1:armhf >> errors/apt.log 
+            sudo apt-get -y install libgdk-pixbuf-2.0-0:armhf >> errors/apt.log 
+            sudo apt-get -y install libgtk-3-0:armhf >> errors/apt.log 
+            sudo apt-get -y install libdrm2:armhf >> errors/apt.log 
+            sudo apt-get -y install libgbm1:armhf >> errors/apt.log
+        fi
+        DL=$(curl https://www.hamrs.app | grep armv7 | sed 's/.*href="//;s/".*//')
+    else
+        #not ARM
+        DL=$(curl https://www.hamrs.app | grep 86_64 | sed 's/.*href="//;s/".*//')
+    fi
+
+    cd ${BAPSRC}
+    rm -rf hamrs
+    mkdir hamrs
+    cd hamrs
+
+    wget ${DL}
+    HAMRS=$(ls | grep hamrs-)
+    mv ${HAMRS} hamrs
+    chmod +x hamrs
+    sudo mv hamrs /usr/local/bin/
+}
+
+VERSION(){
+    if [[ $(whereis hamrs | grep bin) ]];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

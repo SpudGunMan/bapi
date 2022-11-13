@@ -1,0 +1,46 @@
+BAPP=4
+ID=QSSTV
+Name=QSSTV
+Comment='SSTV Soundcard Modem'
+VerLocal=0
+VerRemote=0
+W3='https://www.qsl.net/on4qz/'
+Author='spud'
+NOTE='git clone no good version details found yet'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install libfftw3-dev >> errors/apt.log
+	sudo apt-get -y install libopenjp2-7 >> errors/apt.log
+	sudo apt-get -y install libopenjp2-7-dev >> errors/apt.log
+	sudo apt-get -y install libv4l-dev >> errors/apt.log
+    sudo apt-get -y install qt5-default >> errors/apt.log
+    
+    cd ${BAPSRC} || return
+    rm -rf QSSTV
+    git clone https://github.com/ON4QZ/QSSTV
+    cd QSSTV
+    
+    mkdir src/build
+    cd src/build
+    qmake ..
+
+    make -j$BAPCORE
+
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis qsstv | grep bin) ]];then
+        CURRENT=9.5-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=9.5-git
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}

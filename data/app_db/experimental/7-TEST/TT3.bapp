@@ -1,0 +1,44 @@
+BAPP=4
+ID=TT3
+Name=TinyTrack3/4
+Comment='TinyTrak3/4 Configuration Software'
+VerLocal=0
+VerRemote=0
+W3='https://www.byonics.com/products'
+Author='spud'
+NOTE='serial ports work?'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    #filename=$(curl -s https://www.byonics.com/downloads/ | grep -m1 TinyTrak3_Config_ | head -c 55 | sed 's/<tr><td data-sort="//' | cut -f1 -d "\"")
+    wget --tries 2 --connect-timeout=60 https://www.byonics.com/downloads/TinyTrak3_Config_v1.4.6.zip
+    unzip *.zip
+    rm *.zip
+    wget --tries 2 --connect-timeout=60 https://www.byonics.com/downloads/TinyTrak4_Alpha_Firmware_v0.68.zip
+    unzip *.zip
+    rm *.zip
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir -p ${HOME}/.wine/drive_c/tt3_config
+        cp *.exe ${HOME}/.wine/drive_c/tt3_config
+    fi
+
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/tt3_config/TinyTrak4\ Alpha\ Config\ v0.68.exe
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/tt3_config/TinyTrak3Config\ v1.4.6.exe
+    
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/tt3_config ];then
+        CURRENT=1.4.6web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://www.byonics.com/downloads/ | grep -m1 TinyTrak3_Config_ | head -c 55 | sed 's/<tr><td data-sort="//' | cut -f1 -d "\"" | sed 's/tinytrak3_config_v//' | sed 's/.zip//')
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}

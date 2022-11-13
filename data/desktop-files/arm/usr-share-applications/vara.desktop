@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VARA
+GenericName=VARA
+Comment=VARA HF TNC emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.wine/drive_c/VARA/VARA.exe
+Type=Application
+StartupNotify=true
+Icon=F302_VARA.0
+StartupWMClass=vara.exe
+Categories=vara

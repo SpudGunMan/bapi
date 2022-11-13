@@ -1,0 +1,69 @@
+BAPP=4
+ID=ARDOP
+Name=ARDOP
+Comment='ARDOP modem and GUI'
+VerLocal=0
+VerRemote=0
+W3='https://www.cantab.net/users/john.wiseman/'
+Author='spud'
+NOTE='pi is using precompiled bins, the gui on X86 bin is corrupt and building from source \n GUI_win32.exe will work in wine'
+
+INSTALL(){
+	# https://github.com/DigitalHERMES/ardopc
+
+
+	cd ${BAPSRC} || return
+	rm -rf ardop
+    mkdir ardop
+    cd ardop
+
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+		#determine if pi-64 bit and install correct dependencies.
+		if [ `getconf LONG_BIT` = '64' ]; then
+			sudo dpkg --add-architecture armhf
+			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+		fi
+		wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piardopc
+		sudo chmod +x piardopc
+		sudo mv piardopc /usr/local/bin/
+		wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Downloads/Beta/piARDOP_GUI
+		sudo chmod +x ${HOME}/ardop/piARDOP_GUI
+		sudo mv piARDOP_GUI /usr/local/bin/
+
+		# extra source code if the binary fails
+		# https://github.com/adilinden-oss/rpi-ardopc
+		# http://www.cantab.net/users/john.wiseman/Downloads/Beta/TeensyProjects.zip
+	else
+		#the *nix GUI binary and source is junk?
+		wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/ardopc64
+		#wget https://www.cantab.net/users/john.wiseman/Downloads/Beta/ARDOP_GUI
+		#wget http://www.cantab.net/users/john.wiseman/Downloads/Beta/ARDOP_GUI.zip
+		chmod +x ardopc64
+		sudo mv ardopc64 /usr/local/bin/
+
+		#do GUI with this repo
+		git clone https://github.com/adilinden-oss/rpi-ardopc
+		cd rpi-ardopc/ARDOP_GUI
+		qmake
+		make
+
+		sudo mv ARDOP_GUI /usr/local/bin/
+	fi
+}
+
+VERSION(){
+    if [[ $(whereis ardopc64 | grep bin) ]];then
+        CURRENT=$(ardopc64 --help | grep Version | sed 's/ardopc Version //')
+    elif [[ $(whereis piardopc | grep bin) ]];then
+        CURRENT=$(piardopc --help | grep Version | sed 's/ardopc Version //')
+	else
+		CURRENT=NONE
+    fi
+	NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

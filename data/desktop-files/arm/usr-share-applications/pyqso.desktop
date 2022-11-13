@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/pyqso
+Name=PyQSO
+Comment=Contact Logging Tool
+Icon=/usr/share/icons/log_64x64.png
+Categories=Utility;HamRadio
+Keywords=Ham Radio;Logbook

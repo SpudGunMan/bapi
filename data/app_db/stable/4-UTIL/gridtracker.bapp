@@ -1,0 +1,103 @@
+BAPP=4
+ID=GridTracker
+Name=GridTracker
+Comment='display data from WSJT/AIDF on a map'
+VerLocal=0
+VerRemote=0
+W3='https://gridtracker.org'
+Author='spud'
+NOTE='commonly has download issues needs NWJS a 1.3GB package FYI'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get install -y libgconf-2-4 >> errors/apt.log
+
+    cd ${BAPSRC}
+	rm -rf gridtracker
+	mkdir gridtracker
+	cd gridtracker
+
+	arm32=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep linux-arm32 | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	arm64=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep linux-arm64 | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	deb=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep gridtracker_  | sed 's/<a href="//' | sed 's/\"><\/a>//')
+
+	# Download gridtracker binary
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+		if [ `getconf LONG_BIT` = '32' ]; then
+			wget --quiet --tries 2 --connect-timeout=60 $arm32
+		else
+			wget --quiet --tries 2 --connect-timeout=60 $arm64
+		fi
+	else
+		wget --quiet --tries 2 --connect-timeout=60 $deb
+	fi
+
+	######install nwjs
+	# https://github.com/nwjs/npm-installer
+	# https://nwjs.io/downloads/
+	# https://github.com/LeonardLaszlo/nw.js-armv7-binaries
+	
+	nwjs_status=$(dpkg -s nwjs-downloader | grep 'install ok installed')
+
+	if [[ "$nwjs_status" == *"install ok"* ]]; then
+		echo -e "INFORMATIONAL: node-webkit Node.js found installed"
+	else
+		echo -e "INFORMATIONAL: node-webkit Node.js instaling 1.3GB download"
+
+		wget  --quiet --connect-timeout=30 https://downloads.gridtracker.org/nwjs-downloader/v0.68.1-5/nwjs-downloader_0.68.1-1_all.deb
+		sudo dpkg -i nwjs-downloader_0.68.1-1_all.deb
+
+		#url-nwjs=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep nwjs | sed 's/<a href="//' | sed 's/\"><\/a>//')
+		#wget --connect-timeout=60 $url-nwjs
+
+		#if [ -f /usr/lib/nwjs/nwjs*.tar.gz ]
+		#	tar -xzvf /usr/lib/nwjs/nwjs*.tar.gz
+		#	cd nwjs*
+		#	sudo cp -r * /usr/lib/nwjs/
+		#fi
+	fi
+
+	#######get gridtracker
+	if [[ "$BAPCPU" == *"ar"* ]]; then
+		echo -e "INFORMATIONAL: PI install unpacking archives"
+		tar -xzvf GridTracker*.tar.gz > /dev/null 2>&1
+		ver=$(ls *.tar.gz | sed 's/GridTracker-//' | cut -f1 -d"-")
+		echo $ver > GridTrackerVersion.txt
+		rm -f *.tar.gz
+		mv GridTracker-* GridTracker
+
+		if [ -d "${HOME}/GridTracker" ];then
+			echo -e "INFORMATIONAL: GridTracker into ${HOME} exists replacing"
+			mv ${HOME}/GridTracker ./GridTracker.bak
+			cp -r GridTracker/ ${HOME}
+			sudo ln -fns ${HOME}/GridTracker/GridTracker /usr/local/bin/GridTracker
+		else
+			echo -e "INFORMATIONAL: installing into ${HOME}"
+			cp -r GridTracker/ ${HOME}
+		fi
+
+	else
+		#not-a-PI
+		echo -e "INFORMATIONAL: DEB install package"
+		grid_status=$(dpkg -s gridtracker | grep 'install ok installed')
+		sudo dpkg -i gridtracker*.deb
+	fi
+}
+
+VERSION(){
+    if [[ $(whereis GridTracker | grep bin) ]];then
+		if [ -f ${BAPSRC}/gridtracker/GridTrackerVersion.txt ];then
+        	CURRENT=$(cat ${BAPSRC}/gridtracker/GridTrackerVersion.txt)
+		else
+			CURRENT=0-deb
+		fi
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep gridtracker_  | sed 's/<a href="//' | sed 's/\"><\/a>//' | grep -o 'v.*' | cut -f1 -d"-" | sed 's/v//')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

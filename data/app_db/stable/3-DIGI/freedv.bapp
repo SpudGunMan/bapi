@@ -1,0 +1,82 @@
+BAPP=4
+ID=FREEDV
+Name=FreeDV
+Comment='GUI for FreeDV  using the CODEC2'
+VerLocal=0
+VerRemote=0
+W3='https://freedv.org'
+Author='spud'
+NOTE='no launcher yet'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install avahi-daemon >> errors/apt.log
+    sudo apt-get -y install sox >> errors/apt.log
+    sudo apt-get -y install libao-dev >> errors/apt.log
+    sudo apt-get -y install libspeexdsp-dev >> errors/apt.log
+    sudo apt-get -y install libwxgtk3.0-gtk3-dev >> errors/apt.log
+    sudo apt-get -y install libsndfile-dev >> errors/apt.log
+    sudo apt-get -y install libsamplerate0-dev >> errors/apt.log
+    sudo apt-get -y install libasound2-dev >> errors/apt.log
+    sudo apt-get -y install libgsm1-dev >> errors/apt.log
+    sudo apt-get -y install libsndfile1-dev >> errors/apt.log
+    sudo apt-get -y install libjpeg9-dev >> errors/apt.log
+    sudo apt-get -y install libxft-dev >> errors/apt.log
+    sudo apt-get -y install libxinerama-dev >> errors/apt.log
+    sudo apt-get -y install libxcursor-dev >> errors/apt.log
+    sudo apt-get -y install module-assistant >> errors/apt.log
+
+    action=$(yad --center --title "Question" --image "dialog-question"\
+        --button="port-audio:0" --button="pulse-audio:2" \
+        --text "Which sound platform do you use (no idea, pulse)")
+
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+        audio="port"
+        echo -e "INFORMATIONAL: port"
+    else
+        audo="pulse"
+        echo -e "INFORMATIONAL: pulse"
+    fi
+
+
+    cd ${BAPSRC} || return
+    rm -rf freedv-gui
+    git clone https://github.com/drowe67/freedv-gui
+    cd freedv-gui
+
+    export CXXFLAGS='-O2 -march=native -mtune=native'
+    export CFLAGS='-O2 -march=native -mtune=native'
+
+    if [ "$audio" == "port" ]; then
+        ./build_linux.sh portaudio
+    else
+        ./build_linux.sh pulseaudio
+    fi
+
+    cd LPCNet/build_linux
+    sudo make install
+    cd ..
+
+    cd build_linux
+    sudo make install
+    cd ..
+
+    sudo ldconfig
+    sudo cp ${BAPSRC}/freedv-gui/build_linux/src/freedv /usr/local/bin/
+}
+
+VERSION(){
+    if [ -f ${BAPSRC}/freedv-gui/build_linux/src/version.h ];then
+        CURRENT=$(cat ${BAPSRC}/freedv-gui/build_linux/src/version.h | grep -m 1 "VERSION (\"" | awk '{ print $3 }' | sed 's/("//' | sed 's/-\"//')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='CODEC2|HAMLIB'
+    #apt-gets will be checked on app-check
+}

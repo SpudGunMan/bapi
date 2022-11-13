@@ -1,0 +1,53 @@
+BAPP=4
+ID=GQRX
+Name=GQRX
+Comment='GQRX SDR Software'
+VerLocal=0
+VerRemote=0
+W3='https://gqrx.dk'
+Author='spud'
+NOTE='installs a mess of SDR rules as well'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install python3-pip >> errors/apt.log
+    sudo apt-get -y install libsndfile-dev >> errors/apt.log
+    sudo apt-get -y install soapysdr-tools >> errors/apt.log
+    sudo apt-get -y install hackrf >> errors/apt.log
+    sudo apt-get -y install airspy >> errors/apt.log
+    sudo apt-get -y install rtl-sdr >> errors/apt.log
+    sudo apt-get -y install soapysdr-tools >> errors/apt.log
+    sudo apt-get -y install soapysdr-module-all >> errors/apt.log
+    sudo apt-get -y install soapysdr0.8-module-all >> errors/apt.log
+    sudo apt-get -y install libsoapysdr0.8 >> errors/apt.log
+    sudo apt-get -y install gnuradio-dev >> errors/apt.log
+    sudo apt-get -y install gr-osmosdr >> errors/apt.log
+    sudo apt-get -y install qt5-default >> errors/apt.log
+    sudo apt-get -y install libqt5svg5-dev >> errors/apt.log
+    sudo apt-get -y install libpulse-dev >> errors/apt.log
+
+    cd ${BAPSRC}
+	rm -rf gqrx
+    git clone https://github.com/gqrx-sdr/gqrx.git
+    cd gqrx
+
+    mkdir build
+    cd build
+    cmake ..
+    make -j$BAPCORE
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis gqrx | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

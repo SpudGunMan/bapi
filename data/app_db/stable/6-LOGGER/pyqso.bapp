@@ -1,0 +1,48 @@
+BAPP=4
+ID=PYQSO
+Name=PY-QSO-Logger
+Comment='Light Weight Contacting Logging'
+VerLocal=0
+VerRemote=0
+W3='https://christianjacobs.uk/pyqso/'
+Author='spud'
+NOTE='you need hamlib with python to get connections'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    #sudo apt-get -y install pyqso >> errors/apt.log
+    sudo apt-get -y install python3-pip >> errors/apt.log
+
+    pip install --upgrade pip
+    pip install numpy
+    pip install matplotlib>=1.3.0
+    pip install cairocffi
+    pip install cartopy>=0.16.0
+    pip install sphinx
+    pip install geocoder
+    pip install sphinx
+
+
+    cd ${BUILDDIR}
+    rm -rf pyqso
+    git clone https://github.com/ctjacobs/pyqso
+    cd pyqso
+    autoreconf --install
+    ./configure --with-python-binding
+    make
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis pyqso | grep bin) ]];then
+        CURRENT=$(pyqso --help 2>&1 | grep 'PyQSO version' | sed 's/INFO:root:PyQSO version //')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=1.1-git
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+    #apt-gets will be checked on app-check
+}

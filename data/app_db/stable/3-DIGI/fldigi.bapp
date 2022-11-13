@@ -1,0 +1,99 @@
+BAPP=4.0
+ID=FLDIGI
+Name=fldigi
+Comment='multi-mode soundcard modem'
+VerLocal=0
+VerRemote=0
+W3='http://www.w1hkj.com'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y libfltk1.3-dev >> errors/apt.log
+    sudo apt-get install -y libxft-dev >> errors/apt.log
+    sudo apt-get install -y libxinerama-dev >> errors/apt.log
+    sudo apt-get install -y libxcursor-dev >> errors/apt.log
+    sudo apt-get install -y libsndfile1-dev >> errors/apt.log
+    sudo apt-get install -y libsamplerate0-dev >> errors/apt.log
+    sudo apt-get install -y texinfo >> errors/apt.log
+	
+	if [[ "$BAPCPU" == *"ar"* ]]; then
+		sudo apt-get install -y libjpeg62-turbo-dev >> errors/apt.log
+
+		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+		#increase swap file if less than 3G memory
+		if [ ${FREEMEM} -lt 3000 ] && [ "$BAPCPU" == *"ar"* ]; then
+			echo "Increasing Swap size for build"
+			#increase swap size
+			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	else
+		sudo apt-get install -y libjpeg62-dev >> errors/apt.log
+	fi
+    
+	cd ${BAPSRC} || return
+
+    if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
+		echo -e "INFORMATIONAL: installing FLXMLRPC"
+		#determine latest FLXMLRPC & download
+		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
+
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		tar -zxvf ${FLXM}
+
+		#build FLXMLRPC
+		cd ${XMPKG} || return
+		./configure --prefix=/usr/local --enable-static
+		make -j$BAPCORE
+		sudo make install
+		sudo ldconfig
+	fi
+
+	#Determine latest FLDIGI
+	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
+
+	#Download latest FLDIGI tar file
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+	tar -zxvf ${FLTAR}
+
+	#build FLDIGI
+	cd ${FLPKG} || return
+	./configure --prefix=/usr/local --enable-static
+	make -j$BAPCORE
+	sudo make install
+	sudo ldconfig
+	sudo make clean
+
+	if [[ "$BAPCPU" == *"ar"* ]]; then
+		#reset swap size to default
+		if [ ${FREEMEM} -lt 3000 ] && [ "$BAPCPU" == *"ar"* ]; then
+			echo "Resetting swap size to default"
+			#increase swap size
+			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+		fi
+	fi
+
+}
+
+VERSION(){
+    if [[ $(whereis fldigi | grep bin) ]];then
+        CURRENT=$(fldigi --version | grep fldigi | sed 's/fldigi //')
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/fldigi/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar" '{print $1}')
+    
+}
+
+DEPENDS(){
+    NEEDED=""
+}

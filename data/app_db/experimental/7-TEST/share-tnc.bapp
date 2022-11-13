@@ -1,0 +1,48 @@
+BAPP=4
+ID=SHARE-TNC
+Name=SHARE-TNC
+Comment='Share a serial TNC using KISS over TCP/IP'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/trasukg/share-tnc'
+Author='spud'
+NOTE='installs npm'
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+
+    if [[ $(whereis npx | grep bin) ]];then
+        echo -e "INFORMATIONAL: found npx"
+    else
+        curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+        sudo apt-get -y install nodejs >> errors/apt.log
+        sudo npm install -g n >> errors/apt.log
+        sudo n stable >> errors/apt.log
+        sudo npm install -g npm >> errors/apt.log
+    fi
+
+    npm install state-machine
+
+    
+    cd ${BAPSRC} || return
+
+    rm -rf share-tnc
+    git clone https://github.com/trasukg/share-tnc
+    cd share-tnc
+    #sudo npm install -g share-tnc
+    sudo npm install -g --unsafe-perm share-tnc  
+
+}
+
+VERSION(){
+    if [[ $(whereis share-tnc | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

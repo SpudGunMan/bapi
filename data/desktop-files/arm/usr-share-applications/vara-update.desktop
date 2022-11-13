@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Update VARA
+GenericName=Update VARA
+Comment=This script updates VARA HF/FM & VARA Chat
+Exec=/home/pi/winelink/Update\ VARA
+Type=Application
+StartupNotify=true
+Categories=vara

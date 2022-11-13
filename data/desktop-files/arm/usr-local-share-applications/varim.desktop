@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=vARIM
+GenericName=Amateur Radio Instant Messaging
+Comment=Amateur Radio Communication using the VARA Sound Card Modem
+Exec=varim
+Icon=varim
+Terminal=false
+Type=Application
+Categories=HamRadio;
+Name[en_US]=vARIM

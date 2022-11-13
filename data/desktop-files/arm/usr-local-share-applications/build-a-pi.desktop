@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Update-Tool
+GenericName=Update-Tool
+Comment=Build-a-Pi App Manager
+Exec=DIRSEDHASH/bapi.sh
+Icon=DIRSEDHASH/ico/logo.png
+Terminal=true
+Type=Application
+Categories=bap

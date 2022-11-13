@@ -1,0 +1,40 @@
+BAPP=4
+ID=PIAPRS
+Name=KM4-PI-APRS
+Comment='KM4ACK PI APRS'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/km4ack/Pi-APRS'
+Author='spud'
+NOTE='no cross compile scripts tested'
+
+INSTALL(){
+    cd ${HOME}
+	
+    if [ -d "Pi-APRS" ];then
+        cd Pi-APRS
+        git pull
+    else
+        git clone https://github.com/km4ack/Pi-APRS
+        cd Pi-APRS
+    fi
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+        sudo cp ${HOME}/Pi-APRS/piaprs.desktop /usr/share/applications
+    fi
+}
+
+VERSION(){
+    if [[ -f ${HOME}/Pi-APRS/piaprs.desktop ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='DIREWOLF'
+    #apt-gets will be checked on app-check
+}

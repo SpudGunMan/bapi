@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VARA Chat
+GenericName=VARA Chat
+Comment=VARA Chat emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.wine/drive_c/VARA/VARA\ Chat.exe
+Type=Application
+StartupNotify=true
+Icon=DF53_VARA Chat.0
+StartupWMClass=vara chat.exe
+Categories=vara

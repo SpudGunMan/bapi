@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Reset Wine
+GenericName=Reset Wine
+Comment=A reset button in case VARA or RMS Express freeze
+Exec=/home/pi/winelink/Reset\ Wine
+Type=Application
+StartupNotify=true
+Categories=HamRadio;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VARA SAT
+GenericName=VARA SAT
+Comment=VARA SAT TNC emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.wine/drive_c/VARA/VARASAT.exe
+Type=Application
+StartupNotify=true
+Icon=29B6_VARASAT.0
+StartupWMClass=varasat.exe
+Categories=vara

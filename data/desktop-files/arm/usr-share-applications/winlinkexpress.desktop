@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Winlink Express
+GenericName=Winlink Express
+Comment=RMS Express emulated with Box86/Wine
+Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine /home/pi/.wine/drive_c/RMS\ Express/RMS\ Express.exe
+Type=Application
+StartupNotify=true
+Icon=219D_RMS Express.0
+StartupWMClass=rms express.exe
+Categories=HamRadio;

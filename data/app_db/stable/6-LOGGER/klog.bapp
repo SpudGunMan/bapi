@@ -1,0 +1,79 @@
+BAPP=4
+ID=KLOG
+Name=K-LOG
+Comment='K-LOG'
+VerLocal=0
+VerRemote=0
+W3='https://www.klog.xyz'
+Author='spud'
+NOTE='version thing needs looked at added -j core and didnt test yet'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install qt5-qmake >> errors/apt.log
+    sudo apt-get -y install qtbase5-dev >> errors/apt.log
+    sudo apt-get -y install qttools5-dev >> errors/apt.log
+    sudo apt-get -y install libqt5charts5-dev >> errors/apt.log
+    sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
+    sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
+    sudo apt-get -y install qtdeclarative5-dev >> errors/apt.log
+    sudo apt-get -y install qtpositioning5-dev >> errors/apt.log
+    sudo apt-get -y install python3-dev >> errors/apt.log
+    # runtime
+    sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
+    sudo apt-get -y install qml-module-qtquick-window2 >> errors/apt.log
+    sudo apt-get -y install qml-module-qtlocation >> errors/apt.log
+    sudo apt-get -y install qml-module-qtpositioning >> errors/apt.log
+    sudo apt-get -y install qml-module-qtquick2 >> errors/apt.log
+    sudo apt-get -y install qml-module-qtquick-controls2 >> errors/apt.log
+    
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+		#increase swap file if less than 3G memory
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Increasing Swap size for build"
+			#increase swap size
+			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+
+    cd ${BAPSRC} || return
+    rm -rf klog
+    git clone https://github.com/ea4k/klog
+    cd klog
+    qmake QT_SELECT=qt5 PREFIX=/usr/local KLog.pro
+    make -j$BAPCORE
+    sudo make install
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		#reset swap size to default
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Resetting swap size to default"
+			#increase swap size
+			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+}
+
+VERSION(){
+    if [[ $(whereis klog | grep bin) ]];then
+        CURRENT=git-0
+        #this causes some garbage, $(klog -v | sed 's/Version: KLog-//')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+    #apt-gets will be checked on app-check
+}

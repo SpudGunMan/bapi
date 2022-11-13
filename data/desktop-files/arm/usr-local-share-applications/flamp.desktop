@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=flamp
+GenericName=Amateur Multicast Protocol Client/Server
+Comment=Amateur Radio Communications
+Exec=flamp
+Icon=flamp
+Terminal=false
+Type=Application
+Categories=flsuite

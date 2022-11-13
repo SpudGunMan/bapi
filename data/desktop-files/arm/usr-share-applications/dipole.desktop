@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Dipole Calculator
+GenericName=Dipole Calc
+Comment=Dipole Calculator
+Exec=/home/pi/bin/dipole
+Icon=/usr/share/icons/Adwaita/scalable/apps/accessories-calculator-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;

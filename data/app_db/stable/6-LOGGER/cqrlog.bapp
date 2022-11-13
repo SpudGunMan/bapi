@@ -1,0 +1,52 @@
+BAPP=4
+ID=CQRLOG
+Name=TECQRLOGMPLT
+Comment='Logging Software'
+VerLocal=0
+VerRemote=0
+W3='https://www.cqrlog.com/'
+Author='spud'
+NOTE=''
+NOTE=''
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y lcl-2.0 >> errors/apt.log
+    sudo apt-get install -y lazarus >> errors/apt.log
+    sudo apt-get install -y lcl >> errors/apt.log
+    sudo apt-get install -y fp-utils >> errors/apt.log
+    sudo apt-get install -y fp-units-misc >> errors/apt.log
+    sudo apt-get install -y fp-units-gfx >> errors/apt.log
+    sudo apt-get install -y fp-units-gtk2 >> errors/apt.log
+    sudo apt-get install -y fp-units-db >> errors/apt.log
+    sudo apt-get install -y fp-units-math >> errors/apt.log
+    sudo apt-get install -y fp-units-net >> errors/apt.log
+    sudo apt-get install -y libssl-dev >> errors/apt.log
+    sudo apt-get install -y mariadb-server >> errors/apt.log
+    sudo apt-get install -y mariadb-client >> errors/apt.log
+
+    cd ${BAPSRC}
+	rm -rf cqrlog
+	mkdir cqrlog
+	cd cqrlog
+
+    git clone https://github.com/ok2cqr/cqrlog
+    cd cqrlog
+
+    make
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis cqrlog | grep bin) ]];then
+        CURRENT=$(cqrlog -v | sed 's/.*Ver://' | cut -f1 -d" ")
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

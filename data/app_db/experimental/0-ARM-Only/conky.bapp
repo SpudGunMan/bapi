@@ -1,0 +1,52 @@
+BAPP=4
+ID=CONKY
+Name=CONKY
+Comment='Conky Telemetry Display'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='Depends on GPS, Pi only at the moment'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install ruby >> errors/apt.log
+    sudo apt-get -y install conky >> errors/apt.log
+
+	sudo gem install gpsd_client
+	sudo gem install maidenhead
+
+	cd ${BAPSRC}
+
+	if [[ "$BAPCPU" == *"ar"* ]]; then 
+		touch ${HOME}/Documents/mylog.txt  #conky will fail to load if this file doesn't exist
+		sudo touch /var/lib/misc/dnsmasq.leases #conky will fail to load if this file doesn't exist
+
+		cp $BAPDIR/data/conky-pi/.conkyrc ${HOME}/.conkyrc
+		mkdir -p ${HOME}/bin/conky
+		cp $BAPDIR/data/conky-pi/* ${HOME}/bin/conky/
+		chmod +x ${HOME}/bin/conky/get-grid ${HOME}/bin/conky/get-freq ${HOME}/bin/conky/grid
+		sed -i "s/N0CALL/${CALL}/" ${HOME}/.conkyrc
+
+		#chron file rerun grid
+		#echo "#Update GPS maidenhead for conky" >>${TEMPCRON}
+		#echo "*/1 * * * * /home/`whoami`/bin/conky/grid" >>${TEMPCRON}
+		#ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+		#chmod +x ${HOME}/pi-build/conky/setconky
+	fi
+
+}
+
+VERSION(){
+    if [[ $(whereis conky | grep bin) ]];then
+        CURRENT=$(conky --version | head -1 | awk '{ print $2 }')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-deb
+}
+
+DEPENDS(){
+    NEEDED='GPS'
+    #apt-gets will be checked on app-check
+}

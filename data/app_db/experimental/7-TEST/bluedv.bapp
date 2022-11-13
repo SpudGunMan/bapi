@@ -1,0 +1,43 @@
+BAPP=4
+ID=BLUEDV
+Name=bluedv
+Comment='bluedv DSTAR DEXTRA, DPLUS, DCS, FUSION DMR'
+VerLocal=0
+VerRemote=0
+W3='https://www.pa7lim.nl/bluedv-linux/'
+Author='spud'
+NOTE='building now what'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install mono-complete >> errors/apt.log
+
+    cd ${BAPSRC} || return
+    rm -rf bluedv
+    mkdir bluedv
+    cd bluedv
+
+    wget --tries 2 --connect-timeout=60  http://software.pa7lim.nl/BlueDV/BETA/Linux/VERSION-LINUX
+    chmod +x VERSION-LINUX
+    mv VERSION-LINUX bluedv
+    echo -e "comport=/dev/ttyACM0" > BlueDVconfig.ini
+    echo -e "[AMBE]" >> BlueDVconfig.ini
+    echo -e "comport=/dev/ttyACM0"  >> BlueDVconfig.ini
+    echo -e "PTTCOMPort=/dev/ttyACM0" >> BlueDVconfig.ini
+    #sudo cp bluedv /usr/local/bluedv
+    #mono bluedv#
+}
+
+VERSION(){
+    if [[ $(whereis bluedv | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

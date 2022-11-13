@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=PacketSearch
+GenericName=Search for Winlink Packet Gateways
+Comment=Search for Winlink Packet Gateways
+Exec=/home/pi/bin/packetsearch
+Icon=/usr/share/icons/gnome/32x32/apps/openterm.png
+Terminal=true
+Type=Application
+Categories=Utility;HamRadio

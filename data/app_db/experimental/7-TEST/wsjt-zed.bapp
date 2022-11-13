@@ -1,0 +1,86 @@
+BAPP=4
+ID=WSJT-ZED
+Name=WSJT-Zed
+Comment='WSJT-Zed Project'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='this currently builds but not installing it where to?'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install gfortran >> errors/apt.log
+    sudo apt-get -y install fftw3-dev >> errors/apt.log
+    sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
+    sudo apt-get -y install libtool >> errors/apt.log
+    sudo apt-get -y install texinfo >> errors/apt.log
+    sudo apt-get -y install asciidoctor >> errors/apt.log
+    sudo apt-get -y install ntp >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+		#increase swap file if less than 3G memory
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Increasing Swap size for build"
+			#increase swap size
+			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+
+    cd ${BAPSRC}
+    rm -rf wsjtz
+    mkdir wsjtz
+    cd wsjtz
+
+    WSJTZPKG=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title=\"//' | cut -f1 -d"\"")
+
+    wget --tries 2 --connect-timeout=60  https://sourceforge.net/projects/wsjt-z/files/Source/$WSJTZPKG
+    unzip $WSJTZPKG
+    rm $WSJTZPKG
+    mv wsjtx src
+    
+    mkdir release
+
+    cmake -D CMAKE_INSTALL_PREFIX=${BAPSRC}/wsjtz/release/
+    cmake -DWSJT_SKIP_MANPAGES=ON-DWSJT_GENERATE_DOCS=OFF ./src
+	sudo cmake --build . --target install -j$BAPCORE
+
+	#sudo mv release/bin/* /usr/local/bin/
+	#sudo cp release/share/applications/wsjtx.desktop /usr/share/applications/
+	#sudo cp release/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		#reset swap size to default
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Resetting swap size to default"
+			#increase swap size
+			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+}
+
+VERSION(){
+    if [[ $(whereis none | grep bin) ]];then
+        CURRENT=fix
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//')
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

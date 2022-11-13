@@ -1,0 +1,64 @@
+BAPP=4
+ID=PI-RTC
+Name=PI-RTC
+Comment='pi Real Time Clock tools'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='un tested'
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC} || return
+
+    #!/bin/bash
+    sudo modprobe i2c-bcm2708
+    sudo modprobe i2c-dev 
+    sudo modprobe rtc-ds1307
+
+    until [ "$loop" = "8" ]; do
+        action=$(yad --form --center --entry --title="Pi-RTC" --button="gtk-ok" --text="Select your RTC chip" \
+        --entry-text "ds1307" "pcf8523" "ds3231" "exit")
+        
+        ret=$?
+        [[ $ret -ge 1 ]] && exit 0
+        case $action in
+            ds1*) clear ; rtc_type="dtoverlay=i2c-rtc,ds1307" && break ;;
+            pcf*) clear ; rtc_type="dtoverlay=i2c-rtc,pcf8523" && break;;
+            ds3*) clear ; rtc_type="dtoverlay=i2c-rtc,ds3231" && break;;
+            ex*) clear ; break ;; #Load EM1COM Package
+        esac
+    
+    done
+    
+    sudo echo $rtc_type | sudo tee -a /boot/config.txt
+    sudo apt-get -y remove fake-hwclock
+    sudo update-rc.d -f fake-hwclock remove
+    sudo systemctl disable fake-hwclock
+    sudo i2cdetect -y 1
+
+    #sed /lib/udev/hwclock-set #uncomment stuff
+    #/sbin/hwclock --rtc=$dev --systz --badyear
+    #/sbin/hwclock --rtc=$dev --systz
+    #should reboot
+    #sudo hwclock -r
+    #sudo hwclock -w
+    #sudo hwclock -r
+    #sudo hwclock -s
+
+
+}
+
+VERSION(){
+    if [[ $(whereis pmon | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-deb
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Temperature Converter
+GenericName=Temperature Converter
+Comment=Utility to convert temperature
+Exec=/home/pi/bin/converttemp
+Icon=/usr/share/icons/Adwaita/22x22/actions/mark-location.png
+Terminal=false
+Type=Application
+Categories=HamRadio;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VARA FM
+GenericName=VARA FM
+Comment=VARA FM TNC emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.wine/drive_c/VARA\ FM/VARAFM.exe
+Type=Application
+StartupNotify=true
+Icon=C497_VARAFM.0
+StartupWMClass=varafm.exe
+Categories=vara

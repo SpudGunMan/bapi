@@ -1,0 +1,25 @@
+Change log for autohotspot-setup.sh
+0.74-2-yad
+added yad as the primary interface with user removed the CLI interactions add -yad to new file name.
+fixed a if else and added sudo check at start
+
+0.74-1
+added a debian to the OS detection for PiOS 64, with detection for dhcpcd incase a non PiOS version of Debian is running.
+
+0.74
+added nft table support for PiOS Bullseye
+fixed clipped country code in hostapd.conf if wpa_supplicant created on Windows
+code cleanup
+upated text and instructions 
+
+0.73
+Added indents to the child functions in the Forceswitch function.
+In dhcpcd.conf for the static Hostspot setup, moved nohooks below the interface wlan0 line
+Now only wlan0 is blocked from using wpa_supplicant.conf. Wlan1 can be used to connect to a network but will
+not give hotspot connected devices access to the internet. The pi will have wifi network access through wlan1.
+
+0.72
+Updated improved handeling of Windows special characters for updating the SSID and Password
+Fixed issue where not all added comment lines were removed from dhcpcd.conf file on uninstall
+
+0.71 First release 19 Apr 2020

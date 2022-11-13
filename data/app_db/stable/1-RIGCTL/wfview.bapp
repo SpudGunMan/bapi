@@ -1,0 +1,60 @@
+BAPP=4
+ID=WFVIEW
+Name=wfview
+Comment='icom rig controller'
+VerLocal=0
+VerRemote=0
+W3='https://wfview.org'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libopus-dev >> errors/apt.log
+    sudo apt-get -y install libeigen3-dev >> errors/apt.log
+    sudo apt-get -y install libqcustomplot1.3 || true >> errors/apt.log
+    sudo apt-get -y install libqcustomplot2.0 || true >> errors/apt.log
+
+    sudo apt-get -y install libqcustomplot-doc >> errors/apt.log
+    sudo apt-get -y install libqcustomplot-dev >> errors/apt.log
+    
+    #echo -e "INFORMATIONAL: if you see a failure on the next apt-get request its ok"
+    #E=0
+    #sudo apt-get -y install libqcustomplot1.3 || ((E=E+1))
+    #sudo apt-get -y install libqcustomplot2.0 || ((E=E+1))
+
+    cd ${BAPSRC} || return
+    rm -rf wfview
+    git clone https://gitlab.com/eliggett/wfview.git
+    cd wfview
+    mkdir build
+    cd build
+    qmake ../wfview.pro
+    make -j$BAPCORE
+
+    if [ $? -ne 0 ]; then
+        echo "Error in make step."
+        echo "wfview was not compiled."
+        echo "Please consider posting the error(s) to https://forum.wfview.org/"
+        exit -1
+    fi
+
+    sudo make install
+}
+
+VERSION(){
+
+    if [[ $(whereis wfview | grep bin) ]];then
+        CURRENT=$(wfview -v | sed 's/wfview version: //' | head -c5)
+    else
+        CURRENT=NONE
+    fi
+
+   NEWVER=$(curl --max-time 20 -s https://gitlab.com/eliggett/wfview/-/raw/master/wfview.pro | grep VERSION= | sed 's/\\//g' | sed 's/DEFINES += WFVIEW_VERSION=//' | sed 's/"//g')
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=XGPS
+GenericName=XGPS
+Comment=GPS Date Viewer
+Exec=/usr/bin/xgps
+Icon=/usr/share/icons/Adwaita/scalable/devices/thunderbolt-symbolic.svg
+Terminal=false
+Type=Application
+Categories=Utility

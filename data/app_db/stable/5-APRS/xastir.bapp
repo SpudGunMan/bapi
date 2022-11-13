@@ -1,0 +1,60 @@
+BAPP=4
+ID=XASTIR
+Name=XASTIR
+Comment='APRS Client'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE=''
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install xorg-dev >> errors/apt.log
+	sudo apt-get -y install libmotif-dev >> errors/apt.log
+	sudo apt-get -y install graphicsmagick >> errors/apt.log
+	sudo apt-get -y install gv >> errors/apt.log
+	sudo apt-get -y install libcurl4-openssl-dev >> errors/apt.log
+	sudo apt-get -y install shapelib libshp-dev >> errors/apt.log
+	sudo apt-get -y install libpcre3-dev >> errors/apt.log
+	sudo apt-get -y install libproj-dev >> errors/apt.log
+	sudo apt-get -y install libdb-dev >> errors/apt.log
+	sudo apt-get -y install python3-dev >> errors/apt.log || exit -1
+	sudo apt-get -y install libax25-dev >> errors/apt.log
+	sudo apt-get -y install libwebp-dev >> errors/apt.log
+	sudo apt-get -y install libwebp-dev >> errors/apt.log
+	sudo apt-get -y install libgraphicsmagick1-dev >> errors/apt.log
+	sudo apt-get -y install festival >> errors/apt.log
+	sudo apt-get -y install festival-dev >> errors/apt.log
+
+	#https://xastir.org/index.php/HowTo:AX.25_-_Ubuntu/Debian
+
+	cd ${BAPSRC}
+	rm -rf Xastir
+	git clone https://github.com/Xastir/Xastir.git
+
+	cd Xastir
+
+	./bootstrap.sh
+	mkdir build
+	cd build 
+	../configure
+	make -j$BAPCORE
+	sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis xastir | grep bin) ]];then
+        CURRENT=$(xastir -V | sed 's/Xastir V//;s/(.*//;/^\s*$/d')
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://github.com/Xastir/Xastir | grep Release- | head -1 | sed 's/.*Release-//;s/">//')
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,56 @@
+BAPP=4
+ID=SoundModem
+Name=QTSoundModem
+Comment='UZ7HO SoundModem'
+VerLocal=0
+VerRemote=0
+W3='http://uz7.ho.ua/packetradio.htm'
+Author='spud'
+NOTE='non functioning TODO'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install qt5-default >> errors/apt.log
+    sudo apt-get -y install libqt5serialport5 >> errors/apt.log
+    sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
+    sudo apt-get -y install libfftw3-dev >> errors/apt.log
+    sudo apt-get -y install libpulse-dev >> errors/apt.log
+
+    cd ${BAPSRC} || return
+    rm -rf qtmodem
+    mkdir qtmodem
+    cd qtmodem
+	
+	if [[ "$BAPCPU" == *"ar"* ]]; then
+        arm=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem)
+    else
+        x86=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtSoundModem)
+    fi
+
+    src=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtSMSource.zip)
+    unzip QtSMSource.zip
+    rm QtSMSource.zip
+
+    qmake
+    make
+
+    cd ..
+    if [ -f qtmodem/QtSoundModem ]; then
+        cp -r qtmodem ${HOME}
+    fi
+    
+}
+
+VERSION(){
+    if [ -f ${HOME}.qtmodem/QtSoundModem ];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

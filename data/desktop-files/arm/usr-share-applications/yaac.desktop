@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=YAAC
+GenericName=YAAC
+Comment=APRS Client
+Exec=/home/pi/YAAC/YAAC
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;

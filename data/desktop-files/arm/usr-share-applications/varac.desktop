@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=VarAC
+GenericName=VarAC
+Comment=VarAC Chat emulated with Box86/Wine
+Exec=env WINEDEBUG=-all wine /home/pi/.wine/drive_c/VarAC/VarAC.exe
+Type=Application
+StartupNotify=true
+Icon=DF53_VARA Chat.0
+StartupWMClass=VarAC.exe
+Categories=HamRadio

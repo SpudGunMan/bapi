@@ -1,0 +1,62 @@
+BAPP=4
+ID=AX25
+Name=AX25
+Comment='linux AX25 tools'
+VerLocal=0
+VerRemote=0
+W3='https://tldp.org/HOWTO/pdf/AX25-HOWTO.pdf'
+Author='spud'
+NOTE='adds telnet and linpac,uronode will auto add your call to axports'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install ax25-tools >> errors/apt.log
+	sudo apt-get -y install ax25-apps >> errors/apt.log
+  	sudo apt-get -y install libax25-dev >> errors/apt.log
+    sudo apt-get -y install libax25 >> errors/apt.log
+    sudo apt-get -y install ax25-node >> errors/apt.log
+    sudo apt-get -y install telnet >> errors/apt.log
+    sudo apt-get -y install uronode >> errors/apt.log
+    sudo apt-get -y install linpac >> errors/apt.log
+
+    sudo modprobe ax25
+    sudo modprobe mkiss
+    sudo /sbin/route add -net 44.0.0.0 netmask 255.0.0.0 dev ax0
+
+
+    #some blogs on connecting the two (direwolf and linpac) using the kernel ax.25 as the shim
+    #https://dzone.com/articles/packet-radio-ax25-direwolf-and-linpac-on-a-raspber
+    #https://www.kevinhooke.com/2015/09/12/direwolf-soundcard-packet-on-linux-with-ax25-and-linpac/
+
+    cd ${BAPSRC}
+
+    #git clone https://github.com/ThomasHabets/ax25ms
+
+    #http://k4gbb.us/docs/raspberry.html
+    #setup_script=http://k4gbb.us/docs/scripts/InstAX25.sh
+    #apps=https://web.archive.org/web/20180829165251/http://www.linux-ax25.org/pub/ax25-apps/ax25-apps-0.0.8-rc4.tar.gz
+    #tools=https://web.archive.org/web/20180829165251/http://www.linux-ax25.org/pub/ax25-tools/ax25-tools-0.0.10-rc4.tar.gz
+    #lib=https://web.archive.org/web/20180829165251/http://www.linux-ax25.org/pub/libax25/libax25-0.0.12-rc4.tar.gz
+
+
+    if [[ -z $(grep -s Winlink /etc/ax25/axports) ]];then
+        echo -e "INFORMATIONAL: AX:25 port Added: wl2k ${BAPCALL} 1200 255 7 Winlink > /etc/ax25/axports"
+        # https://godoc.org/github.com/la5nta/pat/cfg#AX25Config
+        echo "wl2k ${BAPCALL} 1200 255 7 Winlink" | sudo tee -a /etc/ax25/axports
+    fi
+}
+
+VERSION(){
+    if [[ ! -z $(grep -s Winlink /etc/ax25/axports) ]];then
+        CURRENT=0-DEB
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-DEB
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

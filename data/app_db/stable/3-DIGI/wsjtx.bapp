@@ -1,0 +1,83 @@
+BAPP=4
+ID=WSJTX
+Name=WSJT-X
+Comment='FST4, FST4W, FT4, FT8, JT4, JT9, JT65, Q65, MSK144, and WSPR'
+VerLocal=0
+VerRemote=0
+W3='https://physics.princeton.edu/pulsar/k1jt/wsjtx.html'
+Author='spud'
+NOTE='installed to /usr/local/bin \n to get better performance note .. renice -n -19 -u wsjtx'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install gfortran >> errors/apt.log
+    sudo apt-get -y install fftw3-dev >> errors/apt.log
+    sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
+    sudo apt-get -y install libtool >> errors/apt.log
+    sudo apt-get -y install texinfo >> errors/apt.log
+    sudo apt-get -y install asciidoctor >> errors/apt.log
+	sudo apt-get -y install ntp >> errors/apt.log
+
+	# Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+		#increase swap file if less than 3G memory
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Increasing Swap size for build"
+			#increase swap size
+			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+
+	cd ${BAPSRC} || return
+	rm -rf wsjtx
+	mkdir wsjtx
+	cd wsjtx
+
+	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
+	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
+
+	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	tar -xvf $FT8PKG
+	rm $FT8PKG
+	cd $FT8DIR
+	cmake -D CMAKE_INSTALL_PREFIX=$FT8DIR
+	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
+	sudo cmake --build . --target install -j$BAPCORE
+	sudo mv ${FT8DIR}/bin/* /usr/local/bin/
+	sudo cp ${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
+	sudo cp ${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+
+	# Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		#reset swap size to default
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Resetting swap size to default"
+			#increase swap size
+			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+}
+
+VERSION(){
+    if [[ $(whereis wsjtx | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
+	WSJTNEXT=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}
+

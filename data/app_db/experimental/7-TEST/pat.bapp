@@ -1,0 +1,87 @@
+BAPP=4
+ID=PAT
+Name=PAT-WINLINK
+Comment='Pat Winlink'
+VerLocal=0
+VerRemote=0
+W3='https://groups.google.com/g/pat-users'
+Author='spud'
+NOTE='installs go and pat from github source, very basic setup'
+
+#reference:
+#https://www.jeremymorgan.com/tutorials/raspberry-pi/install-go-raspberry-pi/
+#https://github.com/la5nta/pat/wiki/Building-from-source
+#https://cqdeks4td.blogspot.com/2021/11/installing-pat-open-source-winlink.html
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install telnet >> errors/apt.log
+
+	cd ${BAPSRC}
+
+	#install Go
+	if [ ! -d /usr/local/go/bin ];then
+		# install go
+		if [[ "$BAPCPU" == *"ar"* ]]; then 
+			if [ `getconf LONG_BIT` = '64' ]; then
+				wget -q https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+				sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+			else
+				#pi3
+				wget -q https://dl.google.com/go/go1.17.7.linux-armv6l.tar.gz
+				sudo tar -C /usr/local -xzf go1.17.7.linux-armv6l.tar.gz
+			fi
+		else
+			#desktop
+			sudo wget -q https://golang.org/dl/go1.17.7.linux-amd64.tar.gz
+			sudo tar -C /usr/local -xzf go1.17.7.linux-amd64.tar.gz
+		fi
+
+		PATH=$PATH:/usr/local/go/bin 
+		GOPATH=$HOME/go
+		source ~/.profile
+	fi
+
+	PATH=$PATH:/usr/local/go/bin 
+	GOPATH=$HOME/go
+	source ~/.profile
+
+	rm -rf pat
+	git clone https://github.com/la5nta/pat
+	cd pat
+	./make.bash libax25
+	./make.bash
+	sudo cp ./pat /usr/local/bin/pat
+	sudo mkdir -p /usr/share/pat
+	sudo cp -r share/* /usr/share/pat
+	sudo cp debian/pat@.service /lib/systemd/system/
+
+	sudo /usr/share/pat/ax25/install-systemd-ax25-unit.bash
+	sudo /usr/share/pat/ardopc/install-systemd-ardop-unit.bash
+	sudo /usr/share/pat/rigctld/install-systemd-rigctld-unit.bash
+
+	patcfg="${HOME}/.config/pat/config.json"
+	mkdir -p ${HOME}/.config/pat
+	cp $BAPDIR/data/pat-config.json ${HOME}/.config/pat/
+	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${MYCALL}\",/" ${patcfg}
+	#sed -i 's/enable_http\": false/enable_http\": true/' ${patcfg}
+	#sed -i 's/allow_forms\": false/allow_forms\": true/' ${patcfg}
+
+	sudo systemctl start pat@$BAPWHOAMI
+	sudo systemctl enable pat@$BAPWHOAMI
+
+}
+
+VERSION(){
+    if [[ $(whereis pat | grep bin) ]];then
+        CURRENT=$(pat version | awk '{print $2}' | sed 's/v0.//;s/.0//')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='AX25'
+    #apt-gets will be checked on app-check
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=FAQ
+Comment=Build a Pi FAQ
+Exec=xdg-open https://app.simplenote.com/publish/C3bBxN
+Icon=DIRSEDHASH/ico/logo.png
+Terminal=false
+Type=Application
+Categories=bap
+Keywords=Support
+

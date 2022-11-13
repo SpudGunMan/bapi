@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Tech Support
+Comment=Build a Pi Tech Support
+Exec=xdg-open https://groups.io/g/KM4ACK-Pi/topics
+Icon=DIRSEDHASH/ico/logo.png
+Terminal=false
+Type=Application
+Categories=bap
+Keywords=Support
+

@@ -1,0 +1,62 @@
+BAPP=4
+ID=ANTSCOPE2
+Name=AntScope2
+Comment='Antenna Scope2 Rigexpert'
+VerLocal=0
+VerRemote=0
+W3='https://rigexpert.com/antscope2-for-rasberry-pi-raspbian/'
+Author='spud'
+NOTE='installs to HOME, using static links to code from web along with git'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y qt5-qmake  >> errors/apt.log
+    sudo apt-get install -y qt5-default  >> errors/apt.log
+    sudo apt-get install -y libegl1-mesa  >> errors/apt.log
+    sudo apt-get install -y libgles2-mesa  >> errors/apt.log
+    sudo apt-get install -y libqt5serialport5-dev  >> errors/apt.log
+
+    cd ${BAPSRC}
+    rm -rf antscope
+    mkdir antscope
+    cd antscope
+
+    mv ${HOME}/AntScope ./AntScope.bak
+
+    #extra files
+    #wget --tries 2 --connect-timeout=30 https://rigexpert.com/files/software/Antscope/antscope2forlinux/AntScope2-1.2.6-ubuntu-21.10.AppImage
+    wget --tries 2 --connect-timeout=30 https://rigexpert.com/files/software/Antscope/antscope2forlinux/rigexpert-usb.rules
+    wget --tries 2 --connect-timeout=30  --no-check-certificate 'https://docs.google.com/uc?export=download&id=1RZioJJ3jzXj0XYMxHI4v89g7lIRmZ3N7' -O antscope-dat.zip
+
+    sudo cp rigexpert-usb.rules /etc/udev/rules.d/
+    sudo udevadm control --reload-rules 
+
+    git clone https://github.com/rigexpert/AntScope2 src
+    cd src
+    mkdir -p build/release/
+    mkdir -p build/release/Resources
+    unzip antscope-dat.zip -d build/release/Resources
+    cp AntScope2.ico build/release/
+    cp AntScope.png build/release/
+    
+    cd build
+    sudo qmake ../AntScope.pro
+    sudo make
+
+    mv release ${HOME}/AntScope
+}
+
+VERSION(){
+    if [[ $(whereis AntScope2 | grep bin) ]];then
+        CURRENT=$(AntScope2 --version)
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

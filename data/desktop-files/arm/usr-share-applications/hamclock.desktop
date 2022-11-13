@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=HamClock
+GenericName=Ham Clock
+Comment=Ham Clock
+Exec=hamclock
+Icon=/usr/share/icons/Adwaita/scalable/apps/preferences-system-time-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;

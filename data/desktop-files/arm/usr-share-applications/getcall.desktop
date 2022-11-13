@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Call Sign Lookup
+GenericName=Call sign lookup utility
+Comment=Call sign lookup utility
+Exec=/home/pi/bin/getcall
+Icon=/usr/share/icons/Adwaita/scalable/apps/user-info-symbolic.svg
+Terminal=false
+Type=Application
+Categories=HamRadio;

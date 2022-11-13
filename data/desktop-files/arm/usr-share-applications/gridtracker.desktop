@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=GridTracker
+Comment=GridTracker
+GenericName=GridTracker, a WSJT-X Companion
+Exec=/home/pi/GridTracker/GridTracker --disable-accelerated-2d-canvas --num-raster-threads=2
+Icon=/home/pi/GridTracker/gridtracker.png
+Path=/home/pi/GridTracker
+Type=Application
+Encoding=UTF-8
+Terminal=false
+Categories=HamRadio;
