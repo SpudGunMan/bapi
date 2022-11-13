@@ -17,7 +17,7 @@ A major fork of this build changes the architecture into a .bapp file for each a
 
 **What this is:** gentoo-esk installer for ham development code applications
 
-**What this isnt:** perfect, its bash and yad following developers make instructions all over the internet, it isnt the KM4ACK project its more for, your development and time saving. It wont promise the apps are working or perfect. Afterall this is all live developemnt code on linux, you will need to know a little till this project grows or stays where its at and you grow! :) or just ignore it all! either way I will use it till sometnhing else better comes along!
+**What this isn't:** perfect, its bash and yad following developers make instructions all over the internet, it isn't the KM4ACK project its more for, your development and time saving. It wont promise the apps are working or perfect. After-all this is all live development code on linux, you will need to know a little till this project grows or stays where its at and you grow! :) or just ignore it all! either way I will use it till something else better comes along!
 
 ## Platforms Specifically Tested
 In theory any Debian platform will work, however the only tested/customized platforms so far. but if you still have python2 as a functioning system or using a distro with python2 .. its getting too old man..
