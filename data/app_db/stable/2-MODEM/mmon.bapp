@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3=''
 Author='spud'
-NOTE='git clone no good version details found yet'
+NOTE=''
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"

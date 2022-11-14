@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3='http://uz7.ho.ua/packetradio.htm'
 Author='spud'
-NOTE='non functioning TODO'
+NOTE=''
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -42,8 +42,8 @@ INSTALL(){
 }
 
 VERSION(){
-    if [ -f ${HOME}.qtmodem/QtSoundModem ];then
-        CURRENT=unknown
+    if [ -f ${HOME}/qtmodem/QtSoundModem ];then
+        CURRENT=0-web
     else
         CURRENT=NONE
     fi

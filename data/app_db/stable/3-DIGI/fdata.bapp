@@ -14,7 +14,7 @@ INSTALL(){
     if [[ $(whereis npx | grep bin) ]];then
         echo -e "INFORMATIONAL: found npx"
     else
-        curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
         sudo apt-get -y install nodejs >> errors/apt.log
         sudo npm install -g n >> errors/apt.log
         sudo n stable >> errors/apt.log
@@ -47,16 +47,16 @@ INSTALL(){
         npm i
 
         cd ${BAPSRC}/FreeDATA
+        echo -e "#!/bin/bash" > run_freedata.sh
+        echo -e "cd $HOME/FreeDATA" >> run_freedata.sh
+        echo -e "x-terminal-emulator -e tnc/daemon.py" >> run_freedata.sh
+        echo -e "cd gui/" >> run_freedata.sh
+        echo -e "npx electron main.js\n" >> run_freedata.sh
+        chmod +x run_freedata.sh
+
+        cd ${BAPSRC}
         mv FreeDATA $HOME/FreeDATA
-        
-        echo -e "#!/bin/bash" > freedata
-        echo -e "cd $HOME/FreeDATA" >> freedata
-        echo -e "x-terminal-emulator -e tnc/daemon.py" >> freedata
-        echo -e "cd gui/" >> freedata
-        echo -e "npx electron main.js\n" >> freedata
-        chmod +x freedata
-        sudo cp freedata /usr/local/bin/freedata
-        cp freedata ${HOME}/FreeDATA/run_freedata.sh
+        sudo ln -s $HOME/FreeDATA/run_freedata.sh /usr/local/bin/freedata
     fi
 
 }

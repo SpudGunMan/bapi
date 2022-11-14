@@ -33,7 +33,7 @@ INSTALL(){
         this is a megadownload hosting failsafe, you can also just ignore this. "
 
         ./install-wine.sh
-        echo -e "INFORMATIONAL: try run again if not clean exit in apt-get messages"
+        echo -e "INFORMATIONAL: try run again, if not clean exit."
         yad --title="bAPi - vara installer" --center --button="OK" \
         --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
     fi
