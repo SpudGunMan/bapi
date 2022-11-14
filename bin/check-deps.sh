@@ -20,7 +20,7 @@ for Job in $JOBLIST; do
 
 	#if missing handle
     if [ ! -z "$NEEDED" ];then
-		DEP_BASE_ISSUES=$(egrep -e "$NEEDED" data/base-apps.bap)
+		DEP_BASE_ISSUES=$(egrep -e "ID=$NEEDED" data/base-apps.bap)
 		echo -e "INFORMATIONAL: Required: $NEEDED"
 
 		for MISSING_BASE in $DEP_BASE_ISSUES;do
