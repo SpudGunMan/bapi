@@ -18,12 +18,13 @@ INSTALL(){
     git clone https://www.github.com/wb2osz/direwolf
     cd direwolf
 
-    action=$(yad --center --title "Question" --image "dialog-question" --button="yes:0" --button="no:2" --text "Use dev branch? (recomend: stable or no)")
+    action=$(yad --center --title "Question which github branch" --image "dialog-question" --button="dev:0" --button="stable:2" --text "Use direwolf git, dev branch? (recomend: stable)")
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
         git branch -r
         git checkout dev
+        git pull
     fi
 
     mkdir build

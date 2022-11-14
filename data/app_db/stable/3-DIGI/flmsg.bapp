@@ -90,7 +90,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis flmsg | grep bin) ]];then
+    if [[ $(whereis flmsg 2>/dev/null | grep bin) ]];then
         CURRENT=$(flmsg --version | sed 's/Version: //')
     else
         CURRENT=NONE

@@ -53,7 +53,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis ardopc64 | grep bin) ]];then
-        CURRENT=$(ardopc64 --help | grep Version | sed 's/ardopc Version //')
+        CURRENT=$(ardopc64 --help 2>/dev/null | grep Version | sed 's/ardopc Version //')
     elif [[ $(whereis piardopc | grep bin) ]];then
         CURRENT=$(piardopc --help | grep Version | sed 's/ardopc Version //')
 	else

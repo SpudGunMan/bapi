@@ -85,7 +85,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis fldigi | grep bin) ]];then
-        CURRENT=$(fldigi --version | grep fldigi | sed 's/fldigi //')
+        CURRENT=$(fldigi --version 2>/dev/null | grep fldigi | sed 's/fldigi //')
     else
         CURRENT=NONE
     fi

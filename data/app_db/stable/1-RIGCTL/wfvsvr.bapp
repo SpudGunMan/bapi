@@ -40,7 +40,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wfserver | grep bin) ]];then
-        CURRENT=$(wfserver -v | sed 's/wfserver version: //' | head -c5)
+        CURRENT=$(wfserver -v 2>/dev/null | sed 's/wfserver version: //' | head -c5)
     else
         CURRENT=NONE
     fi

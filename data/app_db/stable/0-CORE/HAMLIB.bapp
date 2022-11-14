@@ -83,7 +83,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis rigctld | grep bin) ]];then
-        CURRENT=$(rigctl --version | sed 's/rigctl Hamlib //' | cut -d " " -f1)
+        CURRENT=$(rigctl --version 2>/dev/null | sed 's/rigctl Hamlib //' | cut -d " " -f1)
         #CURRENT=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest| jq -r '.tag_name')
     else
         CURRENT=NONE

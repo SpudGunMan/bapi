@@ -45,7 +45,7 @@ INSTALL(){
 VERSION(){
 
     if [[ $(whereis wfview | grep bin) ]];then
-        CURRENT=$(wfview -v | sed 's/wfview version: //' | head -c5)
+        CURRENT=$(wfview -v 2>/dev/null | sed 's/wfview version: //' | head -c5)
     else
         CURRENT=NONE
     fi

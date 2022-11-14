@@ -90,7 +90,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis flamp | grep bin) ]];then
-        CURRENT=$(flamp --version | sed 's/Version: //')
+        CURRENT=$(flamp --version 2>/dev/null | sed 's/Version: //')
     else
         CURRENT=NONE
     fi

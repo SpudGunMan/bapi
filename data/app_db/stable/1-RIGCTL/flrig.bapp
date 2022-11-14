@@ -87,7 +87,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis flrig | grep bin) ]];then
-        CURRENT=$(flrig --version | sed 's/Version: //')
+        CURRENT=$(flrig --version 2>/dev/null | sed 's/Version: //')
     else
         CURRENT=NONE
     fi
