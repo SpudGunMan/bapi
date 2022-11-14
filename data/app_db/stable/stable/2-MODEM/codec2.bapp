@@ -1,0 +1,39 @@
+BAPP=4
+ID=CODEC2
+Name=CODEC2
+Comment='low bit rate speech codec'
+VerLocal=0
+VerRemote=0
+W3='https://freedv.org'
+Author='spud'
+NOTE='core libs for CODEC2 project'
+
+INSTALL(){
+    #sudo apt-get sox
+
+    cd ${BAPSRC}
+    rm -rf codec2
+    git clone https://github.com/drowe67/codec2.git
+    cd codec2
+    mkdir build_linux
+    cd build_linux
+    cmake ..
+    make
+    
+    sudo make install
+    sudo ldconfig
+}
+
+VERSION(){
+    if [ -f /usr/local/include/codec2/version.h ];then
+        CURRENT=$(cat /usr/local/include/codec2/version.h | grep "VERSION \"" | awk '{ print $3 }' | sed 's/\"//'g)
+	else
+		CURRENT=NONE
+    fi
+	NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

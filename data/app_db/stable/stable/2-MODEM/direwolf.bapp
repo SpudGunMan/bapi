@@ -1,0 +1,62 @@
+BAPP=4
+ID=DIREWOLF
+Name=direwolf
+Comment='soundcard AX.25 modem/TNC and APRS'
+VerLocal=0
+VerRemote=0
+W3='https://packet-radio.net/direwolf/'
+Author='spud'
+NOTE='you can choose to use dev or main branch'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install avahi-daemon >> errors/apt.log
+
+	cd ${BAPSRC}
+    rm -rf direwolf
+
+    git clone https://www.github.com/wb2osz/direwolf
+    cd direwolf
+
+    action=$(yad --center --title "Question which github branch" --image "dialog-question" --button="dev:0" --button="stable:2" --text "Use direwolf git, dev branch? (recomend: stable)")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+        git branch -r
+        git checkout dev
+        git pull
+    fi
+
+    mkdir build
+    cd build
+
+    cmake ..
+    make -j 4
+    sudo make install
+    make install-conf
+
+    sed -i "s/N0CALL/${BAPCALL}/" "${HOME}/direwolf.conf"
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 2 localhost:4532' ${HOME}/direwolf.conf
+}
+
+VERSION(){
+    if [[ $(whereis direwolf | grep bin) ]];then
+        CURRENT_TMP=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
+        if [[ "$CURRENT_TMP" == *"DEVELOPMENT"* ]]; then
+            CURRENT=$(echo $CURRENT_TMP | sed 's/Dire Wolf DEVELOPMENT version //' )
+        else
+            CURRENT=$(direwolf -S -t 0 | head -1 | sed 's/Dire\ Wolf\ version\ //')
+        fi
+    else
+        CURRENT=NONE
+    fi
+
+    wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
+    NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

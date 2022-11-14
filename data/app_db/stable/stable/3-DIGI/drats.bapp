@@ -1,0 +1,62 @@
+BAPP=4
+ID=DRATS
+Name=D-RATS
+Comment='icom DSTAR D-RATS software'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/ham-radio-software/D-Rats'
+Author='spud'
+NOTE='git clone no good version details found yet \n this will install python3 as well as dev kit'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install python3-pip >> errors/apt.log
+	sudo apt-get -y install python3-dev >> errors/apt.log
+
+	sudo apt-get -y install python-glade2 >> errors/apt.log
+	sudo apt-get -y install python3-libxml2 >> errors/apt.log
+	sudo apt-get -y install python3-libxslt1 >> errors/apt.log
+	sudo apt-get -y install python3-lxml >> errors/apt.log
+	sudo apt-get -y install python3-feedparser >> errors/apt.log
+	sudo apt-get -y install python3-gtk2 >> errors/apt.log
+	sudo apt-get -y install python3-suds >> errors/apt.log
+
+	pip install Pillow
+	pip install geopy
+	pip install pycairo
+	pip install PyGObject
+	pip install pyserial
+	pip install simplejson
+	pip install feedparser
+	pip install libxml2
+	pip install flask
+	pip install gevent
+	pip install gevent-socketio
+	pip install greenlet
+
+ 	if [ -f ${HOME}/D-Rats/d-rats.py ] ; then
+ 		echo "updating D-rats"
+ 		cd ${HOME}/D-Rats/
+ 		git pull
+ 	else
+ 		echo "installing D-rats"
+ 		cd ${HOME}/
+ 		git clone https://github.com/ham-radio-software/D-Rats
+ 	fi
+}
+
+VERSION(){
+    if [[ $(whereis drats | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
+
+
