@@ -10,7 +10,7 @@ NOTE=''
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install qt5-default >> errors/apt.log
+    #sudo apt-get -y install qt5-default >> errors/apt.log
     sudo apt-get -y install libqt5serialport5 >> errors/apt.log
     sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
     sudo apt-get -y install libfftw3-dev >> errors/apt.log

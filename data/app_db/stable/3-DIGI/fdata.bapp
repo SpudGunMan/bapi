@@ -41,22 +41,20 @@ INSTALL(){
         cd ${HOME}/FreeDATA
         git pull
     else
+        cd ${HOME}/FreeDATA
         git clone https://github.com/DJ2LS/FreeDATA.git
-        cd FreeDATA/gui
+        cd gui
 
         npm i
 
-        cd ${BAPSRC}/FreeDATA
+        cd ..
         echo -e "#!/bin/bash" > run_freedata.sh
         echo -e "cd $HOME/FreeDATA" >> run_freedata.sh
         echo -e "x-terminal-emulator -e tnc/daemon.py" >> run_freedata.sh
         echo -e "cd gui/" >> run_freedata.sh
         echo -e "npx electron main.js\n" >> run_freedata.sh
         chmod +x run_freedata.sh
-
-        cd ${BAPSRC}
-        mv FreeDATA $HOME/FreeDATA
-        sudo ln -s $HOME/FreeDATA/run_freedata.sh /usr/local/bin/freedata
+        sudo ln -s run_freedata.sh /usr/local/bin/freedata
     fi
 
 }
