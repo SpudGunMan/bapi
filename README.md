@@ -1,9 +1,12 @@
 # bAPi / Build-a-Pi mark 2
 
 **PLEASE NOTE EARLY DEV RC1**
-this is a early dev:demo for feedback: no .desktop files yet items in test need installing but should build into bap-source broken I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
+this is a early dev:demo for feedback: 
+
+- no .desktop files yet items are buildig and most install, but no menu or icons last item to do and all..
 
 PI3 setting cores to 2 for default, without cooling locks up - with cooling 3 or 4 seems ok.
+- I havent tracked more file:bin/set-enviroment.sh:line:86 has the setting to change
 
 ## Description
 
