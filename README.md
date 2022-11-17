@@ -1,9 +1,9 @@
-# Codename bAPi mark 2 DEV:RC1
+# bAPi / Build-a-Pi mark 2
 
-**PLEASE NOTE DEV RC1**
-this is a early dev:demo for feedback: no .desktop files yet working on stability etc..
+**PLEASE NOTE EARLY DEV RC1**
+this is a early dev:demo for feedback: no .desktop files yet items in test need installing but should build into bap-source broken I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
 
-pi3 set to 2 cores file:bin/set-enviroment.sh:line:86 has the setting to change if you dont have active cooling the pi3 will lock up for me at 3core used
+PI3 setting cores to 2 for default, without cooling locks up - with cooling 3 or 4 seems ok.
 
 ## Description
 
@@ -15,9 +15,9 @@ Allowing you to get up and running fast with supported hardware for ham radio. C
 
 A major fork of this build changes the architecture into a .bapp file for each app. The menu is just a static terminal showing the data in the .bapp app files. All apps in the stable appear to load cross platform.
 
-**What this is:** gentoo-esk installer for ham development code applications
+**What this is:** AUR platform knock off -  becayuse DUR never did? installer for ham development code applications
 
-**What this isn't:** perfect, its bash and yad following developers make instructions all over the internet, it isn't the KM4ACK project its more for, your development and time saving. It wont promise the apps are working or perfect. After-all this is all live development code on linux, you will need to know a little till this project grows or stays where its at and you grow! :) or just ignore it all! either way I will use it till something else better comes along!
+**What this isnt:** perfect, its bash and yad following developers make instructions all over the internet It wont promise the apps are working or perfect. Afterall this is all live developemnt code on linux.
 
 ## Platforms Specifically Tested
 In theory any Debian platform will work, however the only tested/customized platforms so far. but if you still have python2 as a functioning system or using a distro with python2 .. its getting too old man..
@@ -82,4 +82,3 @@ Wine and Box86 script work, https://github.com/WheezyE/Winelink/
   - publish to readme.md?
 - add the backup to know ver and cpu
 - add uninstaller / app remover
-
