@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------
 # checks job files for any missed required apps to also be added
 # ------------------------------------------------------------------
-SH_VERSION=0.8.9a
+SH_VERSION=1.0.0
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: check-deps.sh"; fi
 if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
