@@ -65,7 +65,8 @@ INSTALL(){
     cd ..
 
     ### bqp-config
-
+    # sudo setcap "CAP_NET_ADMIN=ep CAP_NET_RAW=ep CAP_NET_BIND_SERVICE=ep" linbpq
+    
     wget http://www.prinmath.com/ham/bpq-config
     chmod a+x bpq-config
 
