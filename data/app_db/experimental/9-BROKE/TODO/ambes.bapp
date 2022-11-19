@@ -15,16 +15,8 @@ INSTALL(){
     rm -rf ambeserver-install
     git clone https://github.com/nwdigitalradio/ambeserver-install
     cd ambeserver-install
-
-    ./install.sh
-
-    systemctl stop ambeserver@ThumbDV
-
-    cd ambeserver-install/usr/local/src/AMBEserver
-    gcc -O2 -march=native -mtune=native -o AMBEserver AMBEserver.c
-    cp AMBEserver /usr/local/sbin
-
-    systemctl restart ambeserver@ThumbDV
+    sudo chmod +x install.sh
+    sudo ./install.sh
 
     #git clone https://github.com/marrold/AMBEServer
     #cd AMBEServer
