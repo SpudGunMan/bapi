@@ -13,20 +13,20 @@ echo "#	Checking for Dependcies "
 echo "###################################"
 
 for Job in $JOBLIST; do  
-    #check depends of from .bapp files get $NEEDED
+    #check depends of from .bapp files get NEEDED
     source "${Job}"
 	[[ $(type -t DEPENDS) == function ]] && DEPENDS
     echo -e "INFORMATIONAL: Processing: $Job"
 
 	#if missing handle
     if [ ! -z "$NEEDED" ];then
-		DEP_BASE_ISSUES=$(egrep -e "ID=$NEEDED" data/base-apps.bap)
+		DEP_BASE_ISSUES=$(egrep -e $NEEDED data/base-apps.bap)
 		echo -e "INFORMATIONAL: Required: $NEEDED"
 
 		for MISSING_BASE in $DEP_BASE_ISSUES;do
 			echo -e "INFORMATIONAL: Checking problems with choices, there is always with mine.."
 			### Check deps!
-			CURRENTLY_REQ=$(grep -ie "$MISSING_BASE" $APP_ID_FILE) || echo ''
+			CURRENTLY_REQ=$(grep -ie $MISSING_BASE $APP_ID_FILE) || echo ''
 			ADD_DEP_LIST=$(grep -ie $MISSING_BASE $BAPAPPS_LIST_FILE) || echo ''
 			if [ -f $FOUND_APPS_FILE ];then FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || echo '' ; fi
 
@@ -71,4 +71,3 @@ for Job in $JOBLIST; do
     fi
 done
 exit 0
-
