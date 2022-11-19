@@ -220,6 +220,7 @@ source ./data/build-utility.bap
 PULSE_SOUND_VIRT_ADD
 SET_BAP_WALLPAPER
 SET_DIALUP_USER
+VNC_PERF
 
 #####################################
 # Developent Enviroment setup 
