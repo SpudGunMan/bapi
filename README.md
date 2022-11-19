@@ -77,8 +77,9 @@ Have an app not working? or want to add an application? check out [contributing]
 
 This project wouldn't be anything without Jason Oleham KM4ACK go check him out on [youtube!](https://www.youtube.com/c/KM4ACK) who this project is a direct spawn from. Special thanks to the beta testers KM4ACK and K3OGG, K4OAM
 
-Wine and Box86 script work, https://github.com/WheezyE/Winelink/, Eric Wiessner KI7POL
-Autohotspot script work, from RaspberryConnect.com, Graeme Richards ZL2GZ
+Wine and Box86 work, from [Winelink](https://github.com/WheezyE/Winelink/), Eric Wiessner KI7POL
+
+Autohotspot script work, from [RaspberryConnect.com](https://www.raspberryconnect.com), Graeme Richards ZL2GZ
 
 ## TO DO and junk
 
