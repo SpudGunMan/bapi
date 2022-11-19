@@ -134,7 +134,7 @@ if [ "$BAPWHOAMI" = 'root' ]; then
 	exit 1
 else
     echo -e "INFORMATIONAL: Enter your password for sudo if prompted"
-    sudo cp LICENSE.md /dev/null
+    sudo cp LICENSE /dev/null || echo -e "License file missing..."
 fi
 
 #####################################

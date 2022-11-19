@@ -25,6 +25,6 @@ if [ "$argz" == "return" ]; then
     --text "Developer Notes and Support for: $id \n $about \n For Support Please see: $w3 \n bapp provided by $dev")
 else
     echo -e "\n John 3:16 \n"
-    cat LICENSE.md
+    echo -e "Copyright (c) [2022] [Kelly R Keeton K7MHI]\n"
 fi
 exit 0
