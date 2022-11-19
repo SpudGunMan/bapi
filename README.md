@@ -1,11 +1,12 @@
-# Codename bAPi mark 2 DEV  PRIVATE
-
-This is the private dev area, just has more agile code
+# Codename bAPi mark 2
 
 **PLEASE NOTE DEV RC1**
-this is a early dev:demo for feedback: no .desktop files yet items in test need installing but should build into bap-source broken I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
+this is a early dev:demo for feedback: 
+- no .desktop files yet, but should build and likley build install as well 
 
-PI3 setting cores to 2 for default, without cooling locks up - with cooling 3 or 4 seems ok.
+I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
+- PI3 setting cores to 2 for default, without active cooling locks up 
+  - with cooling 3 or 4 seems ok.
 
 ## Description
 
