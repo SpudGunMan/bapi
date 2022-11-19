@@ -1,0 +1,39 @@
+BAPP=4
+ID=UIVIEW32
+Name=UI-View32
+Comment='APRS Client from windows'
+VerLocal=0
+VerRemote=0
+W3='http://www.ui-view.net'
+Author='spud'
+NOTE='https://www.ckarc.ca/QST/index.php?topic=320.0;wap2'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    #filename=$(curl -s http://www.ui-view.net/ | grep -m1 uisfx )
+    wget --tries 2 --connect-timeout=60 http://www.ui-view.net/uiview/uisfx239.exe
+
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir -p ${HOME}/.wine/drive_c/uiview32
+        cp *.exe ${HOME}/.wine/drive_c/uiview32
+    fi
+
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/uiview32/uisfx239.exe
+    
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/uiview32 ];then
+        CURRENT=2.3.9
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://www.byonics.com/downloads/ | grep -m1 TinyTrak3_Config_ | head -c 55 | sed 's/<tr><td data-sort="//' | cut -f1 -d "\"" | sed 's/tinytrak3_config_v//' | sed 's/.zip//')
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}
