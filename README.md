@@ -1,12 +1,12 @@
-# bAPi / Build-a-Pi mark 2
+# Codename bAPi mark 2
 
-**PLEASE NOTE EARLY DEV RC1**
+**PLEASE NOTE DEV RC1**
 this is a early dev:demo for feedback: 
+- no .desktop files yet, but should build and likley build install as well 
 
-- no .desktop files yet items are buildig and most install, but no menu or icons last item to do and all..
-
-PI3 setting cores to 2 for default, without cooling locks up - with cooling 3 or 4 seems ok.
-- I havent tracked more file:bin/set-enviroment.sh:line:86 has the setting to change
+I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
+- PI3 setting cores to 2 for default, without active cooling locks up 
+  - with cooling 3 or 4 seems ok.
 
 ## Description
 
@@ -50,14 +50,16 @@ These are the tools needed to build most of the projects here, option given if y
 ### Additional Install Guidance
 If long term stability is your goal - recommendations are to NOT update the OS, or the packages in this project after stable functionality is reached. This creates your own distribution which you can replicate or multiply. Helpfull for EMCOM work. Build an external hard disk image with this tool to boot a spare or work laptop from!
 
-If you have issues make sure your running the newest code, and OS! `git pull`, and `sudo apt-get update -y && sudo apt-get upgrade -y` if you really get stuck you can start over `mv $HOME/bapi $HOME/bapi.old` and git clone again. Or try a `git reset --hard` followed by a `git pull`. To try a different branch, you can get fancy (warning: unless you know how to break it and fix it..) with `git checkout beta`
+If you have issues make sure your running the newest code, and OS! `git pull`, and `sudo apt-get update -y && sudo apt-get upgrade -y` if you really get stuck you can start over `mv $HOME/bapi $HOME/bapi.old` and git clone again. Or try a `git reset --hard` followed by a `git pull`. 
+
+To try the beta code, get fancy with `git checkout beta`
 
 Recommended to flash your SD-Card with the official [Raspberry Flash Tool](https://www.raspberrypi.com/software/)
 To enable VNC or SSH on PI's [Enable the VNC service](https://www.realvnc.com/en/blog/how-to-setup-vnc-connect-raspberry-pi/)
 
 ## Issue Reporting - Feature Requests
 
-groups.io reflector [here](https://groups.io/g/bapi) Please report issues & feature requests [here](https://github.com/spudgunman/bapi/issues) please keep in mind the scope of this project is the core menu (API) and calling the (.bapp) files which are themselves just ported from the developer, and fitted here into a easy to use format. 
+groups.io reflector [here](https://groups.io/g/bapi) Please report issues & feature requests [here](https://github.com/spudgunman/bapi/issues) please keep in mind the scope of this project is the core menu (API) and calling the (.bapp) files which are themselves just ported from the developer, and fitted here into a easy to use format. The more details the better check the `errors/` for logs.
 
 Issues with developental code branches is problematic when operating on early release or development code. Which we are directly getting, the latest and greatest. 
 
@@ -69,13 +71,14 @@ Have an app not working? or want to add an application? check out [contributing]
 
 [groups.io](https://groups.io/g/bapi) you can also try `touch .debug` for more details which may help or make a mess.
 
-`${HOME}/.bap-source-files` is where all the source files and build work takes place. This is just a little menu to save you time!
+`~/.bap-source-files` is where all the source files and build work takes place. This is just a little menu to save you time!
 
 # Recognition
 
-This project wouldn't be anything without Jason A Oleham KM4ACK go check him out on [youtube!](https://www.youtube.com/c/KM4ACK) who this project is a direct spawn from. Special thanks to the beta testers KM4ACK and K3OGG, K4OAM
+This project wouldn't be anything without Jason Oleham KM4ACK go check him out on [youtube!](https://www.youtube.com/c/KM4ACK) who this project is a direct spawn from. Special thanks to the beta testers KM4ACK and K3OGG, K4OAM
 
-Wine and Box86 script work, https://github.com/WheezyE/Winelink/
+Wine and Box86 script work, https://github.com/WheezyE/Winelink/, Eric Wiessner KI7POL
+Autohotspot script work, from RaspberryConnect.com, Graeme Richards ZL2GZ
 
 ## TO DO and junk
 
@@ -85,3 +88,4 @@ Wine and Box86 script work, https://github.com/WheezyE/Winelink/
   - publish to readme.md?
 - add the backup to know ver and cpu
 - add uninstaller / app remover
+
