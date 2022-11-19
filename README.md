@@ -59,7 +59,7 @@ To enable VNC or SSH on PI's [Enable the VNC service](https://www.realvnc.com/en
 
 ## Issue Reporting - Feature Requests
 
-groups.io reflector [here](https://groups.io/g/bapi) Please report issues & feature requests [here](https://github.com/spudgunman/bapi/issues) please keep in mind the scope of this project is the core menu (API) and calling the (.bapp) files which are themselves just ported from the developer, and fitted here into a easy to use format. The more details the better.
+groups.io reflector [here](https://groups.io/g/bapi) Please report issues & feature requests [here](https://github.com/spudgunman/bapi/issues) please keep in mind the scope of this project is the core menu (API) and calling the (.bapp) files which are themselves just ported from the developer, and fitted here into a easy to use format. The more details the better check the `errors/` for logs.
 
 Issues with developental code branches is problematic when operating on early release or development code. Which we are directly getting, the latest and greatest. 
 
