@@ -21,7 +21,7 @@ INSTALL(){
 		fi
 		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/piQtTermTCP
 		sudo chmod +x piQtTermTCP
-		sudo mv piQtTermTCP /usr/local/bin/
+		sudo mv piQtTermTCP /usr/local/bin/QtTermTCP
 	else
 		wget http://www.cantab.net/users/john.wiseman/Downloads/QtTermTCP
 		chmod +x QtTermTCP
@@ -32,8 +32,6 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis QtTermTCP | grep bin) ]];then
-        CURRENT=0-web
-    elif [[ $(whereis piQtTermTCP | grep bin) ]];then
         CURRENT=0-web
     else
         CURRENT=NONE
