@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=D-Rats
+GenericName=D-Rats
+Comment=D-Rats for ICOM D-Star
+Exec=/bin/sh -c "$HOME/D-Rats/d-rats.py"
+Icon=D-Rats
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=D-Rats.desktop
+Comment[en_US]=D-Rats for ICOM D-Star

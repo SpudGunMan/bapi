@@ -1,0 +1,44 @@
+BAPP=4
+ID=ALARMEJT
+Name=AlarmeJT
+Comment='AlarmeJT is based on the principle of JTAlert '
+VerLocal=0
+VerRemote=0
+W3='http://alarmejt.blog.free.fr/index.php?pages/AlarmeJT-c-est-quoi'
+Author='spud'
+NOTE='cant find a copy of libwebkitgtk-1.0-0 to run the app'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo add-apt-repository universe
+    sudo apt-get -y install libwebkitgtk-1.0-0 >> errors/apt.log
+    sudo apt-get -y install libwebkitgtk-1.0 >> errors/apt.log
+    sudo apt-get -y install libwebkit2gtk-4.0-37 >> errors/apt.log
+    sudo apt-get -y install sqlite3 >> errors/apt.log
+    sudo apt-get -y install libsqlite3-dev >> errors/apt.log
+    sudo apt-get -y install libgtk-3-dev >> errors/apt.log
+    
+    cd ${BAPSRC}
+    rm -rf alarmejt
+    mkdir alarmejt-src
+    cd alarmejt-src
+    wget https://sourceforge.net/projects/alarmejt/files/latest/AlarmeJT.tar.gz
+    tar -xzf AlarmeJT.tar.gz
+    mv AlarmeJT ${HOME}/
+
+    # https://sourceforge.net/projects/alarmejt/files/Ubuntu%2014.04/AlarmeJT-0.8-UDP/AlarmeJT-0.8.1-UDP_Fullinstall.tar.gz/download
+}
+
+VERSION(){
+    if [[ $(whereis pmon | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=NONE
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

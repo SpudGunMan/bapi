@@ -1,0 +1,93 @@
+BAPP=4
+ID=BPQ32
+Name=linBPQ
+Comment='BPQ32 Node, APRS BBS and Chat Server AND bpq-config'
+VerLocal=0
+VerRemote=0
+W3='https://www.cantab.net/users/john.wiseman/Documents/InstallingLINBPQ.htm'
+Author='spud'
+NOTE='also installs http://www.prinmath.com/ham/bpq-config and BPQAPRS. Will set your call for default values on config'
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libqt5serialport5 >> errors/apt.log
+    sudo apt-get -y install libcap2-bin >> errors/apt.log
+    sudo apt-get -y install minicom >> errors/apt.log
+    sudo apt-get -y install telnet >> errors/apt.log
+    sudo apt-get -y install lsof >> errors/apt.log
+
+
+    cd ${BAPSRC} || return
+
+    rm -rf BPQ32
+    mkdir BPQ32
+    cd BPQ32
+
+    ##BPQ
+
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+		#determine if pi-64 bit and install correct dependencies.
+		if [ `getconf LONG_BIT` = '64' ]; then
+			sudo dpkg --add-architecture armhf
+			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+		fi
+		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq
+		mv pilinbpq linbpq
+	else
+		wget http://www.cantab.net/users/john.wiseman/Downloads/Beta/linbpq
+	fi
+    chmod +x linbpq
+    mkdir -p logs
+
+    wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/Beta/HTMLPages.zip
+    unzip HTMLPages.zip -d HTML && rm -f HTMLPages.zip
+
+    ###BPQ APRS
+
+    #src=http://www.cantab.net/users/john.wiseman/Downloads/QtAPRSSource.zip
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+		#determine if pi-64 bit and install correct dependencies.
+		if [ `getconf LONG_BIT` = '64' ]; then
+			sudo dpkg --add-architecture armhf
+			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+		fi
+		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/piQtBPQAPRS
+		mv piQtBPQAPRS QtBPQAPRS
+	else
+		wget http://www.cantab.net/users/john.wiseman/Downloads/QtBPQAPRS
+	fi
+    chmod +x QtBPQAPRS
+
+    mkdir -p BPQAPRS
+    cd BPQAPRS
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Documents/Samples/APRSHTML.zip
+    unzip APRSHTML.zip && rm -f APRSHTML.zip
+    wget --tries 2 --connect-timeout=60 https://www.cantab.net/users/john.wiseman/Documents/APRSWebKeys.htm
+    cd ..
+
+    ### bqp-config
+    # sudo setcap "CAP_NET_ADMIN=ep CAP_NET_RAW=ep CAP_NET_BIND_SERVICE=ep" linbpq
+    
+    wget http://www.prinmath.com/ham/bpq-config
+    chmod a+x bpq-config
+
+    mkdir -p ${HOME}/BPQ32
+    mv * ${HOME}/BPQ32/
+
+    cd ${HOME}/BPQ32
+    echo -e "USER=$MYCALL,$MYCALL,$MYCALL,,SYSOP" > ${HOME}/BPQ32/bpq32.cfg
+    echo -e "LOCATOR=NONE" >> ${HOME}/BPQ32/bpq32.cfg
+}
+
+VERSION(){
+    if [ -d ${HOME}/BPQ32 ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

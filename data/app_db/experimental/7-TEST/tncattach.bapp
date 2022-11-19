@@ -1,0 +1,33 @@
+BAPP=4
+ID=TNCAttach
+Name=TNC-Attach
+Comment='Attach KISS TNC devices as network interfaces in Linux.'
+VerLocal=0
+VerRemote=0
+W3='https://unsigned.io/ethernet-and-ip-over-packet-radio-tncs/'
+Author='spud'
+NOTE=''
+INSTALL(){
+
+    cd ${BAPSRC} || return
+
+    rm -rf tncattach
+    git clone https://github.com/markqvist/tncattach
+    cd tncattach
+    make
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis tncattach | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

@@ -189,7 +189,7 @@ until [ "$select" = "8" ]; do
         Welcome to the new and improved.. \n
             <b>Build-A-Pi mark II</b> \n
         Now with feature enhanced secret sauce! \n
-                -DEMO DEV:RC1 SEE README \n
+                -BAPI PRE-RELEASE - SEE README \n
                 -Double click app in menu for notes \n
                 -Press ESC now to exit!" \
         --entry-text $list)
@@ -220,6 +220,7 @@ source ./data/build-utility.bap
 PULSE_SOUND_VIRT_ADD
 SET_BAP_WALLPAPER
 SET_DIALUP_USER
+VNC_PERF
 
 #####################################
 # Developent Enviroment setup 

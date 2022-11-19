@@ -1,0 +1,35 @@
+BAPP=4
+ID=RBNC
+Name=RBNC
+Comment='DX Cluster Reverse Beacon'
+VerLocal=0
+VerRemote=0
+W3='https://dm3mat.darc.de/rbn/'
+Author='spud'
+NOTE='non functioning TODO'
+
+INSTALL(){
+
+	echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC}
+
+    rm -rf skcc
+    git clone https://github.com/hmatuschek/skcc
+    cd skcc
+    
+    cmake
+}
+
+VERSION(){
+    if [[ $(whereis skcc | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
