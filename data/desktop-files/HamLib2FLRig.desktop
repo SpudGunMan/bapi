@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=HamLib2flRig        
+Comment=runs rigctl with -m4 to flrig
+Exec=bash -c 'rigctl -m 4'
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;

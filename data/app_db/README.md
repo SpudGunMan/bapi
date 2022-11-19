@@ -2,7 +2,7 @@
 Please also see details on [contributing](/CONTRIBUTING.md)
 
 # Overview
-The bapp/papp files are located in the [app/](./README.md) directory. There is stable and experimental branches. The stable branch is core applications and consistently maintained packages by the core development team. These packages are expected to be functional on all supported hardware. bapp files are for classic x86 architecture and ARM(pi) hardware
+The bapp files are located in the [app/](./README.md) directory. There is stable and experimental branches. The stable branch is core applications and consistently maintained packages. These packages are expected to be functional on all supported hardware. bapp files are for classic x86 architecture and ARM(pi) hardware
 
 The experimental branch is open for inclusion of apps by the community as well as apps with less development or less attention, these apps worked at one time and could have gone stale or need more involvement to deploy due to less automation possibilities.
 
@@ -90,33 +90,15 @@ DEPENDS(){
 ```
 The files are put into the experimental location and optionally viewed to the menu at load. You should see the file processing in the startup routine checks as listed for checks, any standard output is displayed here as well for the end user and logs.
 
+# CACHE folder
+there is a link `src` in the bapi folder to `~/.bap-source-files` where you can find your way to quick debug
+
 ### Logging and error Trapping
-there is a `${HOME}/.bap-source-files src` link where you can find `ls src` your way to quick debug
+The intention is to send all error lines of critical nature into a central log location in `errors/`
 
-The intention is to send all error lines of critical nature into a central log location in `errors/` to do this we need to finish writing the code to handle it first!
-
-This also handles (hopefully) any exit error code as well?
-
-### Running AKA local-runner.sh
-This is a tool that can be used to run any given bapp file `./bin/dev-runner.sh hamlib.bapp` it is lost if you find it please pass it along. It will just bypass the menu system and run the single install with dep check and install run job.
-
-a light weight runner tool
-```
-#! /bin/bash
-# local-runner.sh
-# to do make sure to grab all the BAPARCH globals
-#
-BAPARCH="64" #override any logic or fill in missing
-BAPCORE="4"
-BAPDIST="debian"
-file=./app/core/example.bapp
-source $file
-DEPENDS
-wait
-INSTALL
-wait
-exit 0
-```
+### Running AKA single files
+This is a tool that can be used to run any given bapp file `./bin/dev-runner.sh hamlib.bapp` 
+It will just bypass the menu system and run the single install with dep check and install run job. Is this feature written yet?
 
 # GLOBALS for runtime and bapp use
 Generically speaking they are set once variables but can be manipulated just variables, damage may occur.
@@ -132,9 +114,6 @@ MyCALL | string | BAPCALL
 MyCALL | string | MYCALL
 source file collection | .bap-source-files | BAPSRC
 whoami | string | BAPWHOAMI
-
-# CACHE folder
-blah blah
 
 ## Additional tools
 Most of them are considered developer tools and should not be used without understanding where the rabbit will go.

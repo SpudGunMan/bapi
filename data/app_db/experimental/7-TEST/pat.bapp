@@ -16,6 +16,7 @@ NOTE='installs go and pat from github source, very basic setup'
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get -y install telnet >> errors/apt.log
+	sudo apt-get -y install jq >> errors/apt.log
 
 	cd ${BAPSRC}
 
@@ -69,6 +70,10 @@ INSTALL(){
 
 	sudo systemctl start pat@$BAPWHOAMI
 	sudo systemctl enable pat@$BAPWHOAMI
+
+	#setup more PAT stuff
+	#bash -c "./usr/bin/pat updateforms"
+	
 
 }
 

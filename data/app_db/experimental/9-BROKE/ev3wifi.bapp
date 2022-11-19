@@ -1,0 +1,42 @@
+BAPP=4
+ID=EV3WIFI
+Name=ev3wifi
+Comment='evolve3 wifi driver'
+VerLocal=0
+VerRemote=0
+W3='none'
+Author='spud'
+NOTE='non functioning TODO'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: installing wifi patch for evolve3 maestro ebook11"
+    cd ${BAPSRC} || return
+    rm -rf rtl8723du
+
+    # just a blocker for now
+    read -p "This is dev stuff currently you sure?"
+    sudo apt-get -y install linux-headers-$(uname -r)
+
+    git clone https://github.com/lwfinger/rtl8723du.git
+    cd rtl8723du
+    make
+    sudo make install
+
+    echo -e "INFORMATIONAL:   sudo modprobe -rv 8723du         #This unloads the module"
+    echo -e "INFORMATIONAL:   sudo modprobe -v 8723du          #This loads the module "
+}
+
+VERSION(){
+    if [[ -d "${BAPSRC}/rtl8723du" ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='EVOLPT'
+}
+#EOF
+

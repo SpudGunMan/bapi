@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=freeData
+GenericName=freeData
+Comment=freeData OpenDV
+Exec=freedata
+Icon=freeData
+Terminal=true
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=freeData.desktop
+Comment[en_US]=freeData OpenDV

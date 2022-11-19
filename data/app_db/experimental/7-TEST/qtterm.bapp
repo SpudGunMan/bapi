@@ -1,0 +1,47 @@
+BAPP=4
+ID=QtTermTCP
+Name=QtTermTCP
+Comment='multi-platform version of BPQTermTCP'
+VerLocal=0
+VerRemote=0
+W3='https://www.cantab.net/users/john.wiseman/Documents/QtTermTCP.html'
+Author='spud'
+NOTE=''
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libqt5serialport5 >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+		#determine if pi-64 bit and install correct dependencies.
+		if [ `getconf LONG_BIT` = '64' ]; then
+			sudo dpkg --add-architecture armhf
+			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
+		fi
+		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/piQtTermTCP
+		sudo chmod +x piQtTermTCP
+		sudo mv piQtTermTCP /usr/local/bin/
+	else
+		wget http://www.cantab.net/users/john.wiseman/Downloads/QtTermTCP
+		chmod +x QtTermTCP
+		sudo mv QtTermTCP /usr/local/bin/
+	fi
+
+}
+
+VERSION(){
+    if [[ $(whereis QtTermTCP | grep bin) ]];then
+        CURRENT=0-web
+    elif [[ $(whereis piQtTermTCP | grep bin) ]];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

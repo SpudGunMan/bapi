@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=wfServer
+GenericName=Radio Controller
+Comment=Control and visualize data from amateur radios
+Exec=wfserver
+Icon=wfview
+Terminal=true
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=wfserver.desktop
+Comment[en_US]=backend for Control and visualize data from amateur radios

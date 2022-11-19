@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=piardopc
+GenericName=piardopc modem
+Comment=ardopc modem used by winlink commonly
+Exec=piardopc
+Icon=piardopc
+Terminal=true
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=piardopc.desktop
+Comment[en_US]=ardopc modem used by winlink commonly

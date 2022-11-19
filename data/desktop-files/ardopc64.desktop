@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=ardopc
+GenericName=ardopc modem
+Comment=ardopc modem used by winlink commonly
+Exec=ardopc64
+Icon=wfview
+Terminal=true
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=ardopc64.desktop
+Comment[en_US]=ardopc modem used by winlink commonly

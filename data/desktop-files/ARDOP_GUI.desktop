@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=ARDOP_GUI
+GenericName=ARDOP GUI
+Comment=ardopc modem GUI
+Exec=ARDOP_GUI
+Icon=ARDOP_GUI
+Terminal=false
+Type=Application
+Categories=Network;HamRadio;
+Name[en_US]=ARDOP_GUI.desktop
+Comment[en_US]=ardopc modem GUI

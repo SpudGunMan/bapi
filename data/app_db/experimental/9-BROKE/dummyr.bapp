@@ -1,0 +1,35 @@
+BAPP=4
+ID=DUMMYR
+Name=DummyRepeater
+Comment='DummyRepeater'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='non functioning TODO'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC}
+
+    rm -rf DummyRepeater
+    git clone https://github.com/g4klx/DummyRepeater
+    cd DummyRepeater
+
+    ./configure
+    make
+}
+
+VERSION(){
+    if [[ $(whereis DummyRepeater | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
