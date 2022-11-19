@@ -1,7 +1,7 @@
 BAPP=4
 ID=AGWPE
 Name=AGWPE
-Comment='AGWPE'
+Comment='AGWPE in box:wine'
 VerLocal=0
 VerRemote=0
 W3='http://www.sv2agw.com/'
