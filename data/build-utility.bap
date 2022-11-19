@@ -3,18 +3,22 @@
 
 PULSE_SOUND_VIRT_ADD(){
     #add virtual sound card link for pulse audio
-    echo -e "INFORMATIONAL: pulse virtual sound card modification patch applied"
-    cat > /tmp/bap-pulsevsound <<EOF
+    cat > /tmp/bap-pulsevsound <<bapiEOF
 pcm.pulse {
     type pulse
+    # BAPi edit
     }
 ctl.pulse {
     type pulse
     }
-sudo chown root:root pulsevsound
-sudo mv /tmp/bap-pulsevsound /etc/asound.conf
-EOF
-rm /tmp/bap-pulsevsound
+bapiEOF
+
+    if [ ! -f /etc/asound.conf ];then
+        #grep not found edit file
+        sudo chown root:root /tmp/bap-pulsevsound
+        sudo mv /tmp/bap-pulsevsound /etc/asound.conf
+        echo -e "INFORMATIONAL: pulse virtual sound card modification patch applied"
+    fi
 }
 
 SET_DIALUP_USER(){
