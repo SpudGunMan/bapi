@@ -189,7 +189,7 @@ until [ "$select" = "8" ]; do
         Welcome to the new and improved.. \n
             <b>Build-A-Pi mark II</b> \n
         Now with feature enhanced secret sauce! \n
-                -BAPI2 DEV COPY SEE README \n
+                -BAPI PRE-RELEASE - SEE README \n
                 -Double click app in menu for notes \n
                 -Press ESC now to exit!" \
         --entry-text $list)
