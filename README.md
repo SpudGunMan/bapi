@@ -14,7 +14,7 @@ bAPi mark II, a fork of the awesome, KM4ACK Build-a-Pi project.
 
 Do you enjoy keeping on the bleeding edge of ham radio software?
 
-Allowing you to get up and running fast with supported hardware for ham radio. Choose the applications and build them gentoo style! This keeps your system as lean and mean as possible, and updated to the latest enhancements!
+Allowing you to get up and running fast with supported hardware for ham radio. Choose the [applications](data/app_db/app-db.md) and build them gentoo style! This keeps your system as lean and mean as possible, and updated to the latest enhancements!
 
 A major fork of this build changes the architecture into a .bapp file for each app. The menu is just a static terminal showing the data in the .bapp app files. All apps in the stable appear to load cross platform.
 

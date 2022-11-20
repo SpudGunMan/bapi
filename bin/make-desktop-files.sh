@@ -1,10 +1,10 @@
 #! /bin/bash
 # ------------------------------------------------------------------
-# checks job files for any missed required apps to also be added
+# install .desktop files to linux
 # ------------------------------------------------------------------
 SH_VERSION=1.0.0
 #Error and DEBUG
-if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: check-deps.sh"; fi
+if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: make-desktop-files.sh"; fi
 if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
          pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
 
