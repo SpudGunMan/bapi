@@ -10,6 +10,8 @@ I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to ch
 
 ## Description
 
+![screenshot](data/screenshot.jpg)
+
 bAPi mark II, a fork of the awesome, KM4ACK Build-a-Pi project.
 
 Do you enjoy keeping on the bleeding edge of ham radio software?
