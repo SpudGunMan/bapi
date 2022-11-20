@@ -1,0 +1,45 @@
+BAPP=4
+ID=AGWPE
+Name=AGWPE
+Comment='AGWPE in box:wine'
+VerLocal=0
+VerRemote=0
+W3='http://www.sv2agw.com/'
+Author='spud'
+NOTE='https://www.soundcardpacket.org/6AGWPrograms.aspx and https://www.soundcardpacket.org/6compat.aspx'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir ${HOME}/.wine/drive_c/agwpe
+        cd ${HOME}/.wine/drive_c/agwpe
+        mv * ${HOME}/.wine/drive_c/agwpe
+        
+        wget --tries 2 --connect-timeout=60 http://www.sv2agw.com/downloads/agwpe.zip
+        #wget --tries 2 --connect-timeout=60 http://www.sv2agw.com/downloads/AGWMonitor_new.zip
+        wget --tries 2 --connect-timeout=60 http://www.sv2agw.com/downloads/tcpip.zip
+        wget --tries 2 --connect-timeout=60 https://www.soundcardpacket.org/Programs/agwtermTcp.zip
+
+        upzip agwpe.zip && rm agwpe.zip
+        unzip agwtermTcp.zip && rm agwtermTcp.zip
+        unzip agwtermTcp.zip && rm agwtermTcp.zip
+        unzip tcpipXP.zip && rm tcpipXP.zip
+    fi
+
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/agwpe/'AGW Packet Engine.exe'
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/agwpe ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}

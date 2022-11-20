@@ -1,0 +1,46 @@
+BAPP=4
+ID=linpac
+Name=linpac
+Comment='linpac TNC AX25 terminal'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='AX25 needed'
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libncurses5-dev >> errors/apt.log
+    sudo apt-get -y install perl >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+    rm -rf linpac
+    git clone git://git.code.sf.net/p/linpac/linpac linpac
+    cd linpac
+    autoreconf --install
+    ./configure
+
+    make
+    sudo make install
+
+    #the app runs best with ax.25 kernel, w/ sudo .. you can fix this I think https://sourceforge.net/p/linpac/discussion/54078/thread/3d993182/)
+    #some blogs on connecting the two (direwolf and linpac) using the kernel ax.25 as the shim
+    #https://dzone.com/articles/packet-radio-ax25-direwolf-and-linpac-on-a-raspber
+    #https://www.kevinhooke.com/2015/09/12/direwolf-soundcard-packet-on-linux-with-ax25-and-linpac/
+    #http://www.trinityos.com/HAM/CentosDigitalModes/RPi/rpi4-setup.html
+
+}
+
+VERSION(){
+    if [[ $(whereis linpaq | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='AX25'
+    #apt-gets will be checked on app-check
+}

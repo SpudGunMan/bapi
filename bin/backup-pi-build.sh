@@ -1,5 +1,5 @@
 #!/bin/bash
-SH_VERSION=0.0.1a
+SH_VERSION=1.0.0
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: backup-pi.sh"; fi
 if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
