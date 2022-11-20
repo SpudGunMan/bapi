@@ -24,13 +24,13 @@ INSTALL(){
 
 	cp $BAPDIR/data/conky/conky-7inch ${HOME}/.conkyrc
 	sed -i "s/N0CALL/${MYCALL}/" ${HOME}/.conkyrc
-
-	chmod +x ${HOME}/bin/get-grid ${HOME}/bin/grid ${HOME}/bin/setconky
+	
 	mkdir -p ${HOME}/conky
 	cp $BAPDIR/data/conky/* ${HOME}/conky
-	sudo ln -s ${HOME}/bin/setconky /usr/local/bin/setconky
-	sudo ln -s ${HOME}/bin/grid /usr/local/bin/grid
-	sudo ln -s ${HOME}/bin/get-grid /usr/local/bin/get-grid
+	chmod +x ${HOME}/conky/get-grid ${HOME}/conky/grid ${HOME}/conky/setconky
+	sudo ln -s ${HOME}/conky/setconky /usr/local/bin/setconky
+	sudo ln -s ${HOME}/conky/grid /usr/local/bin/grid
+	sudo ln -s ${HOME}/conky/get-grid /usr/local/bin/get-grid
 
 	#ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
 }
