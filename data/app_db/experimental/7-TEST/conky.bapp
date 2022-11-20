@@ -1,0 +1,50 @@
+BAPP=4
+ID=CONKY
+Name=CONKY
+Comment='Conky Telemetry Display'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE=''
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install ruby >> errors/apt.log
+    sudo apt-get -y install conky >> errors/apt.log
+
+	sudo gem install gpsd_client
+	sudo gem install maidenhead
+
+	cd ${BAPSRC}
+
+	touch ${HOME}/Documents/mylog.txt
+	sudo touch /var/lib/misc/dnsmasq.leases
+	touch /run/user/1000/gridinfo.txt
+
+	cp $BAPDIR/data/conky/conky-7inch ${HOME}/.conkyrc
+	sed -i "s/N0CALL/${MYCALL}/" ${HOME}/.conkyrc
+	
+	mkdir -p ${HOME}/conky
+	cp $BAPDIR/data/conky/* ${HOME}/conky
+	chmod +x ${HOME}/conky/get-grid ${HOME}/conky/grid ${HOME}/conky/setconky
+	sudo ln -s ${HOME}/conky/setconky /usr/local/bin/setconky
+	sudo ln -s ${HOME}/conky/grid /usr/local/bin/grid
+	sudo ln -s ${HOME}/conky/get-grid /usr/local/bin/get-grid
+
+	#ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+}
+
+VERSION(){
+    if [[ $(whereis conky | grep bin) ]];then
+        CURRENT=$(conky --version | head -1 | awk '{ print $2 }')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-deb
+}
+
+DEPENDS(){
+    NEEDED='GPS'
+    #apt-gets will be checked on app-check
+}
