@@ -1,10 +1,8 @@
 #!/bin/bash
 
-#set conky display size &/or update call sign
-#20200123 km4ack
-#20200514 edit km4ack
+#set conky display size &/or update call sign; by km4ack
 
-MYPATH=$HOME/pi-build/conky
+MYPATH=$HOME/conky
 TEMPFILE=/run/user/1000/conky.tmp
 LOGO=$MYPATH/conky-logo.png
 
@@ -68,7 +66,6 @@ fi
 cp $TEMPFILE $HOME/.conkyrc
 
 sudo killall conky > /dev/null 2>&1
-
 conky > /dev/null 2>&1
 
 yad --form --width=420 --text-align=center --center --title="Preferences" \
