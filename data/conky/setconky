@@ -5,9 +5,9 @@
 MYPATH=$HOME/conky
 TEMPFILE=/run/user/1000/conky.tmp
 LOGO=$MYPATH/conky-logo.png
+cd $MYPATH
 
 CALL=$(cat ~/.conkyrc | grep "{color Yellow}" | sed s'/.*{alignc}//' | head -1)
-
 
 INFO=$(yad --form --width=420 --text-align=center --center --title="Preferences" \
 --image $LOGO --window-icon=$LOGO --image-on-top --separator="|" --item-separator="|" \

@@ -28,9 +28,9 @@ INSTALL(){
 	chmod +x ${HOME}/bin/get-grid ${HOME}/bin/grid ${HOME}/bin/setconky
 	mkdir -p ${HOME}/conky
 	cp $BAPDIR/data/conky/* ${HOME}/conky
-	ln -s ${HOME}/bin/setconky /usr/local/bin/setconky
-	ln -s ${HOME}/bin/grid /usr/local/bin/grid
-	ln -s ${HOME}/bin/get-grid /usr/local/bin/get-grid
+	sudo ln -s ${HOME}/bin/setconky /usr/local/bin/setconky
+	sudo ln -s ${HOME}/bin/grid /usr/local/bin/grid
+	sudo ln -s ${HOME}/bin/get-grid /usr/local/bin/get-grid
 
 	#ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
 }
