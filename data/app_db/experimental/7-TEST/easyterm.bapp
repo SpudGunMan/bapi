@@ -1,0 +1,38 @@
+BAPP=4
+ID=EasyTerm
+Name=EasyTerm
+Comment='UZ7HO EasyTerm in wine'
+VerLocal=0
+VerRemote=0
+W3='http://uz7.ho.ua/packetradio.htm'
+Author='spud'
+NOTE='work on air?'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    wget --tries 2 --connect-timeout=60 http://uz7.ho.ua/apps/easyterm49.zip
+    unzip *.zip
+    rm *.zip
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir -p ${HOME}/.wine/drive_c/easyterm
+        cp *.exe ${HOME}/.wine/drive_c/easyterm
+    fi
+
+    #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/easyterm/Term.exe 
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/tt3_config ];then
+        CURRENT=49b-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}
