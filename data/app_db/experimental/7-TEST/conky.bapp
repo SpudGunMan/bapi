@@ -32,7 +32,7 @@ INSTALL(){
 	sudo ln -s ${HOME}/conky/grid /usr/local/bin/grid
 	sudo ln -s ${HOME}/conky/get-grid /usr/local/bin/get-grid
 
-	#ln -sf ${HOME}/.local/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
+	ln -sf /usr/share/applications/conky.desktop ${HOME}/.config/autostart/conky.desktop
 }
 
 VERSION(){
