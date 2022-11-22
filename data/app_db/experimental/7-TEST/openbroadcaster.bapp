@@ -103,6 +103,6 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED='VARA'
+    NEEDED=''
     #apt-gets will be checked on app-check
 }
