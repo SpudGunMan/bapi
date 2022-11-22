@@ -88,9 +88,7 @@ INSTALL(){
     git clone https://github.com/openbroadcaster/reviews
 
     cd observer/
-    
-
-    
+    sudo bash ob.installer.sh
 }
 
 VERSION(){
@@ -103,6 +101,6 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED='VARA'
+    NEEDED=''
     #apt-gets will be checked on app-check
 }

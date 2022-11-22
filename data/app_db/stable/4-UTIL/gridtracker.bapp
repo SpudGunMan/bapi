@@ -17,9 +17,10 @@ INSTALL(){
 	mkdir gridtracker
 	cd gridtracker
 
-	arm32=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep linux-arm32 | sed 's/<a href="//' | sed 's/\"><\/a>//')
-	arm64=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep linux-arm64 | sed 's/<a href="//' | sed 's/\"><\/a>//')
-	deb=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep gridtracker_  | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	arm32=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "linux-arm32" | grep "GridTracker-" | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	arm64=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "linux-arm64" | grep "GridTracker-" | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	deb=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "_all.deb" | grep "gridtracker_" | sed 's/<a href="//' | sed 's/\"><\/a>//')
+	
 
 	# Download gridtracker binary
     if [[ "$BAPCPU" == *"ar"* ]]; then
@@ -47,7 +48,7 @@ INSTALL(){
 		wget  --quiet --connect-timeout=30 https://downloads.gridtracker.org/nwjs-downloader/v0.68.1-5/nwjs-downloader_0.68.1-1_all.deb
 		sudo dpkg -i nwjs-downloader_0.68.1-1_all.deb
 
-		#url-nwjs=$(curl -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep nwjs | sed 's/<a href="//' | sed 's/\"><\/a>//')
+		#url-nwjs=$()
 		#wget --connect-timeout=60 $url-nwjs
 
 		#if [ -f /usr/lib/nwjs/nwjs*.tar.gz ]
@@ -94,7 +95,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' |grep href |sort |uniq | grep all.deb | grep gridtracker_  | sed 's/<a href="//' | sed 's/\"><\/a>//' | grep -o 'v.*' | cut -f1 -d"-" | sed 's/v//')
+    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "_all.deb" | grep "gridtracker_" | sed 's/<a href="//' | sed 's/\"><\/a>//' | grep -o '_.*' | sed 's/_//' | sed 's/_all.deb//')
 }
 
 DEPENDS(){

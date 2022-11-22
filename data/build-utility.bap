@@ -41,8 +41,6 @@ VNC_PERF(){
                     --text="Is your Pi connected to LCD or VNC, will modify for VNC" \
                     --entry-text LCD-LEAVE-Config.txt-Alone VNC-Edit-Config.txt)
                     
-                    ret=$?
-                    [[ $ret -ge 1 ]] && exit 0
                     case $action in
                         LCD*) clear ; touch cache/LCD.bap && break ;; #Default
                         VNC*) clear ; touch cache/VNC.bap && break ;; #VNC PAtches
@@ -56,7 +54,7 @@ VNC_PERF(){
                 sudo sed -i 's/dtoverlay=vc4-kms-v3d/#BAPi_dtoverlay=vc4-kms-v3d/' /boot/config.txt
                 sudo sed -i 's/max_framebuffers=2/#BAPi_max_framebuffers=2/' /boot/config.txt
             else
-                echo -e "INFORMATIONAL: No changes"
+                echo -e "INFORMATIONAL: No changes to config.txt"
             fi
 
         fi

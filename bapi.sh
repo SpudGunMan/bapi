@@ -76,7 +76,7 @@ SETUP(){
     if [ $DEBUG -eq 1 ];then echo -e "DEBUG: bapi.sh SETUP function"; fi
     #Install YAD
     echo -e "INFORMATIONAL: apt-get update.."
-    sudo ntpd pool.ntp.org || echo -e "INFORMATIONAL: issues setting time-date"
+    sudo timedatectl set-ntp true --adjust-system-clock || echo -e "WARNING: issues setting time-date"
     sudo apt-get -y update > errors/apt.log
     if [[ $(whereis yad | grep bin) ]];then
         echo "yad found" > /dev/null
