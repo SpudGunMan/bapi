@@ -75,13 +75,13 @@ export -f YAD_INFO_F
 SETUP(){
     if [ $DEBUG -eq 1 ];then echo -e "DEBUG: bapi.sh SETUP function"; fi
     #Install YAD
-    #echo -e "INFORMATIONAL: Enter your password if prompted to elevate"
     echo -e "INFORMATIONAL: apt-get update.."
+    sudo ntpd pool.ntp.org || echo -e "INFORMATIONAL: issues setting time-date"
     sudo apt-get -y update > errors/apt.log
     if [[ $(whereis yad | grep bin) ]];then
         echo "yad found" > /dev/null
     else
-        echo -e "\n ERROR: WARNING: dependency yad, git, curl needed checking.."
+        echo -e " WARNING: dependency yad, git, curl needed checking.."
         sudo apt-get -y install git >> errors/apt.log
         sudo apt-get -y install yad >> errors/apt.log
         sudo apt-get -y install curl >> errors/apt.log
