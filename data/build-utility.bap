@@ -128,11 +128,6 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install libopenjp2-7 
     sudo apt-get -y install libopenjp2-7-dev
 
-    #Can we do without this makes a mess out of mint
-    #sudo apt-get -y install libudev-dev
-
-
-
     #set this as done so its ran once the OS will handle updates
     touch .skip-dev-apt
 }

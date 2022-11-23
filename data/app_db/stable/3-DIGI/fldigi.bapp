@@ -17,6 +17,7 @@ INSTALL(){
     sudo apt-get install -y libsndfile1-dev >> errors/apt.log
     sudo apt-get install -y libsamplerate0-dev >> errors/apt.log
     sudo apt-get install -y texinfo >> errors/apt.log
+	sudo apt-get -y install libudev-dev >> errors/apt.log
 	
 	if [[ "$BAPCPU" == *"ar"* ]]; then
 		sudo apt-get install -y libjpeg62-turbo-dev >> errors/apt.log
