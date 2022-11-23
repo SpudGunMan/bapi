@@ -6,10 +6,15 @@ VerLocal=0
 VerRemote=0
 W3='https://github.com/openbroadcaster'
 Author='spud'
-NOTE='This is a very large suite of tools, best on dedicated system'
+NOTE='This is a very large suite of tools, best on dedicated system, install logs password to cache/ob.server.log'
 
 INSTALL(){
     cd ${BAPSRC} || return
+
+    rm -rf openbrodcast
+    mkdir -p openbrodcast
+    cd openbrodcast
+
     # echo -e "\n\nINFORMATIONAL: Verbose apt-get required packages\n\n"
 
     # sudo apt-get -y install apache2 >> errors/apt.log
@@ -79,20 +84,20 @@ INSTALL(){
     # sudo pip3 install inotify >> errors/apt.log
     # sudo pip3 install boto3 >> errors/apt.log
 
-    mkdir -p openbrodcast
-    cd openbrodcast
-
     git clone https://github.com/openbroadcaster/obplayer
     git clone https://github.com/openbroadcaster/observer
     git clone https://github.com/openbroadcaster/ad-manager
     git clone https://github.com/openbroadcaster/reviews
 
     cd observer/
-    sudo bash ob.installer.sh
+    sudo bash ob.installer.sh | tee -a $(echo cache/ob.server.log)
+
+    #password autoset
+    #cd /var/www/observer/ && tools/password_change.php admin admin
 }
 
 VERSION(){
-    if [ -d ${HOME}/.wine/drive_c/tt3_config ];then
+    if [ -d /var/www/observer/ ];then
         CURRENT=0-git
     else
         CURRENT=NONE
