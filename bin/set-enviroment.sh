@@ -117,10 +117,9 @@ case "$distribution" in
         ls > /dev/null #nothing yet
         ;;
     ubuntu)
-        ls > /dev/null #nothing yet
         #consider DISTRIB_RELEASE less than 20 to say no
-        if [ $DISTRIB_CODENAME == "bionic" ];then
-            echo -e "WARNING: UNTESTED reasonably old upgrade!:" | tee -a $BAP_ERROR_LOG
+        if [ "$DISTRIB_CODENAME" == "bionic" ];then
+            echo -e "WARNING: UNTESTED reasonably old, upgrade!:" | tee -a $BAP_ERROR_LOG
         fi
         ;;
     *)

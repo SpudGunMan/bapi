@@ -63,19 +63,30 @@ VNC_PERF(){
 
 SET_BAP_WALLPAPER(){
     if [[ "$BAPCPU" == *"ar"* ]]; then
-        echo -e "INFORMATIONAL: set custom wallpaper"
-        if [ ! -f /usr/share/rpd-wallpaper/bap-wallpaper.jpg ];then
+        echo -e "INFORMATIONAL: set pi custom wallpaper"
+        if [ ! -f /usr/share/rpd-wallpaper/bap-wallpaper.jpg ]; then
             sudo cp data/bap-wallpaper.jpg /usr/share/rpd-wallpaper/
             pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
         fi
-    else
-        if [ ! -f /usr/share/rpd-wallpaper/bap-wallpaper.jpg ];then
+    fi
+    
+    if [ -d  /usr/share/backgrounds/linuxmint ]; then
+        echo -e "INFORMATIONAL: set mint custom wallpaper"
+        if [ ! -f /usr/share/rpd-wallpaper/bap-wallpaper.jpg ]; then
             echo -e "INFORMATIONAL: attempting to set custom wallpaper"
             sudo cp data/bap-wallpaper.jpg /usr/share/backgrounds/linuxmint/bap-wallpaper.jpg
             #gsettings set org.gnome.desktop.background picture-options 'scaled'
             gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/linuxmint/bap-wallpaper.jpg"
         fi
+    elif [ -d  /usr/share/backgrounds ]; then
+        echo -e "INFORMATIONAL: attempting to set custom wallpaper"
+        sudo cp data/bap-wallpaper.jpg /usr/share/backgrounds/bap-wallpaper.jpg
+        #gsettings set org.gnome.desktop.background picture-options 'scaled'
+        gsettings set org.gnome.desktop.background picture-uri "file:///usr/share/backgrounds/bap-wallpaper.jpg"
+    else
+        echo -e "INFORMATIONAL: cpuld not set the custom wallpaper"
     fi
+
 }
 
 COMMON_DEVELOPER_TOOLS_INSTALL(){
