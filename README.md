@@ -1,12 +1,13 @@
 # Codename bAPi mark 2
 
-**PLEASE NOTE DEV RC1**
+**PLEASE NOTE DEV RC2**
 this is a early dev:demo for feedback: 
-- no .desktop files yet, but should build and likley build install as well 
+- no .desktop files yet, but should build and likley build install as well
+- tested on SBC and VM hardware primarly this is dev code caution.
 
-I havent tracked at all file:bin/set-enviroment.sh:line:86 has the setting to change
-- PI3 setting cores to 2 for default, without active cooling locks up 
+PI3 setting cores to 2 for default, without active cooling locks up 
   - with cooling 3 or 4 seems ok.
+  - file:bin/set-enviroment.sh:line:86 has the setting to change
 
 ## Description
 
