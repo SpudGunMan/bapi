@@ -10,6 +10,8 @@ NOTE='pulling directly from the dev home page'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
+	sudo apt-get -y install libudev-dev
+	
 	#stop the default from installing
     sudo apt-mark hold flrig
 
