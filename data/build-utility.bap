@@ -83,12 +83,12 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     #	common core make tools
 
     #minimal
-    sudo apt-get -y install build-essential || exit -1
-    sudo apt-get -y install cmake || exit -1
-    sudo apt-get -y install autoconf || exit -1
-    sudo apt-get -y install automake || exit -1
-    sudo apt-get -y install pkg-config || exit -1
-    sudo apt-get -y install libboost-all-dev || exit -1
+    sudo apt-get -y install build-essential
+    sudo apt-get -y install cmake
+    sudo apt-get -y install autoconf
+    sudo apt-get -y install automake
+    sudo apt-get -y install pkg-config
+    sudo apt-get -y install libboost-all-dev
 
     #qt suite
     sudo apt-get -y install qtchooser 
@@ -118,9 +118,8 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install libeigen3-dev
 
     sudo apt-get -y install libfltk1.3-dev
-    sudo apt-get -y install libudev-dev
     sudo apt-get -y install libusb-1.0-0-dev
-    sudo apt-get install -y libusb-1.0-0 
+    sudo apt-get install -y libusb-1.0-0
     sudo apt-get -y install libtool
 
     sudo apt-get -y install libfftw3-dev 
@@ -128,6 +127,12 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install libv4l-dev 
     sudo apt-get -y install libopenjp2-7 
     sudo apt-get -y install libopenjp2-7-dev
+
+    #Can we do without this makes a mess out of mint
+    #sudo apt-get -y install libudev-dev
+
+
+
     #set this as done so its ran once the OS will handle updates
     touch .skip-dev-apt
 }
