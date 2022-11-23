@@ -2,16 +2,15 @@
 
 **PLEASE NOTE DEV RC2**
 this is a early dev:demo for feedback: 
-- no .desktop files yet, but should build and likley build install as well
-- tested on SBC and VM hardware primarly this is dev code caution.
-- fl-suite depends on libudev-dev which, when installed into newest mint vanessa, it will make a huge mess on physical hardware, when not first apt-get upgrade. Currently this script is not upgrading the OS.
+- no .desktop files yet, but should build and likely build install as well
+- tested on SBC and VM hardware primary this is dev code caution.
+- fl-suite depends on libudev-dev which, when installed into newest non-updated, mint Vanessa, it will make a huge mess, when not first apt-get upgrade. This script is not upgrading the OS.
 
 PI3 setting cores to 2 for default, without active cooling locks up 
   - with cooling 3 or 4 seems ok.
   - file:bin/set-enviroment.sh:line:86 has the setting to change
 
 ## Description
-
 ![screenshot](data/screenshot.jpg)
 
 bAPi mark II, a fork of the awesome, KM4ACK Build-a-Pi project.
@@ -22,9 +21,9 @@ Allowing you to get up and running fast with supported hardware for ham radio. C
 
 A major fork of this build changes the architecture into a .bapp file for each app. The menu is just a static terminal showing the data in the .bapp app files. All apps in the stable appear to load cross platform.
 
-**What this is:** AUR platform knock off -  becayuse DUR never did? installer for ham development code applications
+**What this is:** AUR platform knock off -  because DUR never did? installer for ham development code applications
 
-**What this isnt:** perfect, its bash and yad following developers make instructions all over the internet It wont promise the apps are working or perfect. Afterall this is all live developemnt code on linux.
+**What this isn't:** perfect, its bash and yad following developers make instructions all over the internet It wont promise the apps are working or perfect. After-all this is all live development code on linux.
 
 ## Platforms Specifically Tested
 In theory any Debian platform will work, however the only tested/customized platforms so far. but if you still have python2 as a functioning system or using a distro with python2 .. its getting too old man..
@@ -43,16 +42,18 @@ The project depends on yad which is a funny word for a GUI manager to give the m
 Additionally fast install profiles are new! (but not setup fully yet) Quickly deploy a common group of applications which fast installs the critical components for typical EMCOMM work so you dont need to worry.
 
 ## Install
+This script tries to keep as small of a footprint as possible, please make sure to have the newest packages installed for your 20.0.0 or greater OS, by running a `sudo apt-get upgrade`.
+
 From a local graphical session terminal window, one line install the following ..
 ***A one-liner install for copy and paste*** (use the github copy quciklink!)
 ```
 cd $HOME && git clone https://github.com/spudgunman/bapi $HOME/bapi && $HOME/bapi/bapi.sh
 ```
-***if you dont want the preloaded dev-package tools SKIP DEV INSTALLL***
+***if you don't want the preloaded dev-package tools SKIP DEV INSTALLL***
 These are the tools needed to build most of the projects here, option given if your dev tools differ. By installing flrig or hamlib you .. also install the same tools and they are basically required to use the other tools so this option is just to skip loading if you want!
 
 ### Additional Install Guidance
-If long term stability is your goal - recommendations are to NOT update the OS, or the packages in this project after stable functionality is reached. This creates your own distribution which you can replicate or multiply. Helpfull for EMCOM work. Build an external hard disk image with this tool to boot a spare or work laptop from!
+If long term stability is your goal - recommendations are to NOT update the OS, or the packages in this project after stable functionality is reached. This creates your own distribution which you can replicate or multiply. Helpful for EMCOM work. Build an external hard disk image with this tool to boot a spare or work laptop from!
 
 If you have issues make sure your running the newest code, and OS! `git pull`, and `sudo apt-get update -y && sudo apt-get upgrade -y` if you really get stuck you can start over `mv $HOME/bapi $HOME/bapi.old` and git clone again. Or try a `git reset --hard` followed by a `git pull`. 
 
@@ -65,7 +66,7 @@ To enable VNC or SSH on PI's [Enable the VNC service](https://www.realvnc.com/en
 
 groups.io reflector [here](https://groups.io/g/bapi) Please report issues & feature requests [here](https://github.com/spudgunman/bapi/issues) please keep in mind the scope of this project is the core menu (API) and calling the (.bapp) files which are themselves just ported from the developer, and fitted here into a easy to use format. The more details the better check the `errors/` for logs.
 
-Issues with developental code branches is problematic when operating on early release or development code. Which we are directly getting, the latest and greatest. 
+Issues with developmental code branches is problematic when operating on early release or development code. Which we are directly getting, the latest and greatest. 
 
 Each bapp file has has a link to the best support information found for direct application support and troubleshooting.
 
@@ -93,4 +94,3 @@ Autohotspot script work, from [RaspberryConnect.com](https://www.raspberryconnec
   - publish to readme.md?
 - add the backup to know ver and cpu
 - add uninstaller / app remover
-
