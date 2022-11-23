@@ -4,7 +4,7 @@
 this is a early dev:demo for feedback: 
 - no .desktop files yet, but should build and likley build install as well
 - tested on SBC and VM hardware primarly this is dev code caution.
-- fldigi depends on  libudev-dev which, when installed into newest mint vanenna, it will make a huge mess.
+- fl-suite depends on libudev-dev which, when installed into newest mint vanessa, it will make a huge mess on physical hardware, when not first apt-get upgrade. Currently this script is not upgrading the OS.
 
 PI3 setting cores to 2 for default, without active cooling locks up 
   - with cooling 3 or 4 seems ok.
