@@ -18,6 +18,7 @@ INSTALL(){
     sudo apt-get -y install telnet >> errors/apt.log
     sudo apt-get -y install uronode >> errors/apt.log
     sudo apt-get -y install linpac >> errors/apt.log
+    sudo apt-get -y install screen >> errors/apt.log
 
     sudo modprobe ax25
     sudo modprobe mkiss
