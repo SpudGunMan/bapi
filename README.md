@@ -1,6 +1,6 @@
 # Codename bAPi mark 2
 
-**PLEASE NOTE DEV RC2**
+**PLEASE NOTE DEV RC3**
 this is a early dev:demo for feedback: 
 - no .desktop files yet, but should build and likely build install as well
 - tested on SBC and VM hardware primary this is dev code caution.
