@@ -4,19 +4,24 @@ Name=rPi-FM-Tx
 Comment='Use your Raspbery as FM Tx'
 VerLocal=0
 VerRemote=0
-W3='https://pimylifeup.com/raspberry-pi-pirate-radio/'
+W3='https://github.com/markondej/fm_transmitter'
 Author='spud'
-NOTE='non functioning TODO'
+NOTE='https://zr6aic.blogspot.com/2016/11/creating-2m-fm-repeater-with-raspberry.html'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
     cd ${BAPSRC}
 
-    rm -rf fm_transmitter
-    git clone https://github.com/pimylifeup/fm_transmitter
-    cd fm_transmitter
+   if [[ "$BAPCPU" == *"ar"* ]]; then
+        rm -rf fm_transmitter
+        git clone https://github.com/markondej/fm_transmitter
+        cd fm_transmitter
+        make
+        cp fm_transmitter /usr/local/bin/
+    else
+        echo -e "ERROR: Pi only package"
+    fi
 
-    whatsthis=https://zr6aic.blogspot.com/2016/11/creating-2m-fm-repeater-with-raspberry.html
 }
 
 

@@ -16,10 +16,18 @@ INSTALL(){
 
     cd ${BAPSRC} || return
 
-    wget --tries 2 --connect-timeout=60 http://freeware.the-meiers.org/CoolTermRaspberryPi.zip
-    unzip *.zip
+
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        wget --tries 2 --connect-timeout=60 http://freeware.the-meiers.org/CoolTermRaspberryPi.zip
+        unzip *.zip
+        mv CoolTermRaspberryPi ${HOME}/CoolTerm
+    else
+        wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux.zip
+        unzip *.zip
+        mv CoolTerm ${HOME}/CoolTerm
+    fi
+
     rm *.zip
-    mv CoolTermRaspberryPi ${HOME}/CoolTerm
     sudo ln -s ${HOME}/CoolTerm/CoolTerm /usr/local/bin/CoolTerm
 
 }
