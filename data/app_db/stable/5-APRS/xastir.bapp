@@ -4,7 +4,7 @@ Name=XASTIR
 Comment='APRS Client'
 VerLocal=0
 VerRemote=0
-W3=''
+W3='http://xastir.org/index.php/Main_Page'
 Author='spud'
 NOTE=''
 
