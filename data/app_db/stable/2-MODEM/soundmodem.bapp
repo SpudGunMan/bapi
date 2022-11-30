@@ -16,18 +16,33 @@ INSTALL(){
     sudo apt-get -y install libfftw3-dev >> errors/apt.log
     sudo apt-get -y install libpulse-dev >> errors/apt.log
 
+    action=$(yad --center --title "Question" --image "dialog-question" \
+        --button="Beta:0" --button="Stable:2" \
+        --text "Try using beta?")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+    	echo -e "INFORMATIONAL: Beta"
+		PiLink="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem"
+		dl="http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtSMSource.zip"
+	else
+        echo -e "INFORMATIONAL: Normal Branch"
+		PiLink="http://www.cantab.net/users/john.wiseman/Downloads/piQtSoundModem"
+		dl="http://www.cantab.net/users/john.wiseman/Downloads/QtSMSource.zip"
+	fi
+
     cd ${BAPSRC} || return
     rm -rf qtmodem
     mkdir qtmodem
     cd qtmodem
 	
 	if [[ "$BAPCPU" == *"ar"* ]]; then
-        arm=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtSoundModem)
+        arm=$(wget --tries 2 --connect-timeout=60  )
     else
-        x86=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtSoundModem)
+        x86=$(wget --tries 2 --connect-timeout=60  $PiLink)
     fi
 
-    src=$(wget --tries 2 --connect-timeout=60  http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtSMSource.zip)
+    src=$(wget --tries 2 --connect-timeout=60  $dl)
     unzip QtSMSource.zip
     rm QtSMSource.zip
 

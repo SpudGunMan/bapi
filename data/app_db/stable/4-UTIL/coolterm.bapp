@@ -1,0 +1,47 @@
+BAPP=4
+ID=CoolTerm
+Name=CoolTerm
+Comment='CoolTerm Serial Terminal'
+VerLocal=0
+VerRemote=0
+W3='http://freeware.the-meiers.org'
+Author='spud'
+NOTE='Good for serial access'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo dpkg --add-architecture armhf
+    sudo apt-get update
+    sudo apt-get -y install libgtk-3-0:armhf >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        wget --tries 2 --connect-timeout=60 http://freeware.the-meiers.org/CoolTermRaspberryPi.zip
+        unzip *.zip
+        mv CoolTermRaspberryPi ${HOME}/CoolTerm
+    else
+        wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux.zip
+        unzip *.zip
+        mv CoolTerm ${HOME}/CoolTerm
+    fi
+
+    rm *.zip
+    sudo ln -s ${HOME}/CoolTerm/CoolTerm /usr/local/bin/CoolTerm
+
+}
+
+VERSION(){
+    if [ -d ${HOME}/CoolTerm ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

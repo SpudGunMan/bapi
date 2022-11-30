@@ -212,7 +212,7 @@ export BAPCALL
 export MYCALL
 
 if [ ! -f cache/.firstrun ]; then
-    echo -e "\n CRITICAL: data corruption try a >  ./bin/set-enviroment.sh reset" | tee -a $BAP_ERROR_LOG
+    echo -e "\n CRITICAL: data corruption first, try 'rm -rf apps/' directory \n more drastic:  ./bin/set-enviroment.sh reset" | tee -a $BAP_ERROR_LOG
 else
     if [[ "$PKG_PROFILE" == *"PKG_DEF"* ]]; then
         #launch menu

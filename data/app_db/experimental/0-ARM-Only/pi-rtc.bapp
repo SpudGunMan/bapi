@@ -11,41 +11,41 @@ INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
     cd ${BAPSRC} || return
 
-    #!/bin/bash
-    sudo modprobe i2c-bcm2708
-    sudo modprobe i2c-dev 
-    sudo modprobe rtc-ds1307
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        sudo modprobe i2c-bcm2708
+        sudo modprobe i2c-dev 
+        sudo modprobe rtc-ds1307
 
-    until [ "$loop" = "8" ]; do
-        action=$(yad --form --center --entry --title="Pi-RTC" --button="gtk-ok" --text="Select your RTC chip" \
-        --entry-text "ds1307" "pcf8523" "ds3231" "exit")
+        until [ "$loop" = "8" ]; do
+            action=$(yad --form --center --entry --title="Pi-RTC" --button="gtk-ok" --text="Select your RTC chip" \
+            --entry-text "ds1307" "pcf8523" "ds3231" "exit")
+            
+            ret=$?
+            [[ $ret -ge 1 ]] && exit 0
+            case $action in
+                ds1*) clear ; rtc_type="dtoverlay=i2c-rtc,ds1307" && break ;;
+                pcf*) clear ; rtc_type="dtoverlay=i2c-rtc,pcf8523" && break;;
+                ds3*) clear ; rtc_type="dtoverlay=i2c-rtc,ds3231" && break;;
+                ex*) clear ; break ;; #Load EM1COM Package
+            esac
         
-        ret=$?
-        [[ $ret -ge 1 ]] && exit 0
-        case $action in
-            ds1*) clear ; rtc_type="dtoverlay=i2c-rtc,ds1307" && break ;;
-            pcf*) clear ; rtc_type="dtoverlay=i2c-rtc,pcf8523" && break;;
-            ds3*) clear ; rtc_type="dtoverlay=i2c-rtc,ds3231" && break;;
-            ex*) clear ; break ;; #Load EM1COM Package
-        esac
-    
-    done
-    
-    sudo echo $rtc_type | sudo tee -a /boot/config.txt
-    sudo apt-get -y remove fake-hwclock
-    sudo update-rc.d -f fake-hwclock remove
-    sudo systemctl disable fake-hwclock
-    sudo i2cdetect -y 1
+        done
+        
+        sudo echo $rtc_type | sudo tee -a /boot/config.txt
+        sudo apt-get -y remove fake-hwclock
+        sudo update-rc.d -f fake-hwclock remove
+        sudo systemctl disable fake-hwclock
+        sudo i2cdetect -y 1
 
-    #sed /lib/udev/hwclock-set #uncomment stuff
-    #/sbin/hwclock --rtc=$dev --systz --badyear
-    #/sbin/hwclock --rtc=$dev --systz
-    #should reboot
-    #sudo hwclock -r
-    #sudo hwclock -w
-    #sudo hwclock -r
-    #sudo hwclock -s
-
+        #sed /lib/udev/hwclock-set #uncomment stuff
+        #/sbin/hwclock --rtc=$dev --systz --badyear
+        #/sbin/hwclock --rtc=$dev --systz
+        #should reboot
+        #sudo hwclock -r
+        #sudo hwclock -w
+        #sudo hwclock -r
+        #sudo hwclock -s
+    fi
 
 }
 

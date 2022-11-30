@@ -9,12 +9,6 @@ Author='spud'
 NOTE='OBplayer needs Python2 so this is likley going to be removed'
 
 INSTALL(){
-    cd ${BAPSRC} || return
-
-    rm -rf openbrodcast
-    mkdir -p openbrodcast
-    cd openbrodcast
-
     # echo -e "\n\nINFORMATIONAL: Verbose apt-get required packages\n\n"
 
     sudo apt-get -y install ntp >> errors/apt.log
@@ -65,6 +59,12 @@ INSTALL(){
     sudo pip3 install pyrtlsdr >> errors/apt.log
     sudo pip3 install inotify >> errors/apt.log
     sudo pip3 install boto3 >> errors/apt.log
+
+    cd ${BAPSRC} || return
+
+    rm -rf openbrodcast
+    mkdir -p openbrodcast
+    cd openbrodcast
 
     git clone https://github.com/openbroadcaster/obplayer
 

@@ -10,7 +10,7 @@ NOTE='no cross compile scripts tested'
 
 INSTALL(){
     cd ${HOME}
-	
+
     if [ -d "Pi-APRS" ];then
         cd Pi-APRS
         git pull

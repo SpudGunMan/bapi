@@ -16,6 +16,26 @@ INSTALL(){
     sudo apt-get -y install lsof >> errors/apt.log
 
 
+    action=$(yad --center --title "Question" --image "dialog-question" \
+        --button="Beta:0" --button="Stable:2" \
+        --text "Try using beta?")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+    	echo -e "INFORMATIONAL: Beta"
+		PiLink-linbpq="http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq"
+		dLinpbq="http://www.cantab.net/users/john.wiseman/Downloads/Beta/linbpq"
+        PiLink-bpqAPRS="http://www.cantab.net/users/john.wiseman/Downloads/Beta/piQtBPQAPRS"
+        dlbpqAPRS="http://www.cantab.net/users/john.wiseman/Downloads/Beta/QtBPQAPRS"
+	else
+        echo -e "INFORMATIONAL: Normal Branch"
+        PiLink-linbpq="http://www.cantab.net/users/john.wiseman/Downloads/pilinbpq"
+		dLinpbq="http://www.cantab.net/users/john.wiseman/Downloads/linbpq"
+        PiLink-bpqAPRS="http://www.cantab.net/users/john.wiseman/Downloads/piQtBPQAPRS"
+        dlbpqAPRS="http://www.cantab.net/users/john.wiseman/Downloads/QtBPQAPRS"
+	fi
+
+
     cd ${BAPSRC} || return
 
     rm -rf BPQ32
@@ -30,10 +50,10 @@ INSTALL(){
 			sudo dpkg --add-architecture armhf
 			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
 		fi
-		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/Beta/pilinbpq
+		wget --tries 2 --connect-timeout=60 $PiLink-linbpq
 		mv pilinbpq linbpq
 	else
-		wget http://www.cantab.net/users/john.wiseman/Downloads/Beta/linbpq
+		wget $dLinpbq
 	fi
     chmod +x linbpq
     mkdir -p logs
@@ -50,10 +70,10 @@ INSTALL(){
 			sudo dpkg --add-architecture armhf
 			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf
 		fi
-		wget --tries 2 --connect-timeout=60 http://www.cantab.net/users/john.wiseman/Downloads/piQtBPQAPRS
+		wget --tries 2 --connect-timeout=60 $PiLink-bpqAPRS
 		mv piQtBPQAPRS QtBPQAPRS
 	else
-		wget http://www.cantab.net/users/john.wiseman/Downloads/QtBPQAPRS
+		wget $dlbpqAPRS
 	fi
     chmod +x QtBPQAPRS
 
