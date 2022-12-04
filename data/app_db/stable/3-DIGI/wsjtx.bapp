@@ -14,6 +14,8 @@ INSTALL(){
     sudo apt-get -y install fftw3-dev >> errors/apt.log
     sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
     sudo apt-get -y install libtool >> errors/apt.log
+	sudo apt-get -y install libudev1 >> errors/apt.log
+	sudo apt-get -y install libudev-dev >> errors/apt.log
     sudo apt-get -y install texinfo >> errors/apt.log
     sudo apt-get -y install asciidoctor >> errors/apt.log
 	sudo apt-get -y install ntp >> errors/apt.log

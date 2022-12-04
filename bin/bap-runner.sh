@@ -38,6 +38,11 @@ execute_build_function() {
         #launch funfacts
         #( bash -c 'data/funfacts' & )
 
+        #	check dev tools
+        if [ -f '.skip-dev-apt' ]; then 
+            echo -e "WARNING: Using custom dev kit!" | tee -a $BAP_ERROR_LOG
+        fi
+
         #process 
         for Job in $JOBLIST; do  
             #source INSTAL

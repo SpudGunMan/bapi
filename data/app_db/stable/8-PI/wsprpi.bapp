@@ -1,0 +1,52 @@
+BAPP=4
+ID=WSPRPI
+Name=rPi-WSPR-Tx
+Comment='Use your older Raspbery as WSPR Tx'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/threeme3/WsprryPi'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC}
+
+    #For RPI1/2/3 user,please find "makefile1" and rename it to "makefile"
+    #For RPI4 user,please find "makefile2" and rename it to "makefile"
+
+
+   if [[ "$BAPCPU" == *"ar"* ]]; then
+        rm -rf WsprryPi
+        git clone https://github.com/threeme3/WsprryPi
+        cd WsprryPi
+
+		#determine if pi-64 bit and install correct dependencies.
+		if [ `getconf LONG_BIT` = '64' ]; then
+            cp makefile2 makefile
+        else
+            cp makefile1 makefile
+        fi
+
+        make
+        sudo make install
+
+    else
+        echo -e "ERROR: Pi only package"
+    fi
+
+}
+
+VERSION(){
+    if [[ $(whereis wspr | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

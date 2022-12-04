@@ -24,12 +24,36 @@ INSTALL(){
     sudo modprobe mkiss
     sudo /sbin/route add -net 44.0.0.0 netmask 255.0.0.0 dev ax0
 
-
     #some blogs on connecting the two (direwolf and linpac) using the kernel ax.25 as the shim
     #https://dzone.com/articles/packet-radio-ax25-direwolf-and-linpac-on-a-raspber
     #https://www.kevinhooke.com/2015/09/12/direwolf-soundcard-packet-on-linux-with-ax25-and-linpac/
+    #http://www.trinityos.com/HAM/CentosDigitalModes/RPi/rpi4-setup.html#25.configure-ax25
 
     cd ${BAPSRC}
+
+
+    wget http://www.trinityos.com/HAM/CentosDigitalModes/RPi/etc/ax25/ax25-up.new
+    wget http://www.trinityos.com/HAM/CentosDigitalModes/RPi/etc/ax25/ax25-up.new2
+    wget http://www.trinityos.com/HAM/CentosDigitalModes/RPi/etc/ax25/ax25-down
+    chmod 744 ax25-*
+    sudo mv ax25-* /etc/ax25
+
+    
+    sudo mkdir -p /var/ax25/mail
+    sudo chmod 4755 /usr/bin/listen
+    sudo chmod 4755 /usr/bin/axlisten
+    sudo chown $USER /var/ax25/mail
+
+
+
+    #wget http://www.trinityos.com/HAM/CentosDigitalModes/RPi/usr/local/sbin/date-listen-log
+    #chmod 744 /usr/local/sbin/date-listen-log
+    #sudo mv date-listen-log /usr/local/sbin/date-listen-log
+
+    ##Timestamp it it hourly
+    #ln -s /usr/local/sbin/date-listen-log /etc/cron.hourly/date-listen-log
+
+
 
     #git clone https://github.com/ThomasHabets/ax25ms
 

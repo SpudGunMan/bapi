@@ -6,10 +6,13 @@ VerLocal=0
 VerRemote=0
 W3='http://www.ui-view.net'
 Author='spud'
-NOTE='https://www.ckarc.ca/QST/index.php?topic=320.0;wap2'
+NOTE='http://wa8lmf.net/aprs/UIview_Notes.htm'
 
 INSTALL(){
     cd ${BAPSRC} || return
+
+    #https://www.ckarc.ca/QST/index.php?topic=320.0;wap2
+
 
     #filename=$(curl -s http://www.ui-view.net/ | grep -m1 uisfx )
     wget --tries 2 --connect-timeout=60 http://www.ui-view.net/uiview/uisfx239.exe
@@ -30,7 +33,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://www.byonics.com/downloads/ | grep -m1 TinyTrak3_Config_ | head -c 55 | sed 's/<tr><td data-sort="//' | cut -f1 -d "\"" | sed 's/tinytrak3_config_v//' | sed 's/.zip//')
+    NEWVER="0-web"
 }
 
 DEPENDS(){
