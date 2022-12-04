@@ -26,15 +26,17 @@ INSTALL(){
 	if [[ "$BAPCPU" == *"ar"* ]]; then
 		sudo apt-get install -y libjpeg62-turbo-dev >> errors/apt.log
 		
-		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
-		#increase swap file if less than 3G memory
-		if [ ${FREEMEM} -lt 3000 ] && [ "$BAPCPU" == *"ar"* ]; then
-			echo "Increasing Swap size for build"
-			#increase swap size
-			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
-			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
-			sudo /etc/init.d/dphys-swapfile restart
-			sleep 10
+		if [ -f /etc/init.d/dphys-swapfile ]; then 
+			FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+			#increase swap file if less than 3G memory
+			if [ ${FREEMEM} -lt 3000 ] && [ "$BAPCPU" == *"ar"* ]; then
+				echo "Increasing Swap size for build"
+				#increase swap size
+				sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+				sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+				sudo /etc/init.d/dphys-swapfile restart
+				sleep 10
+			fi
 		fi
 	else
 		sudo apt-get install -y libjpeg62-dev >> errors/apt.log
@@ -75,7 +77,7 @@ INSTALL(){
 	sudo make clean
 	#sudo apt-mark manual libjpeg9 #this needed???
 
-	if [[ "$BAPCPU" == *"ar"* ]]; then
+	if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then
 		#reset swap size to default
 		if [ ${FREEMEM} -lt 3000 ] && [ "$BAPCPU" == *"ar"* ]; then
 			echo "Resetting swap size to default"

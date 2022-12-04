@@ -21,7 +21,7 @@ INSTALL(){
     cd ${BAPSRC} || return
 
     # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
+    if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
 		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
 		#increase swap file if less than 3G memory
 		if [ ${FREEMEM} -lt 3000 ]; then
@@ -57,7 +57,7 @@ INSTALL(){
 	#sudo cp release/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
 
     # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
+    if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
 		#reset swap size to default
 		if [ ${FREEMEM} -lt 3000 ]; then
 			echo "Resetting swap size to default"
