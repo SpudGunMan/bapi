@@ -89,8 +89,6 @@ case "$arch" in
             if [[ "$model" == *"Pi 2"* ]]; then
                 echo -e "WARNING: Pi2 detected setting cores to two"
                 cpu=2 #the pi2 is unstable with all cores in use via VNC and SSH
-                        #https://forums.raspberrypi.com/viewtopic.php?t=147170
-                        # you can try heat dissapation and just remove the cpu=1
             fi
         fi
         
@@ -233,7 +231,7 @@ VNC_PERF
 # Developent Enviroment setup 
 # for now this is here till a better spot or idea
 # the problem really is front loading a lot of heavy stuff at home vs cell phone field or just over and over
-if [ ! -f '.skip-dev-apt' ];then
+if [ ! -f '.skip-dev-apt' ] && [ ! -f '.ran-dev-apt' ];then
     echo -e "INFORMATIONAL: Installing developer tools, this may take some time."
     COMMON_DEVELOPER_TOOLS_INSTALL >> errors/apt.log
 else

@@ -39,7 +39,7 @@ execute_build_function() {
         #( bash -c 'data/funfacts' & )
 
         #	check dev tools
-        if [ -f '.skip-dev-apt' ]; then 
+        if [ ! -f '.ran-dev-apt' ]; then 
             echo -e "WARNING: Using custom dev kit!" | tee -a $BAP_ERROR_LOG
         fi
 
