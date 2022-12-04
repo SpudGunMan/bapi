@@ -32,7 +32,7 @@ SET_DIALUP_USER(){
 }
 
 VNC_PERF(){
-    if [[ "$BAPCPU" == *"ar"* ]]; then
+    if [ -f /boot/config.txt ] && [[ "$BAPCPU" == *"ar"* ]]; then
         #dont mess the file 2x
         if [[ $(grep -L "BAPi_" /boot/config.txt) ]];then
 

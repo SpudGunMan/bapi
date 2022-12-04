@@ -83,9 +83,17 @@ fi
 case "$arch" in
     armv7l)
         CPU=32
-        cpu=2 #the pi3 is unstable with all cores in use via VNC and SSH
-        #https://forums.raspberrypi.com/viewtopic.php?t=147170
-        # you can try heat dissapation and just remove the cpu=1
+        if [ -f /sys/firmware/devicetree/base/model ];then
+            IFS= read -r -d '' model </proc/device-tree/model || [[ $model ]]
+    
+            if [[ "$model" == *"Pi 2"* ]]; then
+                echo -e "WARNING: Pi2 detected setting cores to two"
+                cpu=2 #the pi2 is unstable with all cores in use via VNC and SSH
+                        #https://forums.raspberrypi.com/viewtopic.php?t=147170
+                        # you can try heat dissapation and just remove the cpu=1
+            fi
+        fi
+        
         if [ -f "/usr/bin/wine" ]; then export BAPWINEARCH=32; fi
         ;;
     aarch64)
