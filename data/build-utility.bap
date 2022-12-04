@@ -65,7 +65,7 @@ VNC_PERF(){
 SET_BAP_WALLPAPER(){
     if [[ "$BAPCPU" == *"ar"* ]]; then
         if [ ! -f /usr/share/rpd-wallpaper/bap-wallpaper.jpg ]; then
-            if [ -d /usr/share/rpd-wallpaper/ ]
+            if [ -d /usr/share/rpd-wallpaper/ ]; then
                 echo -e "INFORMATIONAL: set pi custom wallpaper"
                 sudo cp data/bap-wallpaper.jpg /usr/share/rpd-wallpaper/
                 pcmanfm --set-wallpaper /usr/share/rpd-wallpaper/bap-wallpaper.jpg
