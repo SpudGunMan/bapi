@@ -1,0 +1,36 @@
+BAPP=4
+ID=LadyHeather
+Name=LadyHeatherGPS
+Comment='Lady Heather GPS clock'
+VerLocal=0
+VerRemote=0
+W3='http://www.ke5fx.com/heather/readme.htm'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    wget http://gotroot.ca/misc/heatherx11_beta_6.14.zip
+    unzip heatherx11_beta_6.14.zip
+    rm heatherx11_beta_6.14.zip
+    cd heatherx11
+    make
+    cd ..
+    mv heatherx11 ${HOME}/heather
+}
+
+VERSION(){
+    if [[ -d "${HOME}/heather" ]];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+}
+#EOF
+

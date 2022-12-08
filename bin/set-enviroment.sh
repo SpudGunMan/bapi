@@ -64,6 +64,17 @@ if [ -z $arch ]; then
     eval "$(sed -n 's/^Architecture:        /arch=/p' /tmp/bap-env-lscpu)"
 fi
 
+#errors are bad so exit 1 if we still have a mess
+if [ -z $arch ]; then
+    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
+    exit 1
+fi
+if [ -z $cpu ]; then
+    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
+    exit 1
+fi
+
+
 # the following will detect Ubuntu and..
 if [ -z $distribution ]; then
     #this detection method isnt good for PI but is for others.
@@ -83,9 +94,15 @@ fi
 case "$arch" in
     armv7l)
         CPU=32
-        cpu=2 #the pi3 is unstable with all cores in use via VNC and SSH
-        #https://forums.raspberrypi.com/viewtopic.php?t=147170
-        # you can try heat dissapation and just remove the cpu=1
+        if [ -f /sys/firmware/devicetree/base/model ];then
+            IFS= read -r -d '' model </proc/device-tree/model || [[ $model ]]
+    
+            if [[ "$model" == *"Pi 2"* ]]; then
+                echo -e "WARNING: Pi2 detected setting cores to two"
+                cpu=2 #the pi2 is unstable with all cores in use via VNC and SSH
+            fi
+        fi
+        
         if [ -f "/usr/bin/wine" ]; then export BAPWINEARCH=32; fi
         ;;
     aarch64)
@@ -104,7 +121,6 @@ case "$arch" in
         echo -e "ERROR: Unsupported: $arch with $cpu cores"
         ;;
 esac
-
 
 case "$distribution" in
     raspbian)
@@ -128,9 +144,6 @@ case "$distribution" in
         ;;
 esac
 
-if [ $DEBUG -eq 1 ];then echo -e "DEBUG: set-enviroment"; fi
-
-
 #####################################
 # create directory locations
 
@@ -143,7 +156,6 @@ mkdir -p ${HOME}/.config/autostart
 
 #####################################
 #   set the station call sign, if youre here to snip this remember to give credit for the rest!
-if [ $DEBUG -eq 1 ];then echo -e "DEBUG: Get MYCALL from yad"; fi
 N0CALL=$(yad --form --width=420 --text-align=center --center \
     --title="Amature Radio Callsign Required" --center --image="gtk-execute" \
     --field="Call Sign" \
@@ -225,7 +237,7 @@ VNC_PERF
 # Developent Enviroment setup 
 # for now this is here till a better spot or idea
 # the problem really is front loading a lot of heavy stuff at home vs cell phone field or just over and over
-if [ ! -f '.skip-dev-apt' ];then
+if [ ! -f '.skip-dev-apt' ] && [ ! -f '.ran-dev-apt' ];then
     echo -e "INFORMATIONAL: Installing developer tools, this may take some time."
     COMMON_DEVELOPER_TOOLS_INSTALL >> errors/apt.log
 else

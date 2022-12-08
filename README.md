@@ -6,10 +6,6 @@ this is a early dev:demo for feedback:
 - tested on SBC and VM hardware primary this is dev code caution.
 - fl-suite depends on libudev-dev which, when installed into newest non-updated, mint Vanessa, it will make a huge mess, when not first apt-get upgrade. This script is not upgrading the OS.
 
-PI3 setting cores to 2 for default, without active cooling locks up 
-  - with cooling 3 or 4 seems ok.
-  - file:bin/set-enviroment.sh:line:86 has the setting to change
-
 ## Description
 ![screenshot](data/screenshot.jpg)
 
