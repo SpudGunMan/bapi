@@ -64,6 +64,17 @@ if [ -z $arch ]; then
     eval "$(sed -n 's/^Architecture:        /arch=/p' /tmp/bap-env-lscpu)"
 fi
 
+#errors are bad so exit 1 if we still have a mess
+if [ -z $arch ]; then
+    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
+    exit 1
+fi
+if [ -z $cpu ]; then
+    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
+    exit 1
+fi
+
+
 # the following will detect Ubuntu and..
 if [ -z $distribution ]; then
     #this detection method isnt good for PI but is for others.
@@ -111,7 +122,6 @@ case "$arch" in
         ;;
 esac
 
-
 case "$distribution" in
     raspbian)
         ls > /dev/null #nothing yet
@@ -134,9 +144,6 @@ case "$distribution" in
         ;;
 esac
 
-if [ $DEBUG -eq 1 ];then echo -e "DEBUG: set-enviroment"; fi
-
-
 #####################################
 # create directory locations
 
@@ -149,7 +156,6 @@ mkdir -p ${HOME}/.config/autostart
 
 #####################################
 #   set the station call sign, if youre here to snip this remember to give credit for the rest!
-if [ $DEBUG -eq 1 ];then echo -e "DEBUG: Get MYCALL from yad"; fi
 N0CALL=$(yad --form --width=420 --text-align=center --center \
     --title="Amature Radio Callsign Required" --center --image="gtk-execute" \
     --field="Call Sign" \
