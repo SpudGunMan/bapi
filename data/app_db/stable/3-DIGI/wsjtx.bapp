@@ -39,13 +39,15 @@ INSTALL(){
 	mkdir wsjtx
 	cd wsjtx
 
-	FT8PKG=$(curl -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
-	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
+	FT8PKG=wsjtx-2.6.0-rc5.tgz
+	SFDIR=$(echo $FT8PKG | sed 's/.tgz//')
+	FT8DIR=$(echo $FT8PKG | sed 's/-rc5.tgz//')
 
-	wget --tries 2 --connect-timeout=60 https://physics.princeton.edu/pulsar/k1jt/$FT8PKG
+	wget --tries 2 --connect-timeout=20 https://sourceforge.net/projects/wsjt/files/$SFDIR/$FT8PKG -O $FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
+	
 	cmake -D CMAKE_INSTALL_PREFIX=$FT8DIR
 	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
