@@ -57,6 +57,5 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED=''
-    #apt-gets will be checked on app-check
+    NEEDED=""
 }
