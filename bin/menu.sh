@@ -50,9 +50,12 @@ echo "$(date +%F-%T) BAP Install Update Requested" >> $INSTALL_HISTORY_FILE
 echo $APPIDLIST >> $INSTALL_HISTORY_FILE
 
 #grep all .bapp files and find the matching APP=ID from selection and return .bapp file name for processing
-runlist=$(egrep -m 1 -e "ID=$APPIDLIST" $(cat $BAPAPPS_LIST_FILE) | cut -f1 -d":")
+runlist=$(
+    for appid in $APPIDLIST; do
+        grep -m 1 -e "ID=$appid" $(cat $BAPAPPS_LIST_FILE) | cut -f1 -d":"
+    done 
+)
 
-#cat $runlist > $JOBFILE
 #create a runlist file just as printed above but as a sting for processing
 echo $runlist | sed 's/ /\n/' > $JOB_FILE 
    
