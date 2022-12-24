@@ -71,17 +71,17 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wsjtx | grep bin) ]];then
-        CURRENT=0-web
+        CURRENT=2.6.0-rc5
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
-	WSJTNEXT=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
+	NEWVER=2.6.0-rc5
+    #NEWVER=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
+	#WSJTNEXT=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
 }
 
 DEPENDS(){
     NEEDED=''
-
     #apt-gets will be checked on app-check
 }
 
