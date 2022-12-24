@@ -24,11 +24,11 @@ INSTALL(){
 
         ./'Update VARA'
     else
-        xdg-open https://rosmodem.wordpress.com/
+        #xdg-open https://rosmodem.wordpress.com/
         yad --title="bAPi - vara installer" --center --button="OK" \
         --text="Vara is emulated in wine, we need to install that and some .net\n \
-        Before all to aid in successfull install, download vara from rosmodem.com \n \
-        please stop now and we tried to browse to https://rosmodem.wordpress.com \n \
+        If you find you have issues with downloading vara this has an added work around\n \
+        please stop now and browse to https://rosmodem.wordpress.com \n \
         save all the -disk icon files- to default downloads folder, 5 disks. \n \
         this is a megadownload hosting failsafe, you can also just ignore this. "
 
