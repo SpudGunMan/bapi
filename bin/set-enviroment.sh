@@ -51,29 +51,24 @@ fi
 #the following works for pi/raspian/debian and mint
 rm -f /tmp/bap-env-*
 lscpu > /tmp/bap-env-lscpu
-eval "$(sed -n 's/^ID=/distribution=/p' /etc/os-release)"
-eval "$(sed -n 's/^VERSION_ID=/version=/p' /etc/os-release | tr -d '"')"
-eval "$(sed -n 's/^Architecture:                    /arch=/p' /tmp/bap-env-lscpu)"
-eval "$(sed -n 's/^CPU(s):                          /cpu=/p' /tmp/bap-env-lscpu)"
+distribution=$(grep ^ID= /etc/os-release | cut -d= -f2)
+version=$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '"')
+arch=$(sed -n 's/^Architecture:                    //p' /tmp/bap-env-lscpu)
+cpu=$(sed -n 's/^CPU(s):                          //p' /tmp/bap-env-lscpu)
 
 #fix older version output
 if [ -z $cpu ]; then
-    eval "$(sed -n 's/^CPU(s):              /cpu=/p' /tmp/bap-env-lscpu)"
+    cpu=$(sed -n 's/^CPU(s):              //p' /tmp/bap-env-lscpu)
 fi
 if [ -z $arch ]; then
-    eval "$(sed -n 's/^Architecture:        /arch=/p' /tmp/bap-env-lscpu)"
+    arch=$(sed -n 's/^Architecture:        //p' /tmp/bap-env-lscpu)
 fi
 
 #errors are bad so exit 1 if we still have a mess
-if [ -z $arch ]; then
-    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
-    exit 1
+if [ -z "$arch" -o -z "$cpu" ]; then
+  echo "Error: cannot determine architecture and number of CPUs"
+  exit 1
 fi
-if [ -z $cpu ]; then
-    echo -e "ERROR: Unknown Please report: $distribution $version $arch with $cpu cores"
-    exit 1
-fi
-
 
 # the following will detect Ubuntu and..
 if [ -z $distribution ]; then
@@ -171,7 +166,7 @@ if echo "$TMPCALL" | grep -q "?";then
 fi
 
 #blank check call
-if [ $N0CALL = "||" ] || [ $N0CALL = "" ]; then
+if [ "$N0CALL" = "||" ] || [ "$N0CALL" = "" ]; then
     echo -e "\n ERROR: CRITICAL: need a radio call to operate, nothing heard QRZ?" | tee -a $BAP_ERROR_LOG
     exit 1
 else
