@@ -83,6 +83,7 @@ Autohotspot script work, from [RaspberryConnect.com](https://www.raspberryconnec
 
 ## TO DO and junk
 
+- autostart conky
 - fl suite clean up script/job for all the fl*.gz files in BAPSRC?
 - menu and icons
 - folders work in yad tree view?

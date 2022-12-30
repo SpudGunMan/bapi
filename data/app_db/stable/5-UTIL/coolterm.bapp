@@ -22,7 +22,11 @@ INSTALL(){
         unzip *.zip
         mv CoolTermRaspberryPi ${HOME}/CoolTerm
     else
-        wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux.zip
+        if [ $BAPARCH == 64 ]; then
+            wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux64Bit.zip
+        else
+            wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux32Bit.zip
+        fi
         unzip *.zip
         mv CoolTerm ${HOME}/CoolTerm
     fi
