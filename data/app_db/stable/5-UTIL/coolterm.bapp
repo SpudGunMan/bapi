@@ -10,19 +10,24 @@ NOTE='Good for serial access'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo dpkg --add-architecture armhf
-    sudo apt-get update
     sudo apt-get -y install libgtk-3-0:armhf >> errors/apt.log
 
     cd ${BAPSRC} || return
 
-
     if [[ "$BAPCPU" == *"ar"* ]]; then
+        if [ `getconf LONG_BIT` = '64' ]; then
+            sudo dpkg --add-architecture armhf
+            sudo apt-get update
+        fi
         wget --tries 2 --connect-timeout=60 http://freeware.the-meiers.org/CoolTermRaspberryPi.zip
         unzip *.zip
         mv CoolTermRaspberryPi ${HOME}/CoolTerm
     else
-        wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux.zip
+        if [ $BAPARCH == 64]; then
+            wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux64Bit.zip
+        else
+            wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux32Bit.zip
+        fi
         unzip *.zip
         mv CoolTerm ${HOME}/CoolTerm
     fi

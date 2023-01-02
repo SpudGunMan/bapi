@@ -18,12 +18,13 @@ INSTALL(){
         wget -q -O - https://www.scs-ptc.com/repo/packages/scs.gpg.key | sudo apt-key add -
         sudo apt update
         sudo apt-get -y install pmon
+        wget -q -O - https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb # | sudo dpkg -i
 
         echo "Done!"
     fi
 
     # https://www.scs-ptc.com/repo/packages/PMON_Manual.pdf
-    pmon_status=$(dpkg -s pmon | grep 'install ok installed')
+    # pmon_status=$(dpkg -s pmon | grep 'install ok installed')
 }
 
 VERSION(){

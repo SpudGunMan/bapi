@@ -1,10 +1,9 @@
 # Codename bAPi mark 2
 
-**PLEASE NOTE DEV RC3**
-this is a early dev:demo for feedback: 
-- no .desktop files yet, but should build and likely build install as well
-- tested on SBC and VM hardware primary this is dev code caution.
-- fl-suite depends on libudev-dev which, when installed into newest non-updated, mint Vanessa, it will make a huge mess, when not first apt-get upgrade. This script is not upgrading the OS.
+**PLEASE NOTE BETA**
+this is a early release still "beta" RC4
+- no .desktop files yet for most things (no menu icons)
+- fl-suite depends on libudev-dev which, when installed into newest non-updated, mint Vanessa, it will make a huge mess, when not first apt-get upgrade (so upgrade your OS first). This script is not upgrading the OS.
 
 ## Description
 ![screenshot](data/screenshot.jpg)
@@ -84,6 +83,7 @@ Autohotspot script work, from [RaspberryConnect.com](https://www.raspberryconnec
 
 ## TO DO and junk
 
+- autostart conky
 - fl suite clean up script/job for all the fl*.gz files in BAPSRC?
 - menu and icons
 - folders work in yad tree view?
