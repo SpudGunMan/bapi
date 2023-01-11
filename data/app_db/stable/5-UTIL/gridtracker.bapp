@@ -57,7 +57,6 @@ INSTALL(){
 	if [[ "$BAPCPU" == *"ar"* ]]; then
 		echo -e "INFORMATIONAL: PI install unpacking archives"
 		tar -xzvf GridTracker.tar.gz > /dev/null 2>&1
-		echo $ver > GridTrackerVersion.txt
 		rm -f *.tar.gz
 		mv GridTracker-* GridTracker
 
@@ -71,6 +70,8 @@ INSTALL(){
 			cp -r GridTracker/ ${HOME}
 		fi
 
+		echo $ver > ${HOME}/GridTracker/GridTrackerVersion.txt
+
 	else
 		#not-a-PI
 		echo -e "INFORMATIONAL: DEB install package"
@@ -80,8 +81,8 @@ INSTALL(){
 }
 
 VERSION(){
-    if [ -f ${BAPSRC}/gridtracker/GridTrackerVersion.txt ];then
-        CURRENT=$(cat ${BAPSRC}/gridtracker/GridTrackerVersion.txt)
+    if [ -f ${HOME}/GridTracker/GridTrackerVersion.txt ];then
+        CURRENT=$(cat ${HOME}/GridTracker/GridTrackerVersion.txt)
     else
         CURRENT=NONE
     fi
