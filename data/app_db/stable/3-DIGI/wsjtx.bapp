@@ -39,8 +39,8 @@ INSTALL(){
 	mkdir wsjtx
 	cd wsjtx
 
-	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | head -1)
-	FT8DIR=$(echo $FT8PKG | sed 's/.tgz//')
+	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[2]}')
+	FT8DIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
 
 	wget --tries 2 --connect-timeout=20 $(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
 	tar -xvf $FT8PKG
