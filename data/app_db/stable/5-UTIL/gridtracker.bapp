@@ -80,16 +80,12 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis GridTracker | grep bin) ]];then
-		if [ -f ${BAPSRC}/gridtracker/GridTrackerVersion.txt ];then
-        	CURRENT=$(cat ${BAPSRC}/gridtracker/GridTrackerVersion.txt)
-		else
-			CURRENT=0-deb
-		fi
+    if [ -f ${BAPSRC}/gridtracker/GridTrackerVersion.txt ];then
+        CURRENT=$(cat ${BAPSRC}/gridtracker/GridTrackerVersion.txt)
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "_all.deb" | grep "gridtracker_" | sed 's/<a href="//' | sed 's/\"><\/a>//' | grep -o '_.*' | sed 's/_//' | sed 's/_all.deb//')
+    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/index.php/downloads/gridtracker | grep osdownloads-container -A 4 | sed 's/.*">//' | grep -m 1 v | sed 's/<\/a> <\/h3>//' | sed 's/v//')
 }
 
 DEPENDS(){
