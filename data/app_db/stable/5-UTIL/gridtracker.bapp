@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3='https://gridtracker.org'
 Author='spud'
-NOTE='commonly has download issues needs NWJS a 1.3GB package FYI'
+NOTE='commonly has download issues FYI'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -17,20 +17,24 @@ INSTALL(){
 	mkdir gridtracker
 	cd gridtracker
 
-	arm32=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "linux-arm32" | grep "GridTracker-" | sed 's/<a href="//' | sed 's/\"><\/a>//')
-	arm64=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "linux-arm64" | grep "GridTracker-" | sed 's/<a href="//' | sed 's/\"><\/a>//')
-	deb=$(curl --max-time 20 -s https://gridtracker.org/release.html | sed "s/<a href/\\n<a href/g" |sed 's/\"/\"><\/a>\n/2' | grep href | sort | uniq | grep "_all.deb" | grep "gridtracker_" | sed 's/<a href="//' | sed 's/\"><\/a>//')
-	
+	# https://gridtracker.org/index.php/downloads/gridtracker scrape the version number
+	ver=$(curl --max-time 20 -s https://gridtracker.org/index.php/downloads/gridtracker | grep osdownloads-container -A 4 | sed 's/.*">//' | grep -m 1 v | sed 's/<\/a> <\/h3>//' | sed 's/\./-/'g)
+	echo -e "INFORMATIONAL: GridTracker version $ver"
+
+	arm64=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-arm-64
+	arm32=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-arm-32
+	deb=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-all.deb
+
 
 	# Download gridtracker binary
     if [[ "$BAPCPU" == *"ar"* ]]; then
 		if [ `getconf LONG_BIT` = '32' ]; then
-			wget --quiet --tries 2 --connect-timeout=60 $arm32
+			wget --quiet --tries 2 --connect-timeout=60 $arm32 -O GridTracker.tar.gz
 		else
-			wget --quiet --tries 2 --connect-timeout=60 $arm64
+			wget --quiet --tries 2 --connect-timeout=60 $arm64 -O GridTracker.tar.gz
 		fi
 	else
-		wget --quiet --tries 2 --connect-timeout=60 $deb
+		wget --quiet --tries 2 --connect-timeout=60 $deb -O GridTracker.tar.gz
 	fi
 
 	######install nwjs
@@ -38,31 +42,21 @@ INSTALL(){
 	# https://nwjs.io/downloads/
 	# https://github.com/LeonardLaszlo/nw.js-armv7-binaries
 	
-	nwjs_status=$(dpkg -s nwjs-downloader | grep 'install ok installed')
+	#nwjs_status=$(dpkg -s nwjs-downloader | grep 'install ok installed')
 
-	if [[ "$nwjs_status" == *"install ok"* ]]; then
-		echo -e "INFORMATIONAL: node-webkit Node.js found installed"
-	else
-		echo -e "INFORMATIONAL: node-webkit Node.js instaling 1.3GB download"
+	#if [[ "$nwjs_status" == *"install ok"* ]]; then
+	#	echo -e "INFORMATIONAL: node-webkit Node.js found installed"
+	#else
+	#	echo -e "INFORMATIONAL: node-webkit Node.js instaling 1.3GB download"
 
-		wget  --quiet --connect-timeout=30 https://downloads.gridtracker.org/nwjs-downloader/v0.68.1-5/nwjs-downloader_0.68.1-1_all.deb
-		sudo dpkg -i nwjs-downloader_0.68.1-1_all.deb
+	#	wget  --quiet --connect-timeout=30 https://downloads.gridtracker.org/nwjs-downloader/v0.68.1-5/nwjs-downloader_0.68.1-1_all.deb
+	#	sudo dpkg -i nwjs-downloader_0.68.1-1_all.deb
+	#fi
 
-		#url-nwjs=$()
-		#wget --connect-timeout=60 $url-nwjs
-
-		#if [ -f /usr/lib/nwjs/nwjs*.tar.gz ]
-		#	tar -xzvf /usr/lib/nwjs/nwjs*.tar.gz
-		#	cd nwjs*
-		#	sudo cp -r * /usr/lib/nwjs/
-		#fi
-	fi
-
-	#######get gridtracker
+	# get gridtracker
 	if [[ "$BAPCPU" == *"ar"* ]]; then
 		echo -e "INFORMATIONAL: PI install unpacking archives"
-		tar -xzvf GridTracker*.tar.gz > /dev/null 2>&1
-		ver=$(ls *.tar.gz | sed 's/GridTracker-//' | cut -f1 -d"-")
+		tar -xzvf GridTracker.tar.gz > /dev/null 2>&1
 		echo $ver > GridTrackerVersion.txt
 		rm -f *.tar.gz
 		mv GridTracker-* GridTracker
