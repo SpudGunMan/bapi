@@ -18,10 +18,6 @@ INSTALL(){
 
     if [ -f ${HOME}/winelink/'Update VARA' ];then
         cd ${HOME}/winelink/
-        xdg-open https://rosmodem.wordpress.com/
-        yad --title="bAPi - vara update" --center --button="OK" \
-        --text="please download VARA files from web as a megadownload fail backup, or ignore."
-
         ./'Update VARA'
     else
         #xdg-open https://rosmodem.wordpress.com/
