@@ -73,7 +73,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wsjtx | grep bin) ]];then
-		if [[ -f ${HOME}/.bap.wsjt.txt ]]; then
+		if [ -f ${HOME}/.bap.wsjt.txt ]; then
 			CURRENT=$(cat ${HOME}/.bap.wsjt.txt)
 		else
         	CURRENT=UNKNOWN
@@ -81,8 +81,8 @@ VERSION(){
     else
         CURRENT=NONE
     fi
+
     NEWVER=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
-	#WSJTNEXT=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
 }
 
 DEPENDS(){

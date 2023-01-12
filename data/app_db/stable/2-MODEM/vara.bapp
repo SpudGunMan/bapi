@@ -49,3 +49,8 @@ VERSION(){
     fi
     NEWVER=0-web
 }
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

@@ -88,3 +88,8 @@ VERSION(){
     fi
     NEWVER=$(curl --max-time 20 -s https://gridtracker.org/index.php/downloads/gridtracker | grep osdownloads-container -A 4 | sed 's/.*">//' | grep -m 1 v | sed 's/<\/a> <\/h3>//' | sed 's/v//')
 }
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
