@@ -41,11 +41,14 @@ INSTALL(){
 
 	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[2]}')
 	FT8DIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
+	FT8VER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}' | sed 's/wsjtx-//')
 
 	wget --tries 2 --connect-timeout=20 $(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
+
+	echo $FT8VER > ${HOME}/.bap.wsjt.txt
 	
 	cmake -D CMAKE_INSTALL_PREFIX=$FT8DIR
 	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
@@ -70,7 +73,11 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wsjtx | grep bin) ]];then
-        CURRENT=0-sf
+		if [[ -f ${HOME}/.bap.wsjt.txt ]]; then
+			CURRENT=$(cat ${HOME}/.bap.wsjt.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
     else
         CURRENT=NONE
     fi
