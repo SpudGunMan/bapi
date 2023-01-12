@@ -46,7 +46,7 @@ INSTALL(){
     cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
 
-    echo $JS8VERSION > ${HOME}/.bap.js8call.txt
+    echo $(curl --max-time 20 -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5) > ${HOME}/.bap.js8call.ver
     
     #cd $JS8DIR
     #sudo cp js8 js8call /usr/local/bin
@@ -69,8 +69,8 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis js8call drats | grep bin) ]];then
-        if [ -f ${HOME}/.bap.js8call.txt ]; then
-            CURRENT=$(cat ${HOME}/.bap.js8call.txt)
+        if [ -f ${HOME}/.bap.js8call.ver ]; then
+            CURRENT=$(cat ${HOME}/.bap.js8call.ver)
         else
             CURRENT=UNKNOWN
         fi
