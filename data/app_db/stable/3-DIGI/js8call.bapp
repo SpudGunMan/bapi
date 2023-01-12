@@ -45,6 +45,8 @@ INSTALL(){
     cmake -D CMAKE_INSTALL_PREFIX=${BAPSRC}/js8call/release/
     cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
+
+    echo $JS8VERSION > ${HOME}/.bap.js8call.txt
     
     #cd $JS8DIR
     #sudo cp js8 js8call /usr/local/bin
@@ -67,7 +69,11 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis js8call drats | grep bin) ]];then
-        CURRENT=0-web
+        if [ -f ${HOME}/.bap.js8call.txt ]; then
+            CURRENT=$(cat ${HOME}/.bap.js8call.txt)
+        else
+            CURRENT=UNKNOWN
+        fi
     else
         CURRENT=NONE
     fi
