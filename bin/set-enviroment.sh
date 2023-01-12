@@ -221,7 +221,7 @@ echo -e "INFORMATIONAL: Install: $PKG_PROFILE"
 #   first spot sudo is called externally as well might hold for all distros
 if [ $DEBUG -eq 1 ];then echo -e "DEBUG: Run Once Scripts located at set-enviroment"; fi
 
-ln -s ${HOME}/.bap-source-files src
+ln -sf ${HOME}/.bap-source-files src
 source ./data/build-utility.bap
 PULSE_SOUND_VIRT_ADD
 SET_BAP_WALLPAPER
