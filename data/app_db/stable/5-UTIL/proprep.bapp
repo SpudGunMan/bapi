@@ -45,6 +45,7 @@ INSTALL(){
 	./configure
 	make
 	sudo make install
+	mkdir -p ${HOME}/itshfbc
 }
 
 VERSION(){

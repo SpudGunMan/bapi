@@ -35,7 +35,7 @@ INSTALL(){
     cd src
     mkdir -p build/release/
     mkdir -p build/release/Resources
-    unzip antscope-dat.zip -d build/release/Resources
+    unzip ../antscope-dat.zip -d build/release/Resources
     cp AntScope2.ico build/release/
     cp AntScope.png build/release/
     

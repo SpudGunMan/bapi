@@ -1,7 +1,7 @@
 BAPP=4
 ID=PMON
 Name=pmon
-Comment='BROKEN Pactor monitor for rPi 4'
+Comment='Pactor monitor for rPi 4'
 VerLocal=0
 VerRemote=0
 W3='https://www.scs-ptc.com/repo/packages/installpmon'
