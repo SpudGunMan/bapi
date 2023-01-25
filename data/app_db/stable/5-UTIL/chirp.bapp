@@ -32,7 +32,7 @@ INSTALL(){
     fi
     wget --tries 2 --connect-timeout=60 $LINK
 
-	CHIRP=$(ls | grep Chirp-daily)
+	CHIRP=$(ls | grep Chirp-next)
 	sudo mv $CHIRP /usr/local/bin/chirp
 	sudo chmod +x /usr/local/bin/chirp
 }
