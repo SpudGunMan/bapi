@@ -21,14 +21,14 @@ INSTALL(){
     if [[ "$BAPCPU" == *"ar"* ]]; then 
         #determine if ARM 32/64 bit and set download link accordingly.
         if [ `getconf LONG_BIT` = '32' ]; then
-            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-armhf.AppImage"
+            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-armhf.AppImage"
         else
-            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-aarch64.AppImage"
+            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-aarch64.AppImage"
             
         fi
     else
         # danplanet LINK=https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
-        LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-daily-$CHIRPDATE-x86_64.AppImage"
+        LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-x86_64.AppImage"
     fi
     wget --tries 2 --connect-timeout=60 $LINK
 
