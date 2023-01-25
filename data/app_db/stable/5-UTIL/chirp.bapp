@@ -24,7 +24,8 @@ INSTALL(){
             LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-armhf.AppImage"
         else
             LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-aarch64.AppImage"
-            
+            #https://github.com/goldstar611/chirp-appimage/releases/download/20221215/Chirp-daily-20221215-aarch64.AppImage
+            #that copy isnt on the next mess
         fi
     else
         # danplanet LINK=https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
