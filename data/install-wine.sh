@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#THIS IS A MODDED FILE has VARAC and DISTRO HACK FOR MINT < please see respective pull requests for these add
-# DONT WANT VARAC go find and remove first instance of 				run_installvarAC
+# TODO: Check for exe's after each install. Error if no exe present.
+# TODO: Add timeout timer for VARA settings menu in case of freeze. Then do `wineserver -k` if needed
+# TODO: Add bap switch to run_giveup
+# TODO: Compile newer custom 32-bit RPiOS kernel for RPi3 and host it.
 
 # About:
 #    This script will help you install Box86, Wine, winetricks, Windows DLL's, Winlink (RMS Express) & VARA.  You will then
@@ -11,28 +13,17 @@
 #
 #    To run Windows .exe files on RPi4, we need an x86 emulator (box86) and a Windows API Call interpreter (wine).
 #    Box86 is opensource and runs about 10x faster than ExaGear or Qemu.  It's much smaller and easier to install too.
-#  echo "####################### Winlink & VARA Installer Script #######################"
-    # echo "# Author: Eric Wiessner (KI7POL)                          System: ${hardware}  #"
-    # echo "# Version: 0.0097a                                  Install time: apx ${tinst} min  #"
-    # echo "#                                                 Space required: apx ${space} GB  #"
-    # echo "# Credits:                                                                    #"
-    # echo "#   The Box86 team (ptitSeb, pale, chills340, Itai-Nelken, Heasterian, et al) #"
-    # echo "#   Esme 'madewokherd' Povirk (CodeWeavers) for adding functions to wine-mono #"
-    # echo "#   Botspot for RPi kernel switching bash code. Chris Keller for Pat support. #"
-    # echo "#   N7ACW, AD7HE, & KK6FVG for getting me started in ham radio.               #"
-    # echo "#   KM4ACK & OH8STN for inspiration. K6ETA & DCJ21's Winlink on Linux guides. #"
-    # echo "#                                                                             #"
-    # echo "# Donations:                                                                  #"
-    # echo "#    Box86                        paypal.me/0ptitSeb                          #"
-    # echo "#    madewokherd / CodeWeavers    codeweavers.com/crossover                   #"
-    # echo "#    Wine / wine-mono             winehq.org/donate                           #"
-    # echo "#                                                                             #"
-    # echo "#    \"My humanity is bound up in yours, for we can only be human together\"    #"
-    # echo "#                                                - Nelson Mandela             #"
-    # echo "###############################################################################"
+#
 # Distribution:
 #    This script is free to use, open-source, and should not be monetized.  If you use this script in your project (or are 
 #    inspired by it) just please be sure to mention ptitSeb, Box86, and myself (KI7POL).
+#
+# Legal:
+#    All software used by this script is free and legal to use (with the exception of VARA, of course, which is shareware).
+#    Box86 and Wine are both open-source (which avoids the legal problems of use & distribution that ExaGear had - ExaGear 
+#    also ran much slower than Box86 and is no-longer maintained, despite what Huawei says these days).  All proprietary 
+#    Windows DLL files required by Wine are downloaded directly from Microsoft and installed according to their redistribution 
+#    guidelines.
 #
 # Code overview:
 #    This script has a main routine that runs subroutines.  Some subroutines in this script are not used and are just for testing.
@@ -83,14 +74,14 @@ function run_main()
 			"raspbian"|"debian") # Pi4 with Raspberry Pi OS
 				case $ARCH in # determine 32-bit or 64-bit RPiOS
 				"ARM32")
-					#run_greeting "${PI_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
+					run_greeting "${PI_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
 					run_checkdiskspace "2100" #min space required in MB
 					run_downloadbox86 "14113faa_RPi4" #emulator to run i386-wine on ARM32 (freeze version at ed8e01ea, which runs RMS, VARAHF/FM, and TCP works)
 					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					;; #/"ARM32")
 				"ARM64")
-					#run_greeting "${PI_SERIES} ${ARCH} " "10" "2.8" "${ARG}"
+					run_greeting "${PI_SERIES} ${ARCH} " "10" "2.8" "${ARG}"
 					run_checkdiskspace "2800" #min space required in MB
 					run_downloadbox86 "14113faa_RPi4"
 					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64"
@@ -110,7 +101,7 @@ function run_main()
 			"raspbian"|"debian") # Pi3 with Raspberry Pi OS (64-bit)...
 				case $ARCH in
 				"ARM32")
-					#run_greeting "${PI_SERIES} ${ARCH}" "35" "4.1" "${ARG}"
+					run_greeting "${PI_SERIES} ${ARCH}" "35" "4.1" "${ARG}"
 					#ARG="bap" # Force-skip RMS Express installation (since it doesn't run great on RPi3B+)
 					run_checkdiskspace "4100" #min space required in MB
 					run_increasepi3swapfile # Helps prevent insufficient RAM crashes when building box86
@@ -120,7 +111,7 @@ function run_main()
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					;; #"ARM32")
 				"ARM64")
-					#run_greeting "${PI_SERIES} ${ARCH}" "28" "3.5" "${ARG}"
+					run_greeting "${PI_SERIES} ${ARCH}" "28" "3.5" "${ARG}"
 					#ARG="bap" # Force-skip RMS Express installation (since it doesn't run great on RPi3B+)
 					run_checkdiskspace "3500" #min space required in MB
 					run_increasepi3swapfile # Helps prevent insufficient RAM crashes when building box86
@@ -169,7 +160,7 @@ function run_main()
 	"x86"|"x64") ############### i386 & i686 OS Section ###############
 		case $ID in
 		"debian"|"raspbian")
-			#run_greeting "${ARCH}" "30" "1.5" "${ARG}"
+			run_greeting "${ARCH}" "30" "1.5" "${ARG}"
 			run_checkdiskspace "1500" #min space required in MB
 			
 			# TODO: Use the OS-specific package manager to install needed packages? Or do a 'try' in-situ?
@@ -191,9 +182,9 @@ function run_main()
 			#Install wine (note: packages are called "wine-stable", not "winehq-stable" like in the Wine wiki).
 			sudo dpkg --add-architecture i386 # also install wine32 using multi-arch
 			sudo apt-key del "D43F 6401 4536 9C51 D786 DDEA 76F1 A20F F987 672F" #apt-key is deprecated, but this step is here as a hotfix in case distro has an old winehq gpg key installed
-			sudo wget -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key || { echo "unable to download winehq gpg key!" && run_giveup; }
+			sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key || { echo "unable to download winehq gpg key!" && run_giveup; }
 			sudo wget -P /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/${VERSION_CODENAME}/winehq-${VERSION_CODENAME}.sources || { echo "unable to download winehq sources file!" && run_giveup; }
-			sudo sed -i 's&/etc/apt/keyrings/winehq-archive.key&/usr/share/keyrings/winehq-archive.key&g' /etc/apt/sources.list.d/winehq-${VERSION_CODENAME}.sources #fix bug found in the winehq-bullseye.sources file present 09/11/2022
+			sudo sed -i 's&/usr/share/keyrings/winehq-archive.key&/etc/apt/keyrings/winehq-archive.key&g' /etc/apt/sources.list.d/winehq-${VERSION_CODENAME}.sources #fix bug found in the winehq-bullseye.sources file https://bugs.winehq.org/show_bug.cgi?id=53662
 				#Note: Old method for installing key and repo
 				#wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo apt-key add -
 				#sudo add-apt-repository "deb https://dl.winehq.org/wine-builds/debian/ ${VERSION_CODENAME} main"
@@ -229,7 +220,7 @@ function run_main()
 				run_giveup
 				;; #/x86)
 			"x64")
-				#run_greeting "${ARCH}" "30" "1.5" "${ARG}"
+				run_greeting "${ARCH}" "30" "1.5" "${ARG}"
 				run_checkdiskspace "1500" #min space required in MB
 
 				#Make sure system time and certs are up to date (in case system is old or a virtual machine)
@@ -240,23 +231,12 @@ function run_main()
 
 				#Install wine (note: In Ubuntu, packages are called "wine-stable", not "winehq-stable" like in the Wine wiki).
 				sudo dpkg --add-architecture i386 #Install procedure last reviewed 09/07/2022 - ejw
-				
-				# 7-11-2022 updated to install doc https://wiki.winehq.org/Ubuntu
-				sudo mkdir -pm755 /etc/apt/keyrings
 				sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key || { echo "unable to download winehq gpg key!" && run_giveup; }
-				if [ $ID == "ubuntu" ];then
-					sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/${UBUNTU_CODENAME}/winehq-${UBUNTU_CODENAME}.sources || { echo "unable to download ubuntu winehq sources file!" && run_giveup; }
-				fi
+				sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/${UBUNTU_CODENAME}/winehq-${UBUNTU_CODENAME}.sources || { echo "unable to download winehq sources file!" && run_giveup; }
+				sudo sed -i 's&/usr/share/keyrings/winehq-archive.key&/etc/apt/keyrings/winehq-archive.key&g' /etc/apt/sources.list.d/winehq-${UBUNTU_CODENAME}.sources #fix bug found in the winehq-bullseye.sources file https://bugs.winehq.org/show_bug.cgi?id=53662
 				sudo apt-get update
-
-				if [ $ID == "linuxmint" ];then
-					#mint package
-					sudo apt-get install --install-recommends wine-installer -y || { echo "wine installation on mint failed!" && run_giveup; }
-				else
-					#ubuntu
-					sudo apt-get install --install-recommends winehq-devel -y  || { echo "wine insallation on ubuntu failed!" && run_giveup; } #note: for some reason wine-stable lags far behind on ubuntu
-					#sudo apt-get install --install-recommends wine-stable -y  || { echo "wine instllation failed!" && run_giveup; } #note: no winehq-stable package for ubuntu. Symlinks are still created though#sudo apt-get install --install-recommends wine-stable -y  || { echo "wine instllation failed!" && run_giveup; } #note: no winehq-stable package for ubuntu. Symlinks are still created though
-				fi
+				#sudo apt-get install --install-recommends wine-stable -y  || { echo "wine instllation failed!" && run_giveup; } #note: no winehq-stable package for ubuntu. Symlinks are still created though#sudo apt-get install --install-recommends wine-stable -y  || { echo "wine instllation failed!" && run_giveup; } #note: no winehq-stable package for ubuntu. Symlinks are still created though
+				sudo apt-get install --install-recommends winehq-devel -y  || { echo "wine instllation failed!" && run_giveup; } #note: for some reason wine-stable lags far behind on ubuntu
 
 				#Add the user to the USB dialout group so that they can access radio USB CAT control later.
 				sudo usermod -a -G dialout $USER
@@ -302,7 +282,7 @@ function run_main()
         ### Set up Wine (silently make & configure a new wineprefix)
             run_setupwineprefix $ARG # if 'vara_only' was passed to the winelink script, then pass 'vara_only' to this subroutine function too
 	
-        ### Install Winlink & VARA & VarAC into our configured wineprefix
+        ### Install Winlink, VARA, & VarAC into our configured wineprefix
             if [ "$ARG" = "vara_only" ] || [ "$ARG" = "bap" ]; then #TODO: Am I using brackets and ='s correctly?
                 run_installvara
             else
@@ -971,9 +951,9 @@ function run_installvarAC()  # Download/extract/install varAC chat app
     mkdir downloads 2>/dev/null; cd downloads
         # Download varAC linux working version 6.1 (static Link as no dynamic link known at the moment)
             echo -e "\n${GREENTXT}Downloading and installing VarAC . . .${NORMTXT}\n"
-            wget https://varac.hopp.to/varac_latest || { echo "VarAC!" && run_giveup; }
+            wget https://varac.hopp.to/varac_latest || { echo "VarAC download failed!" && run_giveup; }
         # Extract/install varAC
-			mkdir -p ${HOME}/.wine/drive_c/VarAC || { echo "VarAC download failed!" && run_giveup; }
+			mkdir -p ${HOME}/.wine/drive_c/VarAC
 			7z x varac_latest -oc:${HOME}/.wine/drive_c/VarAC
 			sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=ON/' ${HOME}/.wine/drive_c/VarAC/VarAC.ini
 		# Clean up
