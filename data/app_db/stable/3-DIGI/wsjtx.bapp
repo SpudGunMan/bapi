@@ -4,7 +4,7 @@ Name=WSJT-X
 Comment='FST4, FST4W, FT4, FT8, JT4, JT9, JT65, Q65, MSK144, and WSPR'
 VerLocal=0
 VerRemote=0
-W3='https://physics.princeton.edu/pulsar/k1jt/wsjtx.html'
+W3='https://wsjt.sourceforge.io/wsjtx.html'
 Author='spud'
 NOTE='installed to /usr/local/bin \n to get better performance note .. renice -n -19 -u wsjtx'
 
@@ -39,14 +39,16 @@ INSTALL(){
 	mkdir wsjtx
 	cd wsjtx
 
-	FT8PKG=wsjtx-2.6.0-rc5.tgz
-	SFDIR=$(echo $FT8PKG | sed 's/.tgz//')
-	FT8DIR=$(echo $FT8PKG | sed 's/-rc5.tgz//')
+	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[2]}')
+	FT8DIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
+	FT8VER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}' | sed 's/wsjtx-//')
 
-	wget --tries 2 --connect-timeout=20 https://sourceforge.net/projects/wsjt/files/$SFDIR/$FT8PKG -O $FT8PKG
+	wget --tries 2 --connect-timeout=20 $(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
 	tar -xvf $FT8PKG
 	rm $FT8PKG
 	cd $FT8DIR
+
+	echo $FT8VER > ${HOME}/.bap.wsjt.txt
 	
 	cmake -D CMAKE_INSTALL_PREFIX=$FT8DIR
 	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
@@ -71,13 +73,16 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wsjtx | grep bin) ]];then
-        CURRENT=2.6.0-rc5
+		if [ -f ${HOME}/.bap.wsjt.txt ]; then
+			CURRENT=$(cat ${HOME}/.bap.wsjt.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
     else
         CURRENT=NONE
     fi
-	NEWVER=2.6.0-rc5
-    #NEWVER=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
-	#WSJTNEXT=$(curl --max-time 20 -s https://physics.princeton.edu/pulsar/k1jt/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | tail -n 1 | sed 's/WSJT-X //' | cut -f1 -d "<")
+
+    NEWVER=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html | grep "WSJT-X" | grep "resources" | cut -d ">" -f2- | head -c12 | sed 's/WSJT-X //')
 }
 
 DEPENDS(){
