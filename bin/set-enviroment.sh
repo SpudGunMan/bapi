@@ -1,7 +1,7 @@
 #! /bin/bash
 # envioment checking
 # depends on lscpu (likely able to work around this in other ways) which appears to be on debian anyway
-SH_VERSION=1.0.0
+SH_VERSION=1.0.1
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: set-env.sh"; fi
 if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
