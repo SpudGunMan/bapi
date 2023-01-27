@@ -31,7 +31,7 @@ INSTALL(){
     cd DroidStar
     mkdir build
     cd build
-    /usr/lib/qt5.15.2/bin/qmake ..
+    qmake ..
     make
     sudo make install
     # installs /opt/DroidStar/bin/DroidStar
