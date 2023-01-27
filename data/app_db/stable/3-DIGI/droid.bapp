@@ -35,7 +35,7 @@ INSTALL(){
     make
     sudo make install
     # installs /opt/DroidStar/bin/DroidStar
-    ln -fs /opt/DroidStar/bin/DroidStar /usr/local/bin/DroidStar
+    sudo ln -fs /opt/DroidStar/bin/DroidStar /usr/local/bin/DroidStar
 }
 
 VERSION(){
