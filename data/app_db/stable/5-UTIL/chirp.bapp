@@ -41,7 +41,8 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis chirp | grep bin) ]];then
-		CURRENT=$(chirp --version | awk '{ print $2 }' | sed 's/daily-//')
+		CURRENT=0-git
+        #$(chirp --version | awk '{ print $2 }' | sed 's/daily-//')
     else
         CURRENT=NONE
     fi
