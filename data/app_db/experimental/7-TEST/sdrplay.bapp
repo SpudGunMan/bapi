@@ -1,0 +1,45 @@
+BAPP=4
+ID=SDRPlayServer
+Name=RSPTCPServer
+Comment='SDRPlay RSPTCPServer'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='RSPTCPServer'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC}
+
+    rm -rf RSPTCPServer
+    git clone https://github.com/SDRplay/RSPTCPServer
+    cd RSPTCPServer
+    
+    # download the API from the SDRplay website
+    wget https://www.sdrplay.com/software/SDRplay_RSP_API-ARM32-3.07.2.run
+    # change permission so the run file is executable
+    chmod 755 ./SDRplay_RSP_API-ARM32-3.07.2.run
+    # execute the API installer (follow the prompts)
+    ./SDRplay_RSP_API-ARM32-3.07.2.run
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis mmfvm | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
