@@ -68,55 +68,58 @@ function run_main()
 	case $ARCH in
 	"ARM32"|"ARM64") ############### armhf & aarch64 OS Section ###############
 		run_detect_rpi
-		case $PI_SERIES in # Check for Pi's that can run in 64-bit ARM ( https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit )
-		"Pi4")
+		run_detect_othersbc
+		
+		case $SBC_SERIES in # Check for Pi's that can run in 64-bit ARM ( https://www.raspberrypi.com/software/operating-systems/#raspberry-pi-os-64-bit )
+		"RPi4")
 			case $ID in
 			"raspbian"|"debian") # Pi4 with Raspberry Pi OS
 				case $ARCH in # determine 32-bit or 64-bit RPiOS
 				"ARM32")
-					run_greeting "${PI_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
+					run_greeting "${SBC_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
 					run_checkdiskspace "2100" #min space required in MB
 					run_downloadbox86 "14113faa_RPi4" #emulator to run i386-wine on ARM32 (freeze version at ed8e01ea, which runs RMS, VARAHF/FM, and TCP works)
-					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RPI4" "ARM32" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					;; #/"ARM32")
 				"ARM64")
-					run_greeting "${PI_SERIES} ${ARCH} " "10" "2.8" "${ARG}"
+					run_greeting "${SBC_SERIES} ${ARCH} " "10" "2.8" "${ARG}"
 					run_checkdiskspace "2800" #min space required in MB
 					run_downloadbox86 "14113faa_RPi4"
-					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64"
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RPI4" "ARM64"
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					run_Install_i386wineDependencies_RpiOS64bit
 					;; #/"ARM64")
 				esac #/case $ARCH
 				;; #/"raspbian"|"debian")
 			*)
+				clear
 				echo -e "ERROR: For Raspberry Pi's, only RPiOS is supported by Winelink at this time.\nGiving up on install."
 				run_giveup
 				;; #/*)
 			esac #/case $ID
 			;; #/"Pi4")
-		"Pi3+"|"Pi3")
+		"RPi3+"|"RPi3")
 			case $ID in
 			"raspbian"|"debian") # Pi3 with Raspberry Pi OS (64-bit)...
 				case $ARCH in
 				"ARM32")
-					run_greeting "${PI_SERIES} ${ARCH}" "35" "4.1" "${ARG}"
+					run_greeting "${SBC_SERIES} ${ARCH}" "35" "4.1" "${ARG}"
 					#ARG="bap" # Force-skip RMS Express installation (since it doesn't run great on RPi3B+)
 					run_checkdiskspace "4100" #min space required in MB
 					run_increasepi3swapfile # Helps prevent insufficient RAM crashes when building box86
 					run_custompi3kernel "1" # This kernel installer will ignore 64bit Pi3's since they already have 3G/1G VMem Swap (not needed for 64-bit RPiOS)
 					run_downloadbox86 "14113faa_RPi4"
-					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RPI4" "ARM32" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					;; #"ARM32")
 				"ARM64")
-					run_greeting "${PI_SERIES} ${ARCH}" "28" "3.5" "${ARG}"
+					run_greeting "${SBC_SERIES} ${ARCH}" "28" "3.5" "${ARG}"
 					#ARG="bap" # Force-skip RMS Express installation (since it doesn't run great on RPi3B+)
 					run_checkdiskspace "3500" #min space required in MB
 					run_increasepi3swapfile # Helps prevent insufficient RAM crashes when building box86
 					run_downloadbox86 "14113faa_RPi4"
-					#run_buildbox86 "ed8e01ea0c69739ced597fecb5c3d61b96c5c761" "RPI4" "ARM64"
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RPI4" "ARM64"
 					run_Sideload_i386wine "devel" "7.1" "debian" "${VERSION_CODENAME}" "-1"
 					run_Install_i386wineDependencies_RpiOS64bit
 					;; #"ARM64")
@@ -128,21 +131,59 @@ function run_main()
 				;; #/*)
 			esac #/case $ID
 			;; #/"Pi3+"|"Pi3")
-		"PiZ2") # TODO - Get a PiZ2W and test this
+		"RPiZ2") # TODO - Get a PiZ2W and test this
 			#run_custompi3kernel "1" 
 			#run_installwine "piz2" "devel" "7.1" "${ID_LIKE}" "${VERSION_CODENAME}" "-1"
+			clear
 			echo -e "ERROR: Raspberry Pi Zero 2W is not supported yet, but might be in the future.\nGiving up on install."
 			run_giveup
 			;; #/"PiZ2")
-		#"") #TODO: Enable this when Termux install available
-		#	: # If no Pi variable is set, do nothing and continue on to check for other hardware cases.
-		#	;; #/"")
+		"Termux") #TODO: Enable this when Termux install available
+			: # If no SBC_SERIES variable is set, do nothing and continue on to check for other hardware cases.
+			;; #/"")
+		"OrangePi4")
+			case $ID in
+			"ubuntu") # Orange Pi 4 LTS with Ubuntu OS
+				case $ARCH in # determine 32-bit or 64-bit Ubuntu
+				"ARM32")
+					run_greeting "${SBC_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
+					run_checkdiskspace "2100" #min space required in MB
+					run_downloadbox86 "14113faa_rk3399" #emulator to run i386-wine on ARM32
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RK3399" "ARM32" #TODO: Double-check this (arm32 better for building?) # NOTE: RPI3 and RPI3ARM64 don't build on Pi3B+ (`cc: error: unrecognized command-line option ‘-marm’`) but RPI4ARM64 does.
+					#run_Sideload_i386wine "devel" "7.7" "ubuntu" "${VERSION_CODENAME}" "-1"
+					run_Sideload_i386wine "devel" "7.7" "debian" "bullseye" "-1" #kludge: Use debian wine on ubuntu for now
+					;; #/"ARM32")
+				"ARM64")
+					run_greeting "${SBC_SERIES} ${ARCH} " "10" "2.8" "${ARG}"
+					run_checkdiskspace "2100" #min space required in MB
+					run_downloadbox86 "14113faa_rk3399"
+					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RK3399" "ARM64" #takes longer than downloading
+					#run_Install_i386wineDependencies_Ubuntu64bit #NOTE: My first attempt at this corrupted an OrangePi4 a bit. Needs more testing.
+					#run_Sideload_i386wine "devel" "7.7" "ubuntu" "${VERSION_CODENAME}" "-1" # THIS IS BROKEN FOR SOME REASONrun_Install_i386wineDependencies_RpiOS64bit
+					run_Sideload_i386wine "devel" "7.7" "debian" "bullseye" "-1" #kludge: Use debian wine on ubuntu for now
+					;; #/"ARM64")
+				esac #/case $ARCH
+				;; #/"raspbian"|"debian")
+			*)
+				clear
+				echo -e "ERROR: For Raspberry Pi's, only RPiOS is supported by Winelink at this time.\nGiving up on install."
+				run_giveup
+				;; #/*)
+			esac #/case $ID
+			;; #/"OrangePi4")
 		*)
-			echo "Your Raspberry Pi is too old to work well with wine/box86 emulation."
+			clear
+			if [[ $SBC_SERIES == *"RPi"* ]]; then
+				echo "Your Raspberry Pi is too old to run Wine/box86 well, so will not be able to run VARA or RMS Express."
+			else
+				echo "You seem to be running an SBC which we have not encountered yet."
+				echo "If you would like your SBC added to Winelink, please post an issue on the Winelink github page."
+				echo "    https://github.com/WheezyE/Winelink/"
+			fi
 			echo "Giving up on install."
 			run_giveup
 			;; #/*)
-		esac #/case $PI_SERIES
+		esac #/case $SBC_SERIES
 
 		# case $FOUNDTERMUX in # TODO - Check for 64-bit Termux
 		# "Termux")
@@ -493,7 +534,16 @@ function run_buildbox86() # Compile box64 & box86 on-device (takes a long time, 
                 git clone https://github.com/ptitSeb/box86 && cd box86/
                     git checkout "$commit86"
                     mkdir build; cd build
-                        cmake .. -DARM_DYNAREC=ON -D${series}${arch}=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+		    	if [ "${series}" = "RPi" ]; then
+                        	cmake .. -DARM_DYNAREC=ON -D${series}${arch}=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+				echo "Compiling box86 for RPi on ${arch}"
+			elif [ "${series}" = "RK3399" ]; then
+				cmake .. -D${series}=1 -DCMAKE_BUILD_TYPE=RelWithDebInfo
+				echo "Compiling box86 for RK3399 on ${arch}"
+			else
+				cmake .. -DARM_DYNAREC=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
+				echo "Compiling box86 for unknown SBC on ${arch}"
+			fi
 			if [ "$(nproc)" > 1 ]; then
                         	make -j$(($(nproc)-2)) # compile using all processors minus two (to prevent OS freezes)
 			else
@@ -581,14 +631,11 @@ function run_Install_i386wineDependencies_RpiOS64bit()
 	# - these packages are needed for running box86/wine-i386 on a 64-bit RPiOS via multiarch
 	echo -e "${GREENTXT}Installing armhf dependencies for i386-Wine on aarch64 . . .${NORMTXT}"
 	sudo dpkg --add-architecture armhf && sudo apt-get update #enable multi-arch
-	sudo apt-get install -y libasound2:armhf libc6:armhf libglib2.0-0:armhf libgphoto2-6:armhf libgphoto2-port12:armhf \
-		libgstreamer-plugins-base1.0-0:armhf libgstreamer1.0-0:armhf libldap-2.4-2:armhf libopenal1:armhf libpcap0.8:armhf \
-		libpulse0:armhf libsane1:armhf libudev1:armhf libusb-1.0-0:armhf libvkd3d1:armhf libx11-6:armhf libxext6:armhf \
-		libasound2-plugins:armhf ocl-icd-libopencl1:armhf libncurses6:armhf libncurses5:armhf libcap2-bin:armhf libcups2:armhf \
-		libdbus-1-3:armhf libfontconfig1:armhf libfreetype6:armhf libglu1-mesa:armhf libglu1:armhf libgnutls30:armhf \
-		libgssapi-krb5-2:armhf libkrb5-3:armhf libodbc1:armhf libosmesa6:armhf libsdl2-2.0-0:armhf libv4l-0:armhf \
-		libxcomposite1:armhf libxcursor1:armhf libxfixes3:armhf libxi6:armhf libxinerama1:armhf libxrandr2:armhf \
-		libxrender1:armhf libxxf86vm1 libc6:armhf libcap2-bin:armhf
+	
+	#depends main packages - NOTE: This for loop method is inefficient, but ensures packages install even if some are missing.
+	for i in 'libasound2:armhf' 'libc6:armhf' 'libglib2.0-0:armhf' 'libgphoto2-6:armhf' 'libgphoto2-port12:armhf' 'libgstreamer-plugins-base1.0-0:armhf' 'libgstreamer1.0-0:armhf' 'libldap-2.4-2:armhf' 'libopenal1:armhf' 'libpcap0.8:armhf' 'libpulse0:armhf' 'libsane1:armhf' 'libudev1:armhf' 'libusb-1.0-0:armhf' 'libvkd3d1:armhf' 'libx11-6:armhf' 'libxext6:armhf' 'libasound2-plugins:armhf' 'ocl-icd-libopencl1:armhf' 'libncurses6:armhf' 'libncurses5:armhf' 'libcap2-bin:armhf' 'libcups2:armhf' 'libdbus-1-3:armhf' 'libfontconfig1:armhf' 'libfreetype6:armhf' 'libglu1-mesa:armhf' 'libglu1:armhf' 'libgnutls30:armhf' 'libgssapi-krb5-2:armhf' 'libkrb5-3:armhf' 'libodbc1:armhf' 'libosmesa6:armhf' 'libsdl2-2.0-0:armhf' 'libv4l-0:armhf' 'libxcomposite1:armhf' 'libxcursor1:armhf' 'libxfixes3:armhf' 'libxi6:armhf' 'libxinerama1:armhf' 'libxrandr2:armhf' 'libxrender1:armhf' 'libxxf86vm1' 'libc6:armhf' 'libcap2-bin:armhf'; do
+		sudo apt-get install -y "$i"
+		done
 		# This list found by downloading...
 		#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/wine-devel-i386_7.1~bullseye-1_i386.deb
 		#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/winehq-devel_7.1~bullseye-1_i386.deb
@@ -607,6 +654,44 @@ function run_Install_i386wineDependencies_RpiOS64bit()
 	#	libxi6:armhf libxinerama1:armhf libxrandr2:armhf libxrender1:armhf libxxf86vm1:armhf mesa-va-drivers:armhf osspd:armhf \
 	#	pulseaudio:armhf -y # for i386-wine on aarch64 - TODO: Something in this list makes taskbar disappear (after reboot) in bullseye
 	#	sudo apt-get install libasound2:armhf libpulse0:armhf libxml2:armhf libxslt1.1:armhf libxslt1-dev:armhf -y # fixes i386-wine sound? from Discord
+}
+
+function run_Install_i386wineDependencies_Ubuntu64bit()
+{
+	# Install :armhf libraries to run i386-Wine on Ubuntu 64-bit - TODO: SOMETHING IS NOT RIGHT WITH UBUNTU WINE ON armhf - using debian wine on ubuntu for now
+	# - these packages are needed for running box86/wine-i386 on a 64-bit Ubuntu via multiarch
+	echo -e "${GREENTXT}Installing armhf dependencies for i386-Wine on aarch64 . . .${NORMTXT}"
+	sudo dpkg --add-architecture armhf && sudo apt-get update #enable multi-arch
+	
+	#depends main packages - NOTE: This for loop method is inefficient, but ensures packages install even if some are missing.
+	for i in 'libasound2:armhf' 'libc6:armhf' 'libglib2.0-0:armhf' 'libgphoto2-6:armhf' 'libgphoto2-port12:armhf' 'libgstreamer-plugins-base1.0-0:armhf' 'libgstreamer1.0-0:armhf' 'libldap-2.5-0:armhf' 'libopenal1:armhf' 'libpcap0.8:armhf' 'libpulse0:armhf' 'libsane1:armhf' 'libudev1:armhf' 'libusb-1.0-0:armhf' 'libx11-6:armhf' 'libxext6:armhf' 'ocl-icd-libopencl1:armhf' 'libasound2-plugins:armhf' 'libncurses6:armhf'; do
+		sudo apt-get install -y "$i"
+		done
+	sudo apt-get install -y 'libunwind8:armhf' #amd64-wine likes this package too
+
+	#depends alternate packages
+	for i in 'libopencl1:armhf' 'libopencl-1.2-1:armhf' 'libncurses5:armhf' 'libncurses:armhf'; do
+		sudo apt-get install -y "$i"
+		done
+
+	#recommends main packages
+	for i in 'libcap2-bin:armhf' 'libcups2:armhf' 'libdbus-1-3:armhf' 'libfontconfig1:armhf' 'libfreetype6:armhf' 'libglu1-mesa:armhf' 'libgnutls30:armhf' 'libgssapi-krb5-2:armhf' 'libkrb5-3:armhf' 'libodbc1:armhf' 'libosmesa6:armhf' 'libsdl2-2.0-0:armhf' 'libv4l-0:armhf' 'libxcomposite1:armhf' 'libxcursor1:armhf' 'libxfixes3:armhf' 'libxi6:armhf' 'libxinerama1:armhf' 'libxrandr2:armhf' 'libxrender1:armhf' 'libxxf86vm1'; do
+		sudo apt-get install -y "$i"
+		done
+	sudo apt-get install -y 'libjpeg62-turbo:armhf' #amd64-wine likes this package too
+
+	#recommends alternate packages
+	for i in 'libglu1:armhf' 'libgnutls28:armhf' 'libgnutls26:armhf'; do
+		sudo apt-get install -y "$i"
+		done
+	sudo apt-get install -y 'libjpeg8:armhf' #amd64-wine likes this package too 
+
+	# This list found by downloading...
+	#	wget https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel-i386_7.7~jammy-1_i386.deb
+	#	wget https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/winehq-devel_7.7~jammy-1_i386.deb
+	#	wget https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel_7.7~jammy-1_i386.deb
+	# then `dpkg-deb -I package.deb`. Read output, add `:armhf` to packages in dep list, then try installing them on Pi aarch64.
+	# I think installing these might mess up the system: 'debconf-2.0:armhf' 'debconf:armhf'
 }
 
 function run_Sideload_amd64wineWithi386wine()
@@ -769,8 +854,8 @@ function run_custompi3kernel() # Needed to run wine on Pi3's running RPiOS (32-b
 			echo "Continuing..."
 		fi
 	elif echo "$vmsplit_output" | grep -q "^CONFIG_VMSPLIT_2G=y" || echo "$vmsplit_output" | grep -q "^# CONFIG_VMSPLIT_3G is not set" ; then #ensure hardware is armv7 for kernel compiling to work
-		if [[ "$PI_SERIES" != 'Pi3' && "$PI_SERIES" != "Pi3+" ]]; then
-			echo "User error: This script is not capable of handling your $PI_SERIES board with a 2G/2G memory split.\nWhatever you did to get yourself into this situation, undo it and try installing Wine again."
+		if [[ "$SBC_SERIES" != 'RPi3' && "$SBC_SERIES" != "RPi3+" ]]; then
+			echo "User error: This script is not capable of handling your $SBC_SERIES board with a 2G/2G memory split.\nWhatever you did to get yourself into this situation, undo it and try installing Wine again."
 			run_giveup
 		#ensure /boot/config.txt exists to make sure this is a rpi board
 		elif [ ! -f /boot/config.txt ]; then
@@ -993,11 +1078,12 @@ function run_varACsetup() # TODO: This is a kludge until VarAC can be patched to
 	    
 	# Guide the user to enter Callsign/Grid into VarAC's menu (configure hardware soundcard input/output)
             clear
-            echo -e "\n${GREENTXT}Configuring VarAC . . .${NORMTXT}\n"
-            echo -e "\n${GREENTXT}Please enter your Callsign & Gridsquare into the VarAC settings box\n(click 'Ok' on the user prompt textbox to continue)\n\nNOTE: VARA might restart a few times as VarAC tries to handshake with VARA.${NORMTXT}\n"
-            zenity --info --height 100 --width 350 --text="We will now setup your Callsign &amp; Gridsquare for VarAC. \n\nInstall will continue once you have closed the VarAC Settings menu." --title="VarAC User Info Setup"
-            echo -e "\n${GREENTXT}Loading VarAC now . . .${NORMTXT}\n"
-	    
+            #echo -e "\n${GREENTXT}Loading VarAC . . .${NORMTXT}\n"
+            #echo -e "\n${GREENTXT}Please enter your Callsign & Gridsquare into the VarAC settings box\n(click 'Ok' on the user prompt textbox to continue)\n\nThis might take a moment.${NORMTXT}\n"
+            #zenity --info --height 100 --width 350 --text="We will now setup your Callsign &amp; Gridsquare for VarAC. \n\nInstall will continue once you have closed the VarAC Settings menu." --title="VarAC User Info Setup"
+            echo -e "\n${GREENTXT}Configuring VarAC now . . .${NORMTXT}\n"
+	    echo -e "\n${GREENTXT}Note: This might take a moment${NORMTXT}\n"
+            
 	# Create/run varaac_configure.ahk
 		# VarAC must be run once an then closed so that it makes a 'VarAC.ini' file in the user home directory. Then we can modify that file.
 		# First run of VarAC will also prompt the user for CallSn & Grid.
@@ -1132,8 +1218,7 @@ function run_makevaraupdatescript()
 				# Search the rosmodem website for a VARA HF mega.nz link of any version, then download it
 					echo -e "\n${GREENTXT}Downloading VARA HF . . .${NORMTXT}\n"
 					VARAHFLINK=$(curl -s https://rosmodem.wordpress.com/ | grep -oP '(?=https://mega.nz).*?(?=" target="_blank" rel="noopener noreferrer">VARA HF v)')
-					mv ${HOME}/Downloads/VARA\ HF*.zip ${VARAUPDATE} 2>&1 > /dev/null
-					megadl ${VARAHFLINK} --path=${VARAUPDATE} 
+					megadl ${VARAHFLINK} --path=${VARAUPDATE} || { echo "VARA HF download failed!" && run_giveup; }
 					7z x ${VARAUPDATE}/VARA\ HF*.zip -o"${VARAUPDATE}/VARAHFInstaller" -y -bsp0 -bso0
 					mv ${VARAUPDATE}/VARAHFInstaller/VARA\ setup*.exe ~/.wine/drive_c/ # move VARA installer into wineprefix (so AHK can find it)
 
@@ -1172,8 +1257,7 @@ function run_makevaraupdatescript()
 				# Search the rosmodem website for a VARA FM mega.nz link of any version, then download it
 					echo -e "\n${GREENTXT}Downloading VARA FM . . .${NORMTXT}\n"
 					VARAFMLINK=$(curl -s https://rosmodem.wordpress.com/ | grep -oP '(?=https://mega.nz).*?(?=" target="_blank" rel="noopener noreferrer">VARA FM v)') # Find the mega.nz link from the rosmodem website no matter its version, then store it as a variable
-					mv ${HOME}/Downloads/VARA\ FM*.zip ${VARAUPDATE} 2>&1 > /dev/null
-					megadl ${VARAFMLINK} --path=${VARAUPDATE} 
+					megadl ${VARAFMLINK} --path=${VARAUPDATE} || { echo "VARA FM download failed!" && run_giveup; }
 					7z x ${VARAUPDATE}/VARA\ FM*.zip -o"${VARAUPDATE}/VARAFMInstaller" -y -bsp0 -bso0
 					mv ${VARAUPDATE}/VARAFMInstaller/VARA\ FM\ setup*.exe ~/.wine/drive_c/ # move VARA installer here (so AHK can find it later)
 
@@ -1212,8 +1296,7 @@ function run_makevaraupdatescript()
 		#		# Search the rosmodem website for a VARA SAT mega.nz link of any version, then download it
 		#			echo -e "\n${GREENTXT}Downloading VARA SAT . . .${NORMTXT}\n"
 		#			VARAFMLINK=$(curl -s https://rosmodem.wordpress.com/ | grep -oP '(?=https://mega.nz).*?(?=" target="_blank" rel="noopener noreferrer">VARA SAT v)') # Find the mega.nz link from the rosmodem website no matter its version, then store it as a variable
-		#			mv ${HOME}/Downloads/VARA\ SAT*.zip ${VARAUPDATE} 2>&1 > /dev/null
-		#			megadl ${VARAFMLINK} --path=${VARAUPDATE}
+		#			megadl ${VARAFMLINK} --path=${VARAUPDATE} || { echo "VARA SAT download failed!" && run_giveup; }
 		#			7z x ${VARAUPDATE}/VARA\ SAT*.zip -o"${VARAUPDATE}/VARASATInstaller" -y -bsp0 -bso0
 		#			mv ${VARAUPDATE}/VARASATInstaller/VARA\ SAT\ setup*.exe ~/.wine/drive_c/ # move VARA installer here (so AHK can find it later)
 		#
@@ -1252,8 +1335,7 @@ function run_makevaraupdatescript()
 				# Search the rosmodem website for a VARA Chat mega.nz link of any version, then download it
 					echo -e "\n${GREENTXT}Downloading VARA Chat . . .${NORMTXT}\n"
 					VARACHATLINK=$(curl -s https://rosmodem.wordpress.com/ | grep -oP '(?=https://mega.nz).*?(?=" target="_blank" rel="noopener noreferrer">VARA Chat v)') # Find the mega.nz link from the rosmodem website no matter its version, then store it as a variable
-					mv ${HOME}/Downloads/VARA\ Chat*.zip ${VARAUPDATE} 2>&1 > /dev/null
-					megadl ${VARACHATLINK} --path=${VARAUPDATE}
+					megadl ${VARACHATLINK} --path=${VARAUPDATE} || { echo "VARA Chat download failed!" && run_giveup; }
 					7z x ${VARAUPDATE}/VARA\ Chat*.zip -o"${VARAUPDATE}/VARAChatInstaller" -y -bsp0 -bso0
 
 				# Run the VARA Chat installer silently
@@ -1605,9 +1687,14 @@ function run_detect_os()
     # TODO: Add Termux detection
 }
 
-function run_detect_rpi()
+function run_detect_rpi()  # Learn about our user's RPi hardware configuration by reading the revision number stored in '/proc/cpuinfo'
 {
-	# Learn about our user's RPi hardware configuration by reading the revision number stored in '/proc/cpuinfo'
+	# If we are not running a Raspberry Pi, don't try to parse the model number.
+		if ! grep -q Raspberry "/proc/device-tree/model"; then
+			echo "This is not a Raspberry Pi."
+			return 1 # leave this function
+			# https://gist.github.com/jperkin/c37a574379ef71e339361954be96be12#raspberry-pi-cpuinfo-vs-device-tree
+		fi
 	
 	# Get revision number
 		#local HEXREVISION="$1" # uncomment this (and comment-out the line below this) if you want to pass revision numbers to this script instead of auto-detecting
@@ -1998,28 +2085,40 @@ function run_detect_rpi()
 		
 	# Categorize the Pi into a series (based on the $PI_TYPE variable)
 		if [ "$PI_TYPE" = "4B" ] || [ "$PI_TYPE" = "400" ] || [ "$PI_TYPE" = "CM4" ]; then
-			PI_SERIES=Pi4
+			SBC_SERIES=RPi4
 		elif [ "$PI_TYPE" = "3A+" ] || [  "$PI_TYPE" = "3B+" ] || [  "$PI_TYPE" = "CM3+" ]; then
-			PI_SERIES=Pi3+
+			SBC_SERIES=RPi3+
 		elif [ "$PI_TYPE" = "Zero 2 W" ]; then
-			PI_SERIES=PiZ2
+			SBC_SERIES=RPiZ2
 		elif [ "$PI_TYPE" = "3B" ] || [  "$PI_TYPE" = "CM3" ]; then
-			PI_SERIES=Pi3
+			SBC_SERIES=RPi3
 		elif [ "$PI_TYPE" = "Zero" ] || [ "$PI_TYPE" = "Zero W" ]; then
-			PI_SERIES=PiZ1
+			SBC_SERIES=RPiZ1
 		elif [ "$PI_TYPE" = "2B" ]; then
-			PI_SERIES=Pi2
+			SBC_SERIES=RPi2
 		elif [ "$PI_TYPE" = "1A+" ] || [ "$PI_TYPE" = "1B+" ]; then
-			PI_SERIES=Pi1+
+			SBC_SERIES=RPi1+
 		elif [ "$PI_TYPE" = "1A" ] || [ "$PI_TYPE" = "1B" ] || [ "$PI_TYPE" = "CM1" ]; then
-			PI_SERIES=Pi1
+			SBC_SERIES=RPi1
 		elif [ "$PI_TYPE" = "Internal use only" ] || [ "$PI_TYPE" = "Alpha (early prototype)" ]; then
-			PI_SERIES=X
+			SBC_SERIES=X
 		else
 			echo "Error: Could not identify Pi series.">&2
 			run_giveup
 		fi
-		echo -e "\nThis Pi is part of the ${PI_SERIES} series."
+		echo -e "\nThis Pi is part of the ${SBC_SERIES} series."
+}
+
+function run_detect_othersbc()
+{
+	local model=$(tr -d '\0' </proc/device-tree/model)
+	# source: https://stackoverflow.com/questions/46163678/get-rid-of-warning-command-substitution-ignored-null-byte-in-input
+
+	# Categorize the SBC into a series
+	if [ "$model" = "OrangePi 4 LTS" ] || [ "$model" = "OrangePi 4" ]; then
+		SBC_SERIES=OrangePi4
+	fi
+	echo -e "\nThis SBC is part of the ${SBC_SERIES} series."
 }
 
 function run_giveup()  # If our script failed at any critical stages, notify the user and quit
