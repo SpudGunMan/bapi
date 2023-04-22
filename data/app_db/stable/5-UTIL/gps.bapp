@@ -84,7 +84,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis gpsupdate | grep bin) ]];then
-        CURRENT=0-deb
+        CURRENT=6
     else
         CURRENT=NONE
     fi

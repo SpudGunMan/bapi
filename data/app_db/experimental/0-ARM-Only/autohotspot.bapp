@@ -34,12 +34,8 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis pmon | grep bin) ]];then
-        CURRENT=unknown
-    else
-        CURRENT=NONE
-    fi
-    NEWVER=0-git
+    CURRENT=BAPI
+    NEWVER=BAPI
 }
 
 DEPENDS(){

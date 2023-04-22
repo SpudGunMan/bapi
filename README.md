@@ -1,9 +1,10 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE BETA**
-this is a early release still "beta" RC4
+this is a early release still "beta" RC5
+  - a exiting enhancment WSJT-X WSJT-Z and JTDX JS8CALL now all installing properly!
 - no .desktop files yet for most things (no menu icons)
-- fl-suite depends on libudev-dev which, when installed into newest non-updated, mint Vanessa, it will make a huge mess, when not first apt-get upgrade (so upgrade your OS first). This script is not upgrading the OS.
+- upgrade your OS first. This script is not upgrading the OS.
 
 ## Description
 ![screenshot](data/screenshot.jpg)

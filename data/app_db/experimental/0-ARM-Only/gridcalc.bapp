@@ -31,7 +31,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis grid-calc | grep bin) ]];then
-        CURRENT=git
+        CURRENT=2
     else
         CURRENT=NONE
     fi

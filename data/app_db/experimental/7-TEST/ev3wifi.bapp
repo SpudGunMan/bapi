@@ -1,7 +1,7 @@
 BAPP=4
 ID=EV3WIFI
 Name=ev3wifi
-Comment='evolve3 laptop wifi driver'
+Comment='evolve3 laptop wifi driver KERNEL patch'
 VerLocal=0
 VerRemote=0
 W3='none'

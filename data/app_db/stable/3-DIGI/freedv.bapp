@@ -68,8 +68,8 @@ INSTALL(){
 }
 
 VERSION(){
-    if [ -f ${BAPSRC}/freedv-gui/build_linux/src/version.h ];then
-        CURRENT=$(cat ${BAPSRC}/freedv-gui/build_linux/src/version.h | grep -m 1 "VERSION (\"" | awk '{ print $3 }' | sed 's/("//' | sed 's/-\"//')
+    if [ -d ${HOME}/FreeDATA ];then
+        CURRENT=0-git
     else
         CURRENT=NONE
     fi

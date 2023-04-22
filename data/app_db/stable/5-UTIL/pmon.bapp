@@ -21,6 +21,8 @@ INSTALL(){
         #wget -q -O - https://www.scs-ptc.com/repo/packages/scs.gpg.key | sudo apt-key add -
         #sudo apt update
         #sudo apt-get -y install pmon
+        #wget -q -O - https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb # | sudo dpkg -i
+        #echo "Done!"
         
         wget https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb
         wget https://www.scs-ptc.com/repo/packages/PMON_Manual.pdf
@@ -32,7 +34,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis pmon | grep bin) ]];then
-        CURRENT=unknown
+        CURRENT=$(pmon -V | sed 's/PMON Version //')
     else
         CURRENT=NONE
     fi

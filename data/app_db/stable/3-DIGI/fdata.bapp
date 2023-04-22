@@ -10,6 +10,7 @@ NOTE='installs to HOME and there is a launcher script \n this also installs npm 
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
+    #sudo apt-get install -y nodejs >> errors/apt.log
 
     if [[ $(whereis npx | grep bin) ]];then
         echo -e "INFORMATIONAL: found npx"
@@ -35,14 +36,15 @@ INSTALL(){
     pip install structlog 
     pip install sounddevice
 
-    cd ${BAPSRC}
-    rm -rf FreeDAT
+    cd ${HOME}
+
     if [ -d ${HOME}/FreeDATA ];then
         cd ${HOME}/FreeDATA
         git pull
     else
-        cd ${HOME}/FreeDATA
-        git clone https://github.com/DJ2LS/FreeDATA.git
+        cd ${HOME}/
+        git clone https://github.com/DJ2LS/FreeDATA
+        cd FreeDATA
         cd gui
 
         npm i
@@ -60,7 +62,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ -f /usr/local/bin/freedata ]];then
+    if [[ $(whereis freedata | grep bin) ]];then
         CURRENT=0-git
 	else
 		CURRENT=NONE

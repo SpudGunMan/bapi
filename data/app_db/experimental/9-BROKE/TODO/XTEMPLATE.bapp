@@ -15,7 +15,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis pmon | grep bin) ]];then
+    if [[ $(whereis NOMON | grep bin) ]];then
         CURRENT=unknown
     else
         CURRENT=NONE

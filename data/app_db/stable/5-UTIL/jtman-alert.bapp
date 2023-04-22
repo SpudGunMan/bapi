@@ -10,8 +10,8 @@ NOTE='could be fiddly'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get install python3-tk
-    sudo apt-get install libatlas-base-dev
+    sudo apt-get -y install install python3-tk
+    sudo apt-get -y install libatlas-base-dev
     pip3 install termcolor
     pip3 install adif_io
     pip3 install pyhamtools
@@ -30,7 +30,7 @@ INSTALL(){
     chmod +x jtman-launch.sh
 
     cd..
-    mv jtman ${HOME}/
+    mv jtman ${HOME}/jtman
 }
 
 VERSION(){

@@ -1,0 +1,46 @@
+BAPP=4
+ID=HDFM
+Name=HDFM
+Comment='HDFM'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/KYDronePilot/hdfm'
+Author='spud'
+NOTE='NOT WORKING 64ARCH'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt install git build-essential cmake autoconf libtool libao-dev libfftw3-dev librtlsdr-dev
+    
+    cd ${BAPSRC}
+    rm -rf hdfm
+    mkdir hdfm
+    cd hdfm
+
+    # install nrsc5
+    git clone https://github.com/theori-io/nrsc5.git nrsc5
+    cd nrsc5
+    mkdir build
+    cd build
+    cmake .. -DUSE_NEON=ON
+    make
+    sudo make install
+    sudo ldconfig
+
+    # install binary
+    sudo curl -sSL 'https://github.com/KYDronePilot/hdfm/releases/download/v2.0.1/hdfm-aarch64-unknown-linux-musl.tgz' | sudo tar xzv -C /usr/local/bin
+}
+
+VERSION(){
+    if [[ $(whereis hdfm | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

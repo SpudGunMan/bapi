@@ -50,8 +50,8 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis pmon | grep bin) ]];then
-        CURRENT=unknown
+    if [[ -f /usr/bin/hwclock ]]; then
+        CURRENT=0-deb
     else
         CURRENT=NONE
     fi

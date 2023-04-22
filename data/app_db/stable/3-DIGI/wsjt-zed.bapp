@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3=''
 Author='spud'
-NOTE='this currently builds but not installing it where to?'
+NOTE='binary is put into ~/wsjtz/bin'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
@@ -44,12 +44,11 @@ INSTALL(){
     wget --tries 2 --connect-timeout=60  https://sourceforge.net/projects/wsjt-z/files/Source/$WSJTZPKG
     unzip $WSJTZPKG
     rm $WSJTZPKG
-    mv wsjtx src
-    
-    mkdir release
 
-    cmake -D CMAKE_INSTALL_PREFIX=${BAPSRC}/wsjtz/release/
-    cmake -DWSJT_SKIP_MANPAGES=ON-DWSJT_GENERATE_DOCS=OFF ./src
+    mv wsjtx src
+    cd src
+
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz/ -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
 	sudo cmake --build . --target install -j$BAPCORE
 
 	#sudo mv release/bin/* /usr/local/bin/
@@ -71,7 +70,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis none | grep bin) ]];then
+    if [ -d ${HOME}/wsjtz ];then
         CURRENT=fix
     else
         CURRENT=NONE

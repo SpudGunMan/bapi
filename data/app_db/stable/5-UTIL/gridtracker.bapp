@@ -18,13 +18,13 @@ INSTALL(){
 	mkdir gridtracker
 	cd gridtracker
 
-	# https://gridtracker.org/index.php/downloads/gridtracker scrape the version number
-	ver=$(curl --max-time 20 -s https://gridtracker.org/index.php/downloads/gridtracker | grep osdownloads-container -A 4 | sed 's/.*">//' | grep -m 1 v | sed 's/<\/a> <\/h3>//' | sed 's/\./-/'g)
+	# https://gitlab.com/gridtracker.org/gridtracker/-/releases scrape the version number
+	ver=1.23.040
 	echo -e "INFORMATIONAL: GridTracker version $ver"
 
-	arm64=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-arm-64
-	arm32=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-arm-32
-	deb=https://gridtracker.org/index.php/component/osdownloads/download/gridtracker-releases/$ver/gridtracker-$ver-all.deb
+	arm64=https://downloads.gridtracker.org/v1.23.0402/GridTracker-1.23.0402-linux-arm64.tar.gz
+	arm32=https://downloads.gridtracker.org/v1.23.0402/GridTracker-1.23.0402-linux-arm32.tar.gz
+	deb=https://downloads.gridtracker.org/v1.23.0402/gridtracker_1.23.0402_all.deb
 
 	# Download gridtracker binary
     if [[ "$BAPCPU" == *"ar"* ]]; then
@@ -82,9 +82,9 @@ VERSION(){
     if [ -f ${HOME}/GridTracker/GridTrackerVersion.txt ];then
         CURRENT=$(cat ${HOME}/GridTracker/GridTrackerVersion.txt)
     else
-        CURRENT=UNK
+        CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://gridtracker.org/index.php/downloads/gridtracker | grep osdownloads-container -A 4 | sed 's/.*">//' | grep -m 1 v | sed 's/<\/a> <\/h3>//' | sed 's/v//')
+    NEWVER='0-web'
 }
 
 DEPENDS(){

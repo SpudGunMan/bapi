@@ -30,12 +30,12 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis pmon | grep bin) ]];then
-        CURRENT=unknown
+    if [ -d ${HOME}/AlarmeJT ]; then
+        CURRENT=0-get
     else
         CURRENT=NONE
     fi
-    NEWVER=NONE
+    NEWVER=0-get
 }
 
 DEPENDS(){

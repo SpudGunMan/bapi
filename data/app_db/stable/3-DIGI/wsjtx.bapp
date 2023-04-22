@@ -50,12 +50,12 @@ INSTALL(){
 
 	echo $FT8VER > ${HOME}/.bap.wsjt.txt
 	
-	cmake -D CMAKE_INSTALL_PREFIX=$FT8DIR
-	cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
+	cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
 	sudo cmake --build . --target install -j$BAPCORE
-	sudo mv ${FT8DIR}/bin/* /usr/local/bin/
-	sudo cp ${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
-	sudo cp ${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+	
+	#sudo mv ${FT8DIR}/bin/* /usr/local/bin/
+	#sudo cp ${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
+	#sudo cp ${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
 
 	# Detect cortex chip (ARM's)
     if [[ "$BAPCPU" == *"ar"* ]]; then 
