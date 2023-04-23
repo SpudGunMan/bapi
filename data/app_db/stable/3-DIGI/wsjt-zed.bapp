@@ -45,6 +45,9 @@ INSTALL(){
     unzip $WSJTZPKG
     rm $WSJTZPKG
 
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//')
+    echo $VER > ${HOME}/.bap.wsjtzed.txt
+
     mv wsjtx src
     cd src
 
@@ -71,7 +74,11 @@ INSTALL(){
 
 VERSION(){
     if [ -d ${HOME}/wsjtz ];then
-        CURRENT=0-git
+		if [ -f ${HOME}/.bap.wsjtzed.txt ]; then
+			CURRENT=$(cat ${HOME}/.bap.wsjtzed.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
     else
         CURRENT=NONE
     fi
