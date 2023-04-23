@@ -2,8 +2,9 @@
 Name=wsjt-z
 GenericName=wsjtx-z
 Comment=Popular Z Fork of wsjtx
-Path=/home/pi/.bap-source-files/wsjt-z
-Exec=/home/pi/.bap-source-files/wsjt-z/wsjtx
+Path=/home/pi/wsjtz/
+Exec=/home/pi/wsjtz/bin/wsjtx
 Terminal=false
 Type=Application
 Categories=Network;HamRadio;
+Icon=/home/pi/wsjtz/share/pixmaps/wsjtx_icon.png
