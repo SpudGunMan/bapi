@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=JTDX
+Exec=/home/pi/jtdx/bin/jtdx
+Comment=
+Terminal=false
+Icon=/home/pi/jtdx/share/pixmaps/jtdx_icon.png
+Type=Application
+Path=/home/pi/jtdx
