@@ -71,7 +71,7 @@ INSTALL(){
 
 VERSION(){
     if [ -d ${HOME}/wsjtz ];then
-        CURRENT=fix
+        CURRENT=0-git
     else
         CURRENT=NONE
     fi
