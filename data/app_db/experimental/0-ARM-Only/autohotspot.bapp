@@ -34,7 +34,7 @@ INSTALL(){
 }
 
 VERSION(){
-    CURRENT=BAPI
+    CURRENT=0
     NEWVER=BAPI
 }
 
