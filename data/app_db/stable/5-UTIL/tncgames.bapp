@@ -6,12 +6,13 @@ VerLocal=0
 VerRemote=0
 W3='http://uz7.ho.ua'
 Author='spud'
-NOTE=''
+NOTE='Silly and fun try over VARA!'
 
 INSTALL(){
     cd ${BAPSRC} || return
     rm -rf tncgames
     mkdir tncgames
+    cd tncgames
     wget --tries 2 --connect-timeout=60  http://uz7.ho.ua/apps/checkers6.zip
     unzip *.zip
     rm *.zip

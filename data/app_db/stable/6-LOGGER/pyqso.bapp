@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3='https://christianjacobs.uk/pyqso/'
 Author='spud'
-NOTE='you need hamlib with python to get connections'
+NOTE='you need hamlib with python to get connections best on Pi'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"

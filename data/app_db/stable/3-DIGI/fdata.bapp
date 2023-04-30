@@ -42,9 +42,8 @@ INSTALL(){
         cd ${HOME}/FreeDATA
         git pull
     else
-        cd ${HOME}/
-        git clone https://github.com/DJ2LS/FreeDATA
-        cd FreeDATA
+        git clone https://github.com/DJ2LS/FreeDATA -o ${HOME}/FreeDATA
+        cd ${HOME}/FreeDATA
         cd gui
 
         npm i

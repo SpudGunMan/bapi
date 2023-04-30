@@ -58,7 +58,7 @@ INSTALL(){
     mkdir build
     cd src
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx/ -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
 
     sudo make install/strip
