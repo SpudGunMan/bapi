@@ -65,7 +65,9 @@ INSTALL(){
         #pyver=$(python -V | sed 's/Python //')
         #ugly hack to cheat python2 vs python3
         sudo ln -s /usr/bin/python3 /usr/bin/python
-        ./configure --with-python-binding --with-xml-support
+        ./configure --with-xml-support --with-python-binding PYTHON_VERSION='3.6'
+        #/.configure --with-python-binding PYTHON=$(which python3)
+        
     else
         ./configure --with-xml-support
     fi

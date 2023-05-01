@@ -154,8 +154,8 @@ else
     #sortin legos for no reason, problem is git updates..
     # dont like it for now edit the data/app_db and thats the master db
     echo -e "INFORMATIONAL: Checking if any updates to bapp files, please review!"
-    echo -e "WARNING: this will overwrite any changes you have made to the bapp files"
-    echo -e "WARNING: there is a bug. for now rm -rf on apps/ and cache/ and run again to rebuild db"
+    echo -e "WARNING: If asking to copy new bapp files at this stage"
+    echo -e "WARNING: there is a bug. for now rm -rf apps/ cache/ and run again to rebuild db"
     echo -e "WARNING: skip installing dev tools - need a better idea for this - maybe a git reset --hard origin/main"
     return= $(cp -iur $BAPDIR/data/app_db/* ./apps/)
     if [ ! -z $return ]; then

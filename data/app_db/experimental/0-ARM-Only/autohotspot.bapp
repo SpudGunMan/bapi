@@ -34,8 +34,8 @@ INSTALL(){
 }
 
 VERSION(){
-    CURRENT=0
-    NEWVER=0
+    CURRENT='NONE'
+    NEWVER='NONE'
 }
 
 DEPENDS(){
