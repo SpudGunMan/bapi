@@ -12,6 +12,7 @@ INSTALL(){
     #stop the default from installing and yeeet it out of here
     echo -e "INFORMATIONAL: apt-get hold and remove all existing"
     sudo apt-mark hold libhamlib*
+    sudo apt-mark hold python3-hamlib
     sudo apt-get -y remove libhamlib*
     
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -61,10 +62,11 @@ INSTALL(){
     # dont want to mess with python per say..
     if [[ $(whereis python3 | grep bin) ]];then
         #pyver=$(python -V | sed 's/Python //')
-        ./configure --with-python-binding PYTHON=$(which python3) --with-xml-support
+        #--with-python-binding
+        ./configure --with-python-binding --with-xml-support
+    else
+        ./configure --with-xml-support
     fi
-
-    ./configure --with-xml-support
 
     make -j$BAPCORE
     sudo make install
