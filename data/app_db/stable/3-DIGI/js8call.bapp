@@ -31,8 +31,9 @@ INSTALL(){
 
     #https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
     #https://bitbucket.org/widefido/js8call/src/js8call/
+    
     cd ${BAPSRC}
-   
+    sudo rm -rf js8call
     JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
     JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
     JS8DIR=$(echo $JS8PKG | sed 's/.tgz//')
