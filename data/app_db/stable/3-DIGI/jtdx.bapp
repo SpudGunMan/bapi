@@ -32,7 +32,7 @@ INSTALL(){
 	fi
 
     cd ${BAPSRC}
-    rm -rf jtdx
+    sudo rm -rf jtdx
     mkdir jtdx
     cd jtdx
 
