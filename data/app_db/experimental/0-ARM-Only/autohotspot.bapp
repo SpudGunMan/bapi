@@ -35,7 +35,7 @@ INSTALL(){
 
 VERSION(){
     CURRENT=0
-    NEWVER=BAPI
+    NEWVER=0
 }
 
 DEPENDS(){
