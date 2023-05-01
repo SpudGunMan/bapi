@@ -54,9 +54,10 @@ INSTALL(){
 
             chmod +x gpsupdate
             sudo cp gpsupdate /usr/local/bin
-            sudo cp gpsupdate.desktop /usr/share/applications
+            #sudo cp gpsupdate.desktop /usr/share/applications
         fi
-
+        
+        cd ${HOME}
         if [ -d "gpsd2ham" ];then
             cd gpsd2ham
             git fetch --all
@@ -77,7 +78,7 @@ INSTALL(){
 
     CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
     if [ -z "$CHRONYCHK" ]; then
-        cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
+        sudo cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
         echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
     fi
     
