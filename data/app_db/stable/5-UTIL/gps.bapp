@@ -56,7 +56,7 @@ INSTALL(){
             sudo cp gpsupdate /usr/local/bin
             #sudo cp gpsupdate.desktop /usr/share/applications
         fi
-        
+
         cd ${HOME}
         if [ -d "gpsd2ham" ];then
             cd gpsd2ham
@@ -64,7 +64,7 @@ INSTALL(){
             git reset --hard
             git pull
         else
-            git clone htt://github.com/spudgunman/gpsd2ham
+            git clone https://github.com/spudgunman/gpsd2ham
         fi
 
     fi
