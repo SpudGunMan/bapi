@@ -42,7 +42,7 @@ INSTALL(){
     rm -f $JS8PKG
     cd js8call
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/js8call/release -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/js8call -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
 
     echo $(curl --max-time 20 -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5) > ${HOME}/.bap.js8call.ver
