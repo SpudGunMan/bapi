@@ -1,7 +1,7 @@
 BAPP=4
 ID=HAMLIB
 Name=hamlib
-Comment='hamlib rig control, remember to install python first'
+Comment='hamlib rig control. remember to install python first'
 VerLocal=0
 VerRemote=0
 W3='https://sourceforge.net/projects/hamlib/support'
@@ -62,6 +62,9 @@ INSTALL(){
 
     # dont want to mess with python per say..
     if [[ $(whereis python3 | grep bin) ]];then
+        #assumptions..
+        export PYTHON=/usr/bin/python3
+        #export PYTHONPATH=/usr/local/lib/python3/site-packages
         pyver=$(python3 -V | sed 's/Python //')
         ./configure --with-xml-support --with-python-binding PYTHON_VERSION=$pyver
 

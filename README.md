@@ -1,10 +1,10 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE BETA**
-this is a early release still "beta" RC5
-  - a exiting enhancment WSJT-X WSJT-Z and JTDX JS8CALL now all installing properly!
+this is a early release still "beta" RC6
 - no .desktop files yet for most things (no menu icons)
 - upgrade your OS first. This script is not upgrading the OS.
+- VARA and winelink RMS etc, having global issues with ARM-BOX emulation
 
 ## Description
 ![screenshot](data/screenshot.jpg)
