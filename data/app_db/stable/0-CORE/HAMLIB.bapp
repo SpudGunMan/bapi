@@ -62,9 +62,8 @@ INSTALL(){
 
     # dont want to mess with python per say..
     if [[ $(whereis python3 | grep bin) ]];then
-        #pyver=$(python -V | sed 's/Python //')
-        ./configure --with-xml-support --with-python-binding PYTHON_VERSION='3.6'
-        #/.configure --with-python-binding PYTHON=$(which python3)
+        pyver=$(python3 -V | sed 's/Python //')
+        .configure --with-xml-support --with-python-binding PYTHON_VERSION=$pyver
 
     else
         ./configure --with-xml-support
