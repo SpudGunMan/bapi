@@ -19,13 +19,20 @@ INSTALL(){
     sudo apt-get -y install python3-gi-cairo >> errors/apt.log
     sudo apt-get -y install libgps-dev >> errors/apt.log
     #sudo apt-get -y install python3-pip >> errors/apt.log
-    
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+        #I found that on the raspberry pi - KM4ACK
+        pip3 uninstall serial
+
+        #line below added per this issue - https://github.com/km4ack/pi-build/issues/146 24SEPT2020
+        sudo ln -s /lib/systemd/system/gpsd.service /etc/systemd/system/multi-user.target.wants/
+    fi
 
     # extra junk
-
     action=$(yad --center --title "Question" --image "dialog-question"\
         --button="Install!:0" --button="nope:2" \
-        --text "Install extras? gpsbabel,foxtrotgps,gpsman ")
+        --text "Install extras? gpsbabel,foxtrotgps,gpsman KM4ACK and K7MHI scripts")
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
@@ -33,62 +40,56 @@ INSTALL(){
         sudo apt-get -y install gpsbabel >> errors/apt.log
         sudo apt-get -y install gpsman >> errors/apt.log
         sudo apt-get -y install gpsmanshp >> errors/apt.log
-    fi
 
-    #https://sourceforge.net/projects/opencachemanage/files/
-    #https://github.com/navit-gps/navit/tree/v0.5.6
-    #https://sourceforge.net/projects/viking/
-    #https://gpsman.sourceforge.net
-    #https://www.bt747.org/webinstall
 
-      # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
-        #I found that on the raspberry pi - KM4ACK
-        pip3 uninstall serial
+        cd ${HOME}
+        if [ -d "km4ack-tools" ];then
+            cd km4ack-tools
+            git fetch --all
+            git reset --hard
+            git pull
+        else
+            git clone https://github.com/km4ack/pi-scripts km4ack-tools
+            cd km4ack-tools
+
+            chmod +x gpsupdate
+            sudo cp gpsupdate /usr/local/bin
+            sudo cp gpsupdate.desktop /usr/share/applications
+        fi
+
+        if [ -d "gpsd2ham" ];then
+            cd gpsd2ham
+            git fetch --all
+            git reset --hard
+            git pull
+        else
+            git clone htt://github.com/spudgunman/gpsd2ham
+        fi
+
     fi
 
     cd ${BAPSRC}
 
     if [ ! -f /etc/default/gpsd.orginal ]; then
         sudo cp /etc/default/gpsd /etc/default/gpsd.orginal
+        sudo cp /etc/ntp.conf /etc/ntp.conf.orginal
     fi
-
-    if [ -d "km4ack-tools" ];then
-        cd km4ack-tools
-        git fetch --all
-        git reset --hard origin/master
-        git pull
-    else
-        git clone https://github.com/km4ack/pi-scripts km4ack-tools
-        cd km4ack-tools
-    fi
-
-    chmod +x gpsupdate
-    sudo cp gpsupdate /usr/local/bin
-
 
     CHRONYCHK=$(grep "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" /etc/chrony/chrony.conf)
     if [ -z "$CHRONYCHK" ]; then
+        cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
         echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
     fi
     
-    #line below added per this issue - https://github.com/km4ack/pi-build/issues/146 24SEPT2020
-    sudo ln -s /lib/systemd/system/gpsd.service /etc/systemd/system/multi-user.target.wants/
-    
-    #Set GPS by serial ID
-    #GPS Variable set by main script or update script and placed in config file
-    #if [ "$GPS" != 'NONE' ]; then
-    #    sudo sed -i "s|DEVICES.*$|DEVICES=\"$GPS\"|g" /etc/default/gpsd
-    #fi
 }
 
 VERSION(){
     if [[ $(whereis gpsupdate | grep bin) ]];then
-        CURRENT=6
+        CURRENT=0-git
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl -s https://raw.githubusercontent.com/km4ack/pi-scripts/master/gpsupdate | grep VERSION= | sed 's/VERSION=//')
+    NEWVER=0-git
 }
 
 DEPENDS(){
