@@ -67,7 +67,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis js8call drats | grep bin) ]];then
+    if [ -d ${HOME}/js8call ];then
         if [ -f ${HOME}/.bap.js8call.ver ]; then
             CURRENT=$(cat ${HOME}/.bap.js8call.ver)
         else
