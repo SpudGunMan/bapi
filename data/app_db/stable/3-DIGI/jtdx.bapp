@@ -32,9 +32,12 @@ INSTALL(){
 	fi
 
     cd ${BAPSRC}
-    rm -rf jtdx
+    sudo rm -rf jtdx
     mkdir jtdx
     cd jtdx
+
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx/files/ | grep -m 1 jtdx_ | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+    echo $VER > ${HOME}/.bap.jtdx.txt
 
     #alternate hamlib code idea ## it should use the default hamlib
     #git clone git://git.code.sf.net/p/jtdx/hamlib hamlib-src
@@ -55,7 +58,7 @@ INSTALL(){
     mkdir build
     cd src
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx/ -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
 
     sudo make install/strip
@@ -77,7 +80,11 @@ INSTALL(){
 
 VERSION(){
     if [ -d ${HOME}/jtdx ];then
-        CURRENT=0-git
+		if [ -f ${HOME}/.bap.jtdx.txt ]; then
+			CURRENT=$(cat ${HOME}/.bap.jtdx.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
     else
         CURRENT=NONE
     fi

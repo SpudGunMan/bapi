@@ -38,12 +38,11 @@ INSTALL(){
 
     cd ${HOME}
 
-    if [ -d ${HOME}/FreeDATA ];then
-        cd ${HOME}/FreeDATA
+    if [ -d FreeDATA ];then
+        cd FreeDATA
         git pull
     else
-        cd ${HOME}/
-        git clone https://github.com/DJ2LS/FreeDATA
+        git clone https://github.com/DJ2LS/FreeDATA -o FreeDATA
         cd FreeDATA
         cd gui
 

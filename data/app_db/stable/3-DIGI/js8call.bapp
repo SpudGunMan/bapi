@@ -30,9 +30,10 @@ INSTALL(){
     fi
 
     #https://9a3gos.com/install-js8call-2-0-0-rc3-on-ubuntu-19-10-hamlib/
-
+    #https://bitbucket.org/widefido/js8call/src/js8call/
+    
     cd ${BAPSRC}
-   
+    sudo rm -rf js8call
     JS8PKG=$(curl -s http://files.js8call.com/latest.html | grep .tgz | sed 's/.*js8call-/js8call-/;s/<.*$//')
     JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
     JS8DIR=$(echo $JS8PKG | sed 's/.tgz//')
@@ -42,8 +43,7 @@ INSTALL(){
     rm -f $JS8PKG
     cd js8call
 
-    cmake -D CMAKE_INSTALL_PREFIX=${BAPSRC}/js8call/release/
-    cmake -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/js8call -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
 	sudo cmake --build . --target install -j$BAPCORE
 
     echo $(curl --max-time 20 -s http://files.js8call.com/latest.html | grep version | sed 's/<p>The latest version of JS8Call is <strong>//' | cut -c1-5) > ${HOME}/.bap.js8call.ver
@@ -68,7 +68,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis js8call drats | grep bin) ]];then
+    if [ -d ${HOME}/js8call ];then
         if [ -f ${HOME}/.bap.js8call.ver ]; then
             CURRENT=$(cat ${HOME}/.bap.js8call.ver)
         else

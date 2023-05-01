@@ -35,7 +35,7 @@ INSTALL(){
 	fi
 
     cd ${BAPSRC}
-    rm -rf wsjtz
+    sudo rm -rf wsjtz
     mkdir wsjtz
     cd wsjtz
 
@@ -45,10 +45,13 @@ INSTALL(){
     unzip $WSJTZPKG
     rm $WSJTZPKG
 
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//')
+    echo $VER > ${HOME}/.bap.wsjtzed.txt
+
     mv wsjtx src
     cd src
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz/ -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
 	sudo cmake --build . --target install -j$BAPCORE
 
 	#sudo mv release/bin/* /usr/local/bin/
@@ -71,7 +74,11 @@ INSTALL(){
 
 VERSION(){
     if [ -d ${HOME}/wsjtz ];then
-        CURRENT=fix
+		if [ -f ${HOME}/.bap.wsjtzed.txt ]; then
+			CURRENT=$(cat ${HOME}/.bap.wsjtzed.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
     else
         CURRENT=NONE
     fi

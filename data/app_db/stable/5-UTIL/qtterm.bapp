@@ -12,6 +12,9 @@ INSTALL(){
     sudo apt-get -y install libqt5serialport5 >> errors/apt.log
 
     cd ${BAPSRC} || return
+	rm -rf qtterm
+	mkdir qtterm
+	cd qtterm
 
 	action=$(yad --center --title "Question" --image "dialog-question" \
         --button="Beta:0" --button="Stable:2" \

@@ -11,6 +11,10 @@ NOTE='work on air?'
 INSTALL(){
     cd ${BAPSRC} || return
 
+    rm -rf easyterm
+    mkdir easyterm
+    cd easyterm
+
     wget --tries 2 --connect-timeout=60 http://uz7.ho.ua/apps/easyterm49.zip
     unzip *.zip
     rm *.zip

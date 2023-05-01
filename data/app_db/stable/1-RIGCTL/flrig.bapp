@@ -52,6 +52,7 @@ INSTALL(){
 
 		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
+		rm ${FLXM}
 
 		#build FLXMLRPC
 		cd ${XMPKG} || return
@@ -67,6 +68,7 @@ INSTALL(){
 
 	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
 	tar -zxvf ${RIGTAR}
+	rm ${RIGTAR}
 
 	#Build FLRIG
 	cd ${RIGPKG} || return

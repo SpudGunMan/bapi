@@ -1,7 +1,7 @@
 BAPP=4
 ID=HAMLIB
 Name=hamlib
-Comment='hamlib rig control'
+Comment='hamlib rig control, remember to install python first'
 VerLocal=0
 VerRemote=0
 W3='https://sourceforge.net/projects/hamlib/support'
@@ -62,19 +62,9 @@ INSTALL(){
     if [[ $(whereis python3 | grep bin) ]];then
         #pyver=$(python -V | sed 's/Python //')
         ./configure --with-python-binding PYTHON=$(which python3) --with-xml-support
-    else
-        action=$(yad --center --title "Question" --image "dialog-question" \
-        --button="stop to fix:1" --button="gtk-ok:0" \
-        --text "You dont have python on your system, not adding bindings\n You can install D-RATS to load it..")
-        return_code="${?:-'2'}"
-
-        if [ "$return_code" -eq 0 ]; then
-            ./configure --with-xml-support
-        else
-            echo -e "\nINFORMATION: go find python, come back after the (br/sn)ake.."
-            exit 0
-        fi
     fi
+
+    ./configure --with-xml-support
 
     make -j$BAPCORE
     sudo make install
