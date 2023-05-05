@@ -28,7 +28,7 @@ INSTALL(){
     sudo pip install cython
 
     cd ${BAPSRC}
-	rm -rf urh
+	sudo rm -rf urh
 	mkdir uhr
 	cd urh
 
