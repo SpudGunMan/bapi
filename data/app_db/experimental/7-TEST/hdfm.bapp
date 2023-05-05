@@ -1,16 +1,17 @@
 BAPP=4
 ID=HDFM
 Name=HDFM
-Comment='HDFM'
+Comment='HDFM is a NRSC5 HD Radio decoder for RTL-SDR dongles.'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/KYDronePilot/hdfm'
 Author='spud'
-NOTE='NOT WORKING 64ARCH'
+NOTE='HDFM NRSC5 with GUI'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt install git build-essential cmake autoconf libtool libao-dev libfftw3-dev librtlsdr-dev
+    sudo apt-get -y install libao-dev libfftw3-dev librtlsdr-dev python3-pip
+    pip3 install pygobject pillow pyaudio  
     
     cd ${BAPSRC}
     rm -rf hdfm
@@ -29,6 +30,18 @@ INSTALL(){
 
     # install binary
     sudo curl -sSL 'https://github.com/KYDronePilot/hdfm/releases/download/v2.0.1/hdfm-aarch64-unknown-linux-musl.tgz' | sudo tar xzv -C /usr/local/bin
+
+    # install nrsc5-gui
+    cd ${HOME}
+    if [[ -d nrsc5-gui ]];then
+        cd nrsc5-gui
+        git pull
+    else
+        git clone https://github.com/cmnybo/nrsc5-gui
+        cd nrsc5-gui
+    fi
+
+
 }
 
 VERSION(){
