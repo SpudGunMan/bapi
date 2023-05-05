@@ -56,7 +56,7 @@ INSTALL(){
     git clone https://github.com/jopohl/urh/ ${HOME}/urh
     
     cd ${HOME}/urh
-    python3 setup.py install
+    sudo python3 setup.py install
 
     echo -e "#!/bin/bash" > Install-URH.sh
 	echo -e "python3 setup.py install \n" >>  Install-URH.sh
