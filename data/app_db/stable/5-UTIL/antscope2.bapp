@@ -17,7 +17,7 @@ INSTALL(){
     sudo apt-get install -y libqt5serialport5-dev  >> errors/apt.log
 
     cd ${BAPSRC}
-    rm -rf antscope
+    sudo rm -rf antscope
     mkdir antscope
     cd antscope
 
