@@ -25,7 +25,7 @@ INSTALL(){
     #sudo apt-get -y install qt5-default >> errors/apt.log
     
     cd ${BAPSRC} || return
-    rm -rf QSSTV
+    sudo rm -rf QSSTV
     git clone https://github.com/ON4QZ/QSSTV
     cd QSSTV
     

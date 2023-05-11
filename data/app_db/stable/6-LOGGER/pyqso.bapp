@@ -24,7 +24,7 @@ INSTALL(){
 
 
     cd ${BUILDDIR}
-    rm -rf pyqso
+    sudo rm -rf pyqso
     git clone https://github.com/ctjacobs/pyqso
     cd pyqso
     autoreconf --install

@@ -30,7 +30,7 @@ INSTALL(){
 	#https://xastir.org/index.php/HowTo:AX.25_-_Ubuntu/Debian
 
 	cd ${BAPSRC}
-	rm -rf Xastir
+	sudo rm -rf Xastir
 	git clone https://github.com/Xastir/Xastir.git
 
 	cd Xastir

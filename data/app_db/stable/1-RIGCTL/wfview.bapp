@@ -26,7 +26,7 @@ INSTALL(){
     #sudo apt-get -y install libqcustomplot2.0 || ((E=E+1))
 
     cd ${BAPSRC} || return
-    rm -rf wfview
+    sudo rm -rf wfview
     git clone https://gitlab.com/eliggett/wfview.git
     cd wfview
     mkdir build

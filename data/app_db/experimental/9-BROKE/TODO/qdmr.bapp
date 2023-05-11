@@ -18,7 +18,7 @@ INSTALL(){
     sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
 
     cd ${BAPSRC} || return
-
+    sudo rm -rf qdmr
     git clone https://github.com/hmatuschek/qdmr
     cd qdmr
 

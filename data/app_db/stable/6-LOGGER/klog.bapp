@@ -42,7 +42,7 @@ INSTALL(){
 	fi
 
     cd ${BAPSRC} || return
-    rm -rf klog
+    sudo rm -rf klog
     git clone https://github.com/ea4k/klog
     cd klog
     qmake QT_SELECT=qt5 PREFIX=/usr/local KLog.pro

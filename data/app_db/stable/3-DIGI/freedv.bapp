@@ -42,7 +42,7 @@ INSTALL(){
 
 
     cd ${BAPSRC} || return
-    rm -rf freedv-gui
+    sudo rm -rf freedv-gui
     git clone https://github.com/drowe67/freedv-gui
     cd freedv-gui
 

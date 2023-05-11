@@ -18,7 +18,7 @@ INSTALL(){
 	sudo apt-get -y install libgoocanvas-2.0-dev >> errors/apt.log
 
     cd ${BAPSRC}
-    rm -rf gpredict
+    sudo rm -rf gpredict
 	git clone https://github.com/csete/gpredict
     cd gpredict
 

@@ -12,7 +12,7 @@ INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
     cd ${BAPSRC}
 
-    rm -rf RSPTCPServer
+    sudo rm -rf RSPTCPServer
     git clone https://github.com/SDRplay/RSPTCPServer
     cd RSPTCPServer
     

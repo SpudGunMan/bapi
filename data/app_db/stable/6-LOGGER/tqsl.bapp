@@ -17,7 +17,7 @@ INSTALL(){
 	sudo apt-get -y install libwxgtk3.0-gtk3-dev >> errors/apt.log
 	
     cd ${BAPSRC}
-	rm -rf tqsl-*
+	sudo rm -rf tqsl-*
 
 	CUR=$(curl -s http://www.arrl.org/tqsl-download | grep "for Linux" | sed 's/.*TQSL //' | awk '{print $1}')
 	wget http://www.arrl.org/tqsl/tqsl-${CUR}.tar.gz

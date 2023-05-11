@@ -14,7 +14,7 @@ INSTALL(){
     pip3 install pygobject pillow pyaudio  
     
     cd ${BAPSRC}
-    rm -rf hdfm
+    sudo rm -rf hdfm
     mkdir hdfm
     cd hdfm
 

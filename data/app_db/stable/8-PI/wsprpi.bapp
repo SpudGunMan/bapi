@@ -17,7 +17,7 @@ INSTALL(){
 
 
    if [[ "$BAPCPU" == *"ar"* ]]; then
-        rm -rf WsprryPi
+        sudo rm -rf WsprryPi
         git clone https://github.com/threeme3/WsprryPi
         cd WsprryPi
 

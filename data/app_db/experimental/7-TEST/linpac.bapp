@@ -14,7 +14,7 @@ INSTALL(){
 
     cd ${BAPSRC} || return
 
-    rm -rf linpac
+    sudo rm -rf linpac
     git clone git://git.code.sf.net/p/linpac/linpac linpac
     cd linpac
     autoreconf --install

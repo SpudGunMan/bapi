@@ -27,7 +27,7 @@ INSTALL(){
     sudo apt-get -y install libssl-dev >> errors/apt.log
 
     cd ${BAPSRC} || return
-    rm -rf cqrprop
+    sudo rm -rf cqrprop
     git clone https://github.com/ok2cqr/cqrprop.git
     cd cqrprop
     make 

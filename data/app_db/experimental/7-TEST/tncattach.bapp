@@ -11,7 +11,7 @@ INSTALL(){
 
     cd ${BAPSRC} || return
 
-    rm -rf tncattach
+    sudo rm -rf tncattach
     git clone https://github.com/markqvist/tncattach
     cd tncattach
     make

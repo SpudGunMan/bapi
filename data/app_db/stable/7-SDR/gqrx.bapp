@@ -27,7 +27,7 @@ INSTALL(){
     sudo apt-get -y install libpulse-dev >> errors/apt.log
 
     cd ${BAPSRC}
-	rm -rf gqrx
+	sudo rm -rf gqrx
     git clone https://github.com/gqrx-sdr/gqrx.git
     cd gqrx
 

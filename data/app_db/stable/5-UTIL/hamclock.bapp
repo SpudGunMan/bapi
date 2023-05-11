@@ -12,7 +12,7 @@ INSTALL(){
 	sudo apt-get -y install libx11-dev
 
 	cd ${BAPSRC} || return
-	rm -f HamClock
+	sudo rm -f HamClock
 	mkdir HamClock
 	cd HamClock
 
