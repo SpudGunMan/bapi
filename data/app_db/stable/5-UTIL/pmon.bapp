@@ -18,15 +18,15 @@ INSTALL(){
     if [[ "$BAPCPU" == *"ar"* ]]; then 
         #echo "Install SCS PMON - a PACTOR(R) monitoring utility"
         #echo "deb https://www.scs-ptc.com/repo/packages/ buster non-free" | sudo tee /etc/apt/sources.list.d/scs.list > /dev/null
-        #wget -q -O - https://www.scs-ptc.com/repo/packages/scs.gpg.key | sudo apt-key add -
-        #sudo apt update
-        #sudo apt-get -y install pmon
+        wget -q -O - https://www.scs-ptc.com/repo/packages/scs.gpg.key | sudo apt-key add -
+        sudo apt update
+        sudo apt-get -y install pmon
         #wget -q -O - https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb # | sudo dpkg -i
         #echo "Done!"
         
-        wget https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb
-        wget https://www.scs-ptc.com/repo/packages/PMON_Manual.pdf
-        sudo dpkg -i pmon_1.1-2_armhf.deb
+        #wget https://www.scs-ptc.com/repo/packages/pmon_1.1-2_armhf.deb
+        #wget https://www.scs-ptc.com/repo/packages/PMON_Manual.pdf
+        #sudo dpkg -i pmon_1.1-2_armhf.deb
     fi
 
     # pmon_status=$(dpkg -s pmon | grep 'install ok installed')
