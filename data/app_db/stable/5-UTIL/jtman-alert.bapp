@@ -29,7 +29,7 @@ INSTALL(){
     echo "CONFIG=config.ini python3 main.py" >> jtman-launch.sh
     chmod +x jtman-launch.sh
 
-    cd..
+    cd ..
     mv jtman ${HOME}/jtman
 }
 
