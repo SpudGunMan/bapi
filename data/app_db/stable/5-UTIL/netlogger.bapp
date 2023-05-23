@@ -21,12 +21,12 @@ INSTALL(){
 
     echo - "INFORMATIONAL: Downloading $NEWVER deb package for x64 compile ideally also .tgz if needed"
 
-    base="http://netlogger.org/download/netlogger_"
-    deb=$NEWVER_amd64.deb
-    src=$NEWVER_Linux_x86.tgz
+    base="http://netlogger.org/download/netlogger"
+    deb="${base}_${NEWVER}_amd64.deb"
+    tgz="${base}_${NEWVER}_src.tgz"
 
-    wget -q $base$deb
-    wget -q $base$src
+    wget -q $deb
+    wget -q $tgz
     
     echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
     sudo dpkg -i netlogger*.deb
