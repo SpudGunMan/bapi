@@ -26,7 +26,7 @@ INSTALL(){
     #tgz="${base}_${NEWVER}_src.tgz"
 
     wget $deb
-    wget $tgz
+    #wget $tgz
     
     echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
     sudo dpkg -i netlogger*.deb
