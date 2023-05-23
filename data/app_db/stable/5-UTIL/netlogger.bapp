@@ -14,16 +14,15 @@ INSTALL(){
     cd ${BAPSRC} || return
     sudo rm -rf netlogger
     mkdir netlogger
+    cd netlogger
 
     # scrape version from Current release on netlogger.org
     NEWVER=$(curl -s http://netlogger.org/download.php | grep -oP '(?<=Current release is v)[0-9\.]+')
 
     echo - "INFORMATIONAL: Downloading $NEWVER deb package for x64 compile ideally also .tgz if needed"
-    deblink="http://netlogger.org/download/netlogger_{$NEWVER}_amd64.deb"
-    srclink="http://netlogger.org/download/netlogger_{$NEWVER}_Linux_x86.tgz"
-
-    wget -q $deblink
-    wget -q $srclink
+    
+    wget -q http://netlogger.org/download/netlogger_{$NEWVER}_amd64.deb
+    wget -q http://netlogger.org/download/netlogger_{$NEWVER}_Linux_x86.tgz
     
     echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
     sudo dpkg -i netlogger*.deb
