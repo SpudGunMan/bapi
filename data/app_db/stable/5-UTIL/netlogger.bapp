@@ -19,14 +19,14 @@ INSTALL(){
     NEWVER=$(curl -s http://netlogger.org/download.php | grep -oP '(?<=Current release is v)[0-9\.]+')
 
     echo - "INFORMATIONAL: Downloading $NEWVER deb package for x64 compile ideally also .tgz if needed"
-    deblink=http://netlogger.org/download/netlogger_$NEWVER_amd64.deb
-    srclink=http://netlogger.org/download/netlogger_$NEWVER_Linux_x86.tgz
+    deblink="http://netlogger.org/download/netlogger_{$NEWVER}_amd64.deb"
+    srclink="http://netlogger.org/download/netlogger_{$NEWVER}_Linux_x86.tgz"
 
-    wget $deblink
-    wget $srclink
-
+    wget -q $deblink
+    wget -q $srclink
+    
     echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
-    sudo dpkg -i netlogger_$NEWVER_amd64.deb
+    sudo dpkg -i netlogger*.deb
 
 }
 
