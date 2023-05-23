@@ -1,0 +1,41 @@
+BAPP=4
+ID=NETLOGGER
+Name=NETLOGGER
+Comment='Netlogger is a logging program for on-air nets'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='debian package is x64 only if you need the x32 not compile code at the moment'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+
+    cd ${BAPSRC} || return
+    sudo rm -rf netlogger
+    mkdir netlogger
+
+    # scrape version from Current release on netlogger.org
+    NEWVER=$(curl -s http://netlogger.org/download.php  | grep -oP '(?<=Current release is v)[0-9\.]+')
+
+    echo - "INFORMATIONAL: Downloading deb package for x64 compile ideally also .tgz if needed"
+    wget http://netlogger.org/download/netlogger_$NEWVER_amd64.deb
+    wget http://netlogger.org/download/netlogger_$NEWVER_Linux_x86.tgz
+
+    echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
+    sudo dpkg -i netlogger_$NEWVER_amd64.deb
+
+}
+
+VERSION(){
+    if [[ $(whereis netlogger | grep bin) ]];then
+        CURRENT=$(dpkg -l | grep netlogger | awk '{print $3}')
+    else
+        CURRENT=0
+    fi
+     NEWVER=$(curl -s http://netlogger.org/download.php  | grep -oP '(?<=Current release is v)[0-9\.]+')
+}
+
+DEPENDS(){
+    NEEDED=''
+}
