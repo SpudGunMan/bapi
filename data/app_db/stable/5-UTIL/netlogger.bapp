@@ -23,13 +23,20 @@ INSTALL(){
 
     base="http://www.netlogger.org/downloads/netlogger"
     deb="${base}_${NEWVER}_amd64.deb"
-    #tgz="${base}_${NEWVER}_src.tgz"
+    tgz="${base}_${NEWVER}_src.tgz"
 
-    wget $deb
-    #wget $tgz
-    
-    echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
-    sudo dpkg -i netlogger*.deb
+    # if raspberry download src ortherwise use deb
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        wget $tgz
+        echo -e "INFORMATIONAL: Installing netlogger $NEWVER source package"
+        tar -xzf NetLogger*.tgz
+        cd NetLogger*
+        bash install
+    else
+        wget $deb
+        echo -e "INFORMATIONAL: Installing netlogger $NEWVER deb package"
+        sudo dpkg -i netlogger*.deb
+    fi
 
 }
 
