@@ -1,7 +1,7 @@
 BAPP=4
 ID=HAMLIB
 Name=hamlib
-Comment='hamlib rig control. remember to install python first'
+Comment='hamlib rig control'
 VerLocal=0
 VerRemote=0
 W3='https://sourceforge.net/projects/hamlib/support'
