@@ -62,11 +62,25 @@ INSTALL(){
 		sudo ldconfig
 	fi
 
-	#Determine latest FLRIG
-	RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
-	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
+	#Choice for Alpha or Release with yad
+	action=$(yad --center --title "Question: Look for Alpha Code?" --image "dialog-question"\
+        --button="Alpha:0" --button="Release:2" \
+        --text "Use Alpha or Normal Release (recomend: Release)")
+    return_code="${?:-'2'}"
 
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flrig/${RIGTAR}
+    if [ "$return_code" -eq 0 ]; then
+		#alpha of FLRIG
+		RIGTAR=$(curl -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+		FLink=http://www.w1hkj.com/alpha/flrig/${RIGTAR}
+	else
+		#release of FLRIG
+		RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+		FLink=http://www.w1hkj.com/files/flrig/${RIGTAR}
+	fi
+
+	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
+	
+	wget --tries 2 --connect-timeout=60 $FLink
 	tar -zxvf ${RIGTAR}
 	rm ${RIGTAR}
 
