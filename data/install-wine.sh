@@ -44,17 +44,22 @@ function run_main()
     ### Clean up previous runs (or failed runs) of this script
         sudo rm install_winelink.sh 2>/dev/null # silently remove this script so it cannot be re-run by accident
         sudo rm -rf ${HOME}/winelink 2>/dev/null # silently clean up any failed past runs of this script
-        sudo rm ${STARTMENU}/winlinkexpress.desktop ${STARTMENU}/vara.desktop ${STARTMENU}/vara-fm.desktop \
-                ${STARTMENU}/vara-sat.desktop ${STARTMENU}/vara-chat.desktop ${STARTMENU}/vara-soundcardsetup.desktop \
-                ${STARTMENU}/vara-update.desktop ${STARTMENU}/resetwine.desktop ${STARTMENU}/VarAC.desktop 2>/dev/null # remove old shortcuts
+        sudo rm ${STARTMENU}/winlinkexpress.desktop ${STARTMENU}/rmssimpleterminal.desktop \
+                ${STARTMENU}/rmstrimode.desktop ${STARTMENU}/rmsadifanalyzer.desktop \
+                ${STARTMENU}/rmspacket.desktop ${STARTMENU}/rmsrelay.desktop ${STARTMENU}/rmslinktest.desktop \
+                ${STARTMENU}/vara.desktop ${STARTMENU}/vara-fm.desktop ${STARTMENU}/vara-sat.desktop ${STARTMENU}/vara-chat.desktop \
+                ${STARTMENU}/vara-soundcardsetup.desktop ${STARTMENU}/vara-update.desktop ${STARTMENU}/VarAC.desktop \
+                ${STARTMENU}/resetwine.desktop 2>/dev/null # remove old shortcuts
         rm ${HOME}/RMS\ Express\ *.log 2>/dev/null # silently remove old RMS Express logs
         rm ${HOME}/VarAC.ini ${HOME}/VarAC_cat_commands.ini ${HOME}/VarAC_frequencies.conf ${HOME}/VarAC_frequency_schedule.conf ${HOME}/VarAC_alert_tags.conf
         
     ### Create winelink directory
         mkdir ${HOME}/winelink && cd ${HOME}/winelink # store all downloaded/installed files in their own directory
     
-        ### Start logging
-        exec > >(tee "winelink.log") 2>&1
+        ### LOGGING: Start
+        exec 77>"winelink.log" # fd 77 is arbitrary since we just need an available descriptor (i.e. not 0, 1, 2 or another number that you have already allocated)
+	export BASH_XTRACEFD=77 # tell bash about it
+ 	set -x # turn on the debug stream
         
 	### Wine omni-installation
 	########################################################################################################################################
@@ -143,7 +148,7 @@ function run_main()
 			;; #/"")
 		"OrangePi4")
 			case $ID in
-			"ubuntu") # Orange Pi 4 LTS with Ubuntu OS
+			"ubuntu") # Orange Pi 4 LTS with Ubuntu OS. Thank you Ole W. Saastad (LB4PJ) for sharing your OrangePi 4 LTS to test with!
 				case $ARCH in # determine 32-bit or 64-bit Ubuntu
 				"ARM32")
 					run_greeting "${SBC_SERIES} ${ARCH} " " 8" "2.1" "${ARG}" #Vars: "Hardware", "OS Bits", "Minutes", "GB", "bap" (check if user passed "bap" to script)
@@ -158,9 +163,10 @@ function run_main()
 					run_checkdiskspace "2100" #min space required in MB
 					run_downloadbox86 "14113faa_rk3399"
 					#run_buildbox86 "14113faabace7f8f8c6a7d0bb5f6e2fea36c43f1" "RK3399" "ARM64" #takes longer than downloading
-					#run_Install_i386wineDependencies_Ubuntu64bit #NOTE: My first attempt at this corrupted an OrangePi4 a bit. Needs more testing.
-					#run_Sideload_i386wine "devel" "7.7" "ubuntu" "${VERSION_CODENAME}" "-1" # THIS IS BROKEN FOR SOME REASONrun_Install_i386wineDependencies_RpiOS64bit
+					#run_Sideload_i386wine "devel" "7.7" "ubuntu" "${VERSION_CODENAME}" "-1" # THIS IS BROKEN FOR SOME REASON
 					run_Sideload_i386wine "devel" "7.7" "debian" "bullseye" "-1" #kludge: Use debian wine on ubuntu for now
+					run_Install_i386wineDependencies_Ubuntu64bit
+					#run_Install_i386wineDependencies_RpiOS64bit
 					;; #/"ARM64")
 				esac #/case $ARCH
 				;; #/"raspbian"|"debian")
@@ -327,9 +333,18 @@ function run_main()
             if [ "$ARG" = "vara_only" ] || [ "$ARG" = "bap" ]; then #TODO: Am I using brackets and ='s correctly?
                 run_installvara
             else
-                run_installrms
-                run_installvara
-                run_installvarAC
+                run_installrmsexpress # main Winlink program for most users
+
+                run_installrmstrimode # sysop programs
+                run_installrmsadifanalyzer #broken for box86 - 6/22/2023
+
+                run_installrmsterminal # misc sysop programs
+                run_installrmslinktest
+                run_installrmsrelay
+                run_installrmspacket
+
+                run_installvara # VARA HF, FM, Chat
+                #run_installvarAC # unofficial VARA HF Chat program
             fi
         
         ### Post-installation
@@ -339,7 +354,7 @@ function run_main()
                 : # If 'bap' is passed to this script, then don't run run_varasoundcardsetup
             else
                 run_varasoundcardsetup
-                run_varACsetup
+                #run_varACsetup
             fi
 	    run_makeuninstallscript
 	    
@@ -353,7 +368,11 @@ function run_main()
 		    : #do nothing
 		    ;; #/*)
             esac #/case $ARCH
-	    
+
+	    # LOGGING: Close the output
+	    set +x
+	    exec 77>&-
+     
 	    # cleanup
 	    rm -rf ${HOME}/winelink/downloads 2>/dev/null # silently remove Winlink downloads directory
 	    rm ${HOME}/winelink/winelink.log 2>/dev/null # silently remove old RMS Express logs
@@ -377,7 +396,7 @@ function run_greeting()
     echo ""
     echo "####################### Winlink & VARA Installer Script #######################"
     echo "# Author: Eric Wiessner (KI7POL)                         System: ${hardware}  #"
-    echo "# Version: 0.0098a                                 Install time: apx ${tinst} min   #"
+    echo "# Version: 0.0099a                                 Install time: apx ${tinst} min   #"
     echo "#                                                Space required: apx ${space} GB   #"
     echo "# Credits:                                                                    #"
     echo "#   The Box86 team (ptitSeb, pale, chills340, Itai-Nelken, Heasterian, et al) #"
@@ -454,13 +473,13 @@ function run_downloadbox86()  # Download & install Box86. (This function needs a
 {
     local version="$1"
     
-    if [ "$arch" == "ARM64" ]; then
+    if [ "$ARCH" == "ARM64" ]; then
 	sudo dpkg --add-architecture armhf && sudo apt-get update
 	sudo apt-get install libc6:armhf -y # needed to run box86:armhf on aarch64
 	#sudo apt-get install libgtk2.0-0:armhf libsdl2-image-2.0-0:armhf libsdl1.2debian:armhf \
 	#	libopenal1:armhf libvorbisfile3:armhf libgl1:armhf libjpeg62:armhf libcurl4:armhf \
 	#	libasound2-plugins:armhf -y # not sure if needed. from: https://box86.org/2022/03/box86-box64-vs-qemu-vs-fex-vs-rosetta2/
-    elif [ "$arch" == "ARM32" ]; then
+    elif [ "$ARCH" == "ARM32" ]; then
     	:
     fi
     sudo apt-get install p7zip-full -y # TODO: remove redundant apt-get installs - put them at top of script.
@@ -559,70 +578,77 @@ function run_buildbox86() # Compile box64 & box86 on-device (takes a long time, 
 }
 
 function run_Sideload_i386wine() {
-	# NOTE: We only really need i386-wine/box86 on RPiOS 64/32-bit for RMS Express and VARA since they are 32-bit.
-	# We don't need really amd64-wine64/box64 for our purposes of running RMS Express and VARA.
-
 	# Wine version variables
 	local branch="$1" #example: "devel" or "stable" without quotes (wine-staging 4.5+ depends on libfaudio0 and requires more install steps)
 	local version="$2" #example: "7.1"
 	local id="$3" #example: debian ($ID_LIKE) - TODO: implement other distros, like Ubuntu
 	local dist="$4" #example: bullseye ($VERSION_CODENAME)
 	local tag="$5" #example: -1
-
-	# Clean up any old wine instances
-	wineserver -k &> /dev/null # stop any old wine installations from running - TODO: double-check this command
-	rm -rf ~/.cache/wine # remove any old wine-mono or wine-gecko install files in case wine was installed previously
-	rm -rf ~/.local/share/applications/wine # remove any old program shortcuts
-
-	# Backup any old wine installs
-	rm -rf ~/wine-old 2>/dev/null; mv ~/wine ~/wine-old 2>/dev/null
-	rm -rf ~/.wine-old 2>/dev/null; mv ~/.wine ~/.wine-old 2>/dev/null
-	sudo mv /usr/local/bin/wine /usr/local/bin/wine-old 2>/dev/null
-	sudo mv /usr/local/bin/wineboot /usr/local/bin/wineboot-old 2>/dev/null
-	sudo mv /usr/local/bin/winecfg /usr/local/bin/winecfg-old 2>/dev/null
-	sudo mv /usr/local/bin/wineserver /usr/local/bin/wineserver-old 2>/dev/null
-
-	# Wine download links from WineHQ: https://dl.winehq.org/wine-builds/
-	#LNKA="https://dl.winehq.org/wine-builds/${id}/dists/${dist}/main/binary-amd64/" #amd64-wine links
-	#DEB_A1="wine-${branch}-amd64_${version}~${dist}${tag}_amd64.deb" #wine64 main bin
-	#DEB_A2="wine-${branch}_${version}~${dist}${tag}_amd64.deb" #wine64 support files (required for wine64 / can work alongside wine_i386 main bin)
-		#DEB_A3="winehq-${branch}_${version}~${dist}${tag}_amd64.deb" #shortcuts & docs?
-	LNKB="https://dl.winehq.org/wine-builds/${id}/dists/${dist}/main/binary-i386/" #i386-wine links
-	DEB_B1="wine-${branch}-i386_${version}~${dist}${tag}_i386.deb" #wine_i386 main bin
-	DEB_B2="wine-${branch}_${version}~${dist}${tag}_i386.deb" #wine_i386 support files (required for wine_i386 if no wine64 / CONFLICTS WITH wine64 support files)
-		#DEB_B3="winehq-${branch}_${version}~${dist}${tag}_i386.deb" #shortcuts & docs?
-
-	# Download, extract wine, and install wine
-	mkdir downloads 2>/dev/null; cd downloads
-		echo -e "${GREENTXT}Downloading wine . . .${NORMTXT}" # Install i386-wine (32-bit)
-		wget -q ${LNKB}${DEB_B1} || { echo "${DEB_B1} download failed!" && run_giveup; }
-		wget -q ${LNKB}${DEB_B2} || { echo "${DEB_B2} download failed!" && run_giveup; }
-		echo -e "${GREENTXT}Extracting wine . . .${NORMTXT}"
-		dpkg-deb -x ${DEB_B1} wine-installer
-		dpkg-deb -x ${DEB_B2} wine-installer
-		echo -e "${GREENTXT}Installing wine . . .${NORMTXT}\n"
-		mv wine-installer/opt/wine* ~/wine
+ 
+	# if [ $WINEVER is populated (indicating wine is the desired version) ] && [ dotnet4 is installed (indicating wine is functioning) ] then skip re-wine install.
+	local WINEVER=$(wine --version | grep "$version\b")
+	if [ ! -z "$WINEVER" ] && [ -d "$HOME/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319" ]
+	then
+		echo "Wine has already been installed and run. Skipping wine installation."
+	else	
+		# NOTE: We only really need i386-wine/box86 on RPiOS 64/32-bit for RMS Express and VARA since they are 32-bit.
+		# We don't need really amd64-wine64/box64 for our purposes of running RMS Express and VARA.
 		
-		## Install amd64-wine (64-bit) and i386-wine (32-bit)
-		#echo -e "\n${GREENTXT}Downloading wine . . .${NORMTXT}"
-		#wget -q ${LNKA}${DEB_A1} || { echo "${DEB_A1} download failed!" && run_giveup; }
-		#wget -q ${LNKA}${DEB_A2} || { echo "${DEB_A2} download failed!" && run_giveup; }
-		#wget -q ${LNKB}${DEB_B1} || { echo "${DEB_B1} download failed!" && run_giveup; }
-		#echo -e "${GREENTXT}Extracting wine . . .${NORMTXT}"
-		#dpkg-deb -x ${DEB_A1} wine-installer
-		#dpkg-deb -x ${DEB_A2} wine-installer
-		#dpkg-deb -x ${DEB_B1} wine-installer
-		#echo -e "${GREENTXT}Installing wine . . .${NORMTXT}\n"
-		#mv wine-installer/opt/wine* ~/wine	
-	cd ..
-
-	# Install symlinks (and make 32bit launcher. Credits: grayduck, Botspot) - TODO: Try to remove linux32 flag
-	echo -e '#!/bin/bash\nsetarch linux32 -L '"$HOME/wine/bin/wine "'"$@"' | sudo tee -a /usr/local/bin/wine >/dev/null # script to launch wine programs as 32bit only
-	#sudo ln -s ~/wine/bin/wine /usr/local/bin/wine # you could also just make a symlink, but box86 only works for 32bit apps at the moment
-	sudo ln -s ~/wine/bin/wineboot /usr/local/bin/wineboot
-	sudo ln -s ~/wine/bin/winecfg /usr/local/bin/winecfg
-	sudo ln -s ~/wine/bin/wineserver /usr/local/bin/wineserver
-	sudo chmod +x /usr/local/bin/wine /usr/local/bin/wineboot /usr/local/bin/winecfg /usr/local/bin/wineserver
+		# Clean up any old wine instances
+		wineserver -k &> /dev/null # stop any old wine installations from running - TODO: double-check this command
+		rm -rf ~/.cache/wine # remove any old wine-mono or wine-gecko install files in case wine was installed previously
+		rm -rf ~/.local/share/applications/wine # remove any old program shortcuts
+	
+		# Backup any old wine installs
+		rm -rf ~/wine-old 2>/dev/null; mv ~/wine ~/wine-old 2>/dev/null
+		rm -rf ~/.wine-old 2>/dev/null; mv ~/.wine ~/.wine-old 2>/dev/null
+		sudo mv /usr/local/bin/wine /usr/local/bin/wine-old 2>/dev/null
+		sudo mv /usr/local/bin/wineboot /usr/local/bin/wineboot-old 2>/dev/null
+		sudo mv /usr/local/bin/winecfg /usr/local/bin/winecfg-old 2>/dev/null
+		sudo mv /usr/local/bin/wineserver /usr/local/bin/wineserver-old 2>/dev/null
+	
+		# Wine download links from WineHQ: https://dl.winehq.org/wine-builds/
+		#LNKA="https://dl.winehq.org/wine-builds/${id}/dists/${dist}/main/binary-amd64/" #amd64-wine links
+		#DEB_A1="wine-${branch}-amd64_${version}~${dist}${tag}_amd64.deb" #wine64 main bin
+		#DEB_A2="wine-${branch}_${version}~${dist}${tag}_amd64.deb" #wine64 support files (required for wine64 / can work alongside wine_i386 main bin)
+			#DEB_A3="winehq-${branch}_${version}~${dist}${tag}_amd64.deb" #shortcuts & docs?
+		LNKB="https://dl.winehq.org/wine-builds/${id}/dists/${dist}/main/binary-i386/" #i386-wine links
+		DEB_B1="wine-${branch}-i386_${version}~${dist}${tag}_i386.deb" #wine_i386 main bin
+		DEB_B2="wine-${branch}_${version}~${dist}${tag}_i386.deb" #wine_i386 support files (required for wine_i386 if no wine64 / CONFLICTS WITH wine64 support files)
+			#DEB_B3="winehq-${branch}_${version}~${dist}${tag}_i386.deb" #shortcuts & docs?
+	
+		# Download, extract wine, and install wine
+		mkdir downloads 2>/dev/null; cd downloads
+			echo -e "${GREENTXT}Downloading wine . . .${NORMTXT}" # Install i386-wine (32-bit)
+			wget -q ${LNKB}${DEB_B1} || { echo "${DEB_B1} download failed!" && run_giveup; }
+			wget -q ${LNKB}${DEB_B2} || { echo "${DEB_B2} download failed!" && run_giveup; }
+			echo -e "${GREENTXT}Extracting wine . . .${NORMTXT}"
+			dpkg-deb -x ${DEB_B1} wine-installer
+			dpkg-deb -x ${DEB_B2} wine-installer
+			echo -e "${GREENTXT}Installing wine . . .${NORMTXT}\n"
+			mv wine-installer/opt/wine* ~/wine
+			
+			## Install amd64-wine (64-bit) and i386-wine (32-bit)
+			#echo -e "\n${GREENTXT}Downloading wine . . .${NORMTXT}"
+			#wget -q ${LNKA}${DEB_A1} || { echo "${DEB_A1} download failed!" && run_giveup; }
+			#wget -q ${LNKA}${DEB_A2} || { echo "${DEB_A2} download failed!" && run_giveup; }
+			#wget -q ${LNKB}${DEB_B1} || { echo "${DEB_B1} download failed!" && run_giveup; }
+			#echo -e "${GREENTXT}Extracting wine . . .${NORMTXT}"
+			#dpkg-deb -x ${DEB_A1} wine-installer
+			#dpkg-deb -x ${DEB_A2} wine-installer
+			#dpkg-deb -x ${DEB_B1} wine-installer
+			#echo -e "${GREENTXT}Installing wine . . .${NORMTXT}\n"
+			#mv wine-installer/opt/wine* ~/wine	
+		cd ..
+	
+		# Install symlinks (and make 32bit launcher. Credits: grayduck, Botspot) - TODO: Try to remove linux32 flag
+		echo -e '#!/bin/bash\nsetarch linux32 -L '"$HOME/wine/bin/wine "'"$@"' | sudo tee -a /usr/local/bin/wine >/dev/null # script to launch wine programs as 32bit only
+		#sudo ln -s ~/wine/bin/wine /usr/local/bin/wine # you could also just make a symlink, but box86 only works for 32bit apps at the moment
+		sudo ln -s ~/wine/bin/wineboot /usr/local/bin/wineboot
+		sudo ln -s ~/wine/bin/winecfg /usr/local/bin/winecfg
+		sudo ln -s ~/wine/bin/wineserver /usr/local/bin/wineserver
+		sudo chmod +x /usr/local/bin/wine /usr/local/bin/wineboot /usr/local/bin/winecfg /usr/local/bin/wineserver
+	fi
 }
 
 function run_Install_i386wineDependencies_RpiOS64bit()
@@ -632,28 +658,19 @@ function run_Install_i386wineDependencies_RpiOS64bit()
 	echo -e "${GREENTXT}Installing armhf dependencies for i386-Wine on aarch64 . . .${NORMTXT}"
 	sudo dpkg --add-architecture armhf && sudo apt-get update #enable multi-arch
 	
-	#depends main packages - NOTE: This for loop method is inefficient, but ensures packages install even if some are missing.
-	for i in 'libasound2:armhf' 'libc6:armhf' 'libglib2.0-0:armhf' 'libgphoto2-6:armhf' 'libgphoto2-port12:armhf' 'libgstreamer-plugins-base1.0-0:armhf' 'libgstreamer1.0-0:armhf' 'libldap-2.4-2:armhf' 'libopenal1:armhf' 'libpcap0.8:armhf' 'libpulse0:armhf' 'libsane1:armhf' 'libudev1:armhf' 'libusb-1.0-0:armhf' 'libvkd3d1:armhf' 'libx11-6:armhf' 'libxext6:armhf' 'libasound2-plugins:armhf' 'ocl-icd-libopencl1:armhf' 'libncurses6:armhf' 'libncurses5:armhf' 'libcap2-bin:armhf' 'libcups2:armhf' 'libdbus-1-3:armhf' 'libfontconfig1:armhf' 'libfreetype6:armhf' 'libglu1-mesa:armhf' 'libglu1:armhf' 'libgnutls30:armhf' 'libgssapi-krb5-2:armhf' 'libkrb5-3:armhf' 'libodbc1:armhf' 'libosmesa6:armhf' 'libsdl2-2.0-0:armhf' 'libv4l-0:armhf' 'libxcomposite1:armhf' 'libxcursor1:armhf' 'libxfixes3:armhf' 'libxi6:armhf' 'libxinerama1:armhf' 'libxrandr2:armhf' 'libxrender1:armhf' 'libxxf86vm1' 'libc6:armhf' 'libcap2-bin:armhf'; do
-		sudo apt-get install -y "$i"
-		done
-		# This list found by downloading...
-		#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/wine-devel-i386_7.1~bullseye-1_i386.deb
-		#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/winehq-devel_7.1~bullseye-1_i386.deb
-		#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/wine-devel_7.1~bullseye-1_i386.deb
-		# then `dpkg-deb -I package.deb`. Read output, add `:armhf` to packages in dep list, then try installing them on Pi aarch64.
-	
-	# Old i386-wine dependency list for box86/wine on aarch64 (worked for buster, but causes taskbar to disappear in bullseye) from Discord
-	# Credits: monkaBlyat (Dr. van RockPi), Itai-Nelken, & WheezyE
-	#sudo apt-get install libavcodec58:armhf libavformat58:armhf libboost-filesystem1.74.0:armhf libboost-iostreams1.74.0:armhf \
-	#	libboost-program-options1.74.0:armhf libcal3d12v5:armhf libcups2:armhf libcurl4:armhf libfontconfig1:armhf \
-	#	libfreetype6:armhf libgdk-pixbuf2.0-0:armhf libgl1-mesa-dev:armhf libgtk2.0-0:armhf libjpeg62:armhf libmpg123-0:armhf \
-	#	libmyguiengine3debian1v5:armhf libncurses5:armhf libncurses6:armhf libopenal1:armhf libpng16-16:armhf \
-	#	libsdl1.2-dev:armhf libsdl2-2.0-0:armhf libsdl2-image-2.0-0:armhf libsdl2-mixer-2.0-0:armhf libsdl2-net-2.0-0:armhf \
-	#	libsdl-mixer1.2:armhf libsmpeg0:armhf libsnappy1v5:armhf libstdc++6:armhf libswscale5:armhf libudev1:armhf \
-	#	libvorbis-dev:armhf libx11-6:armhf libx11-dev:armhf libxcb1:armhf libxcomposite1:armhf libxcursor1:armhf libxext6:armhf \
-	#	libxi6:armhf libxinerama1:armhf libxrandr2:armhf libxrender1:armhf libxxf86vm1:armhf mesa-va-drivers:armhf osspd:armhf \
-	#	pulseaudio:armhf -y # for i386-wine on aarch64 - TODO: Something in this list makes taskbar disappear (after reboot) in bullseye
-	#	sudo apt-get install libasound2:armhf libpulse0:armhf libxml2:armhf libxslt1.1:armhf libxslt1-dev:armhf -y # fixes i386-wine sound? from Discord
+	sudo apt-get install -y libasound2:armhf libc6:armhf libglib2.0-0:armhf libgphoto2-6:armhf libgphoto2-port12:armhf \
+	    libgstreamer-plugins-base1.0-0:armhf libgstreamer1.0-0:armhf libldap-2.4-2:armhf libopenal1:armhf libpcap0.8:armhf \
+	    libpulse0:armhf libsane1:armhf libudev1:armhf libusb-1.0-0:armhf libvkd3d1:armhf libx11-6:armhf libxext6:armhf \
+	    libasound2-plugins:armhf ocl-icd-libopencl1:armhf libncurses6:armhf libncurses5:armhf libcap2-bin:armhf libcups2:armhf \
+	    libdbus-1-3:armhf libfontconfig1:armhf libfreetype6:armhf libglu1-mesa:armhf libglu1:armhf libgnutls30:armhf \
+	    libgssapi-krb5-2:armhf libkrb5-3:armhf libodbc1:armhf libosmesa6:armhf libsdl2-2.0-0:armhf libv4l-0:armhf \
+	    libxcomposite1:armhf libxcursor1:armhf libxfixes3:armhf libxi6:armhf libxinerama1:armhf libxrandr2:armhf \
+	    libxrender1:armhf libxxf86vm1 libc6:armhf libcap2-bin:armhf x11-utils:armhf libxcomposite-dev:armhf # to run wine-i386 through box86:armhf on aarch64
+	# Dependencies can be found through trial-error and/or by by downloading...
+	#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/wine-devel-i386_7.1~bullseye-1_i386.deb
+	#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/winehq-devel_7.1~bullseye-1_i386.deb
+	#	wget https://dl.winehq.org/wine-builds/debian/dists/bullseye/main/binary-i386/wine-devel_7.1~bullseye-1_i386.deb
+	# then `dpkg-deb -I package.deb`. Read output, add `:armhf` to packages in dep list, then try installing them on Pi aarch64.
 }
 
 function run_Install_i386wineDependencies_Ubuntu64bit()
@@ -663,28 +680,27 @@ function run_Install_i386wineDependencies_Ubuntu64bit()
 	echo -e "${GREENTXT}Installing armhf dependencies for i386-Wine on aarch64 . . .${NORMTXT}"
 	sudo dpkg --add-architecture armhf && sudo apt-get update #enable multi-arch
 	
-	#depends main packages - NOTE: This for loop method is inefficient, but ensures packages install even if some are missing.
+	# NOTE: This for loop method is inefficient, but ensures packages install even if some are missing.
 	for i in 'libasound2:armhf' 'libc6:armhf' 'libglib2.0-0:armhf' 'libgphoto2-6:armhf' 'libgphoto2-port12:armhf' 'libgstreamer-plugins-base1.0-0:armhf' 'libgstreamer1.0-0:armhf' 'libldap-2.5-0:armhf' 'libopenal1:armhf' 'libpcap0.8:armhf' 'libpulse0:armhf' 'libsane1:armhf' 'libudev1:armhf' 'libusb-1.0-0:armhf' 'libx11-6:armhf' 'libxext6:armhf' 'ocl-icd-libopencl1:armhf' 'libasound2-plugins:armhf' 'libncurses6:armhf'; do
-		sudo apt-get install -y "$i"
+		sudo apt-get install -y "$i" #depends main packages
 		done
-	sudo apt-get install -y 'libunwind8:armhf' #amd64-wine likes this package too
-
-	#depends alternate packages
 	for i in 'libopencl1:armhf' 'libopencl-1.2-1:armhf' 'libncurses5:armhf' 'libncurses:armhf'; do
-		sudo apt-get install -y "$i"
+		sudo apt-get install -y "$i" #depends alternate packages
 		done
-
-	#recommends main packages
-	for i in 'libcap2-bin:armhf' 'libcups2:armhf' 'libdbus-1-3:armhf' 'libfontconfig1:armhf' 'libfreetype6:armhf' 'libglu1-mesa:armhf' 'libgnutls30:armhf' 'libgssapi-krb5-2:armhf' 'libkrb5-3:armhf' 'libodbc1:armhf' 'libosmesa6:armhf' 'libsdl2-2.0-0:armhf' 'libv4l-0:armhf' 'libxcomposite1:armhf' 'libxcursor1:armhf' 'libxfixes3:armhf' 'libxi6:armhf' 'libxinerama1:armhf' 'libxrandr2:armhf' 'libxrender1:armhf' 'libxxf86vm1'; do
-		sudo apt-get install -y "$i"
+	for i in 'libcap2-bin:armhf' 'libcups2:armhf' 'libdbus-1-3:armhf' 'libfontconfig1:armhf' 'libfreetype6:armhf' 'libglu1-mesa:armhf' 'libgnutls30:armhf' 'libgssapi-krb5-2:armhf' 'libkrb5-3:armhf' 'libodbc1:armhf' 'libosmesa6:armhf' 'libsdl2-2.0-0:armhf' 'libv4l-0:armhf' 'libxcomposite1:armhf' 'libxcursor1:armhf' 'libxfixes3:armhf' 'libxi6:armhf' 'libxinerama1:armhf' 'libxrandr2:armhf' 'libxrender1:armhf' 'libxxf86vm1:armhf'; do
+		sudo apt-get install -y "$i" #recommends main packages
 		done
-	sudo apt-get install -y 'libjpeg62-turbo:armhf' #amd64-wine likes this package too
-
-	#recommends alternate packages
 	for i in 'libglu1:armhf' 'libgnutls28:armhf' 'libgnutls26:armhf'; do
-		sudo apt-get install -y "$i"
+		sudo apt-get install -y "$i" #recommends alternate packages
 		done
-	sudo apt-get install -y 'libjpeg8:armhf' #amd64-wine likes this package too 
+	
+	#amd64-wine likes these packages too?
+	sudo apt-get install -y 'libunwind8:armhf' 
+	sudo apt-get install -y 'libjpeg62-turbo:armhf'
+	sudo apt-get install -y 'libjpeg8:armhf'
+	
+	# Ubuntu will complain about /usr/lib/arm-linux-gnueabihf/ld-linux-armhf.so.3 crashing /usr/sbin/capsh. We can silent the error message.
+	sudo sed -i 's+enabled=1+enabled=0+g' /etc/default/apport
 
 	# This list found by downloading...
 	#	wget https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/main/binary-i386/wine-devel-i386_7.7~jammy-1_i386.deb
@@ -786,13 +802,20 @@ function run_Install_amd64wineDependencies_RpiOS64bit()
 
 function run_installwinemono()  # Wine-mono replaces MS.NET 4.6 and earlier.
 {
-    # MS.NET 4.6 takes a very long time to install on RPi4 in Wine and runs slower than wine-mono
-    sudo apt-get install p7zip-full -y
-    mkdir ~/.cache/wine 2>/dev/null
-    echo -e "\n${GREENTXT}Downloading and installing wine-mono . . .${NORMTXT}\n"
-    wget -q -P ~/.cache/wine https://dl.winehq.org/wine/wine-mono/7.2.0/wine-mono-7.2.0-x86.msi  || { echo "wine-mono .msi install file download failed!" && run_giveup; }
-    wine msiexec /i ~/.cache/wine/wine-mono-7.2.0-x86.msi
-    rm -rf ~/.cache/wine # clean up to save disk space
+	if [ -d "$HOME/.wine/drive_c/windows/Microsoft.NET/Framework/v4.0.30319" ]
+	then
+	    echo "Wine-mono has already been installed and run. Skipping wine-mono installation."
+	else
+		# MS.NET 4.6 takes a very long time to install on RPi4 in Wine and runs slower than wine-mono
+		sudo apt-get install p7zip-full -y
+		mkdir ~/.cache/wine 2>/dev/null
+		echo -e "\n${GREENTXT}Downloading and installing wine-mono . . .${NORMTXT}\n"
+		wget -q -P ~/.cache/wine https://dl.winehq.org/wine/wine-mono/7.2.0/wine-mono-7.2.0-x86.msi  || { echo "wine-mono .msi install file download failed!" && run_giveup; }
+		wine msiexec /i ~/.cache/wine/wine-mono-7.2.0-x86.msi
+		
+		rm -rf ~/.cache/wine # clean up to save disk space
+  		wineboot -e && wineboot -f && wineserver -k # try to free up Wine's RAM(?) in wine (try to prevent freezes on Raspberry Pi)
+	fi
 }
 
 function run_increasepi3swapfile()
@@ -964,21 +987,19 @@ function run_setupwineprefix()  # Set up a new wineprefix silently.  A wineprefi
     local varaonly="$1"
     
     # Silently create a new wineprefix
-        echo -e "\n${GREENTXT}Creating a new wineprefix.  This may take a moment . . .${NORMTXT}\n" 
+        echo -e "\n${GREENTXT}Initializing wineprefix.  This may take a moment . . .${NORMTXT}\n" 
         rm -rf ~/.cache/wine # make sure no old wine-mono files are in wine's cache, or else they will be auto-installed on first wineboot
         DISPLAY=0 WINEARCH=win32 WINEDEBUG=-all wine wineboot # initialize Wine silently (silently makes a fresh wineprefix in `~/.wine`)
 
     # Install pre-requisite software into the wineprefix for RMS Express and VARA
         if [ "$varaonly" = "vara_only" ]; then
 	    echo -e "\n${GREENTXT}Setting up your wineprefix for VARA . . .${NORMTXT}\n"
-	    BOX86_NOBANNER=1 winetricks -q vb6run pdh_nt4 win7 sound=alsa || { echo "Winetricks failed to download/install VB6 or PDH.DLL!" && run_giveup; } # for VARA
-	    #WTERR_VB6RUN=$( winetricks -q vb6run | tee /dev/stderr | grep -o -P '(warning: Downloading )(.*?)(VB6.0-KB290887-X86.exe failed)' ) # more precise error reporting
 	else
 	    echo -e "\n${GREENTXT}Setting up your wineprefix for RMS Express & VARA . . .${NORMTXT}\n"
-	    run_installwinemono # for RMS Express - wine-mono replaces dotnet46
-	    #BOX86_NOBANNER=1 winetricks -q dotnet46 win7 sound=alsa # for RMS Express
-	    BOX86_NOBANNER=1 winetricks -q vb6run pdh_nt4 win7 sound=alsa || { echo "Winetricks failed to download/install VB6 or PDH.DLL!" && run_giveup; } # for VARA
+	    run_installwinemono # for RMS Express (wine-mono replaces dotnet46)
 	fi
+ 	BOX86_DYNAREC=0 BOX86_NOBANNER=1 winetricks -q vb6run pdh_nt4 win7 sound=alsa || { echo "Winetricks failed to download/install VB6 or PDH.DLL!" && run_giveup; } # for VARA
+	#could also do 'BOX86_DYNAREC=0 wine winecfg -v win7'
 	# TODO: Check to see if 'winetricks -q corefonts riched20' would make text look nicer
 }
 
@@ -997,7 +1018,7 @@ function run_installahk()
     cd ..
 }
 
-function run_installrms()  # Download/extract/install RMS Express
+function run_installrmsexpress()  # Download/extract/install RMS Express
 {
     mkdir downloads 2>/dev/null; cd downloads
         # Download RMS Express (no matter its version number) [https://downloads.winlink.org/User%20Programs/]
@@ -1012,13 +1033,13 @@ function run_installrms()  # Download/extract/install RMS Express
 
         # Extract/install RMS Express
             7z x Winlink_Express_install_*.zip -o"WinlinkExpressInstaller" -y -bsp0 -bso0
-            wine WinlinkExpressInstaller/Winlink_Express_install.exe /SILENT
+            WINEDEBUG=-all wine WinlinkExpressInstaller/Winlink_Express_install.exe /SILENT
 	    
 	# Clean up
             rm -rf WinlinkExpressInstaller
 	    sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Express/ # Remove wine's auto-generated program icon from the start menu
             
-        # Make a RMS Express desktop shortcut
+        # Make an RMS Express desktop shortcut
             echo '[Desktop Entry]'                                                                             | sudo tee ${STARTMENU}/winlinkexpress.desktop > /dev/null
             echo 'Name=Winlink Express'                                                                        | sudo tee -a ${STARTMENU}/winlinkexpress.desktop > /dev/null
             echo 'GenericName=Winlink Express'                                                                 | sudo tee -a ${STARTMENU}/winlinkexpress.desktop > /dev/null
@@ -1033,12 +1054,193 @@ function run_installrms()  # Download/extract/install RMS Express
     cd ..
 }
 
+function run_installrmsterminal()
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS Terminal (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing RMS Simple Terminal . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "RMS_Simple_Terminal_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS Simple Terminal download failed!" && run_giveup; }
+
+        # Extract/install RMS Terminal
+            7z x RMS_Simple_Terminal_install_*.zip -o"RMSTerminalInstaller" -y -bsp0 -bso0
+            BOX86_DYNAREC=0 WINEDEBUG=-all wine msiexec /i RMSTerminalInstaller/RMS\ Simple\ Terminal\ Setup.msi /quiet
+
+	# Clean up
+            rm -rf RMSTerminalInstaller
+	    #sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Simple\ Terminal/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS Simple Terminal desktop shortcut
+            echo '[Desktop Entry]'                                                                                               | sudo tee ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'Name=RMS Simple Terminal'                                                                                      | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'GenericName=RMS Simple Terminal'                                                                               | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'Comment=RMS Simple Terminal emulated with Box86/Wine'                                                          | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/RMS\ Simple\ Terminal/RMS\ Simple\ Terminal.exe' | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'Type=Application'                                                                                              | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                            | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            #echo 'Icon=none.0'                                                                                                   | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'StartupWMClass=rms simple terminal.exe'                                                                        | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                          | sudo tee -a ${STARTMENU}/rmssimpleterminal.desktop > /dev/null
+    cd ..
+}
+
+function run_installrmstrimode()  # Download/extract/install RMS Express
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS Trimode (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing RMS Trimode . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "RMS_Trimode_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS Trimode download failed!" && run_giveup; }
+
+        # We could also use curl if we don't want to use wget to find the link . . .
+            #RMSTRILINKPREFIX="https://downloads.winlink.org"
+            #RMSTRILINKSUFFIX=$(curl -s https://downloads.winlink.org/User%20Programs/ | grep -oP '(?=/Sysop%20Programs/RMS_Trimode_install_).*?(\.zip).*(?=">RMS_Trimode_install_)')
+            #RMSTRILINK=$RMSTRILINKPREFIX$RMSTRILINKSUFFIX
+            #wget -q $RMSTRILINK || { echo "RMS Trimode download failed!" && run_giveup; }
+
+        # Extract/install RMS Trimode
+            7z x RMS_Trimode_install_*.zip -o"RMSTrimodeInstaller" -y -bsp0 -bso0
+            WINEDEBUG=-all wine RMSTrimodeInstaller/RMS_Trimode_install.exe /SILENT
+
+	# Clean up
+            rm -rf RMSTrimodeInstaller
+	    sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Trimode/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS Trimode desktop shortcut
+            echo '[Desktop Entry]'                                                                                               | sudo tee ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Name=RMS Trimode'                                                                                              | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'GenericName=RMS Trimode'                                                                                       | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Comment=RMS Trimode emulated with Box86/Wine'                                                                  | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/RMS\ Trimode/RMS\ Trimode.exe' | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Type=Application'                                                                                              | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                            | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Icon=C4A8_RMS Trimode.0'                                                                                       | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'StartupWMClass=rms trimode.exe'                                                                                | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                          | sudo tee -a ${STARTMENU}/rmstrimode.desktop > /dev/null
+    cd ..
+}
+
+function run_installrmsadifanalyzer()
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS ADIF Analyzer (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing ADIF Analyzer (companion app for RMS Trimode) . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "ADIF_Analyzer_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS ADIF Analyzer download failed!" && run_giveup; }
+
+        # Extract/install RMS ADIF Analyzer
+            7z x ADIF_Analyzer_install_*.zip -o"RMSADIFInstaller" -y -bsp0 -bso0
+            BOX86_DYNAREC=0 WINEDEBUG=-all wine RMSADIFInstaller/ADIF_Analyzer_install.exe /SILENT
+	    #TODO: Extract .ico from exe, convert to .png, and save as .0 in ${HOME}/.local/share/icons/hicolor/48x48/apps/
+
+	# Clean up
+            rm -rf RMSADIFInstaller
+	    sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/ADIF\ Analyzer/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS ADIF Analyzer desktop shortcut
+            echo '[Desktop Entry]'                                                                                               | sudo tee ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Name=RMS ADIF Analyzer'                                                                                        | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'GenericName=RMS ADIF Analyzer'                                                                                 | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Comment=ADIF Analyzer emulated with Box86/Wine'                                                                | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/ADIF\ Analyzer/ADIF\ Analyzer.exe' | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Type=Application'                                                                                              | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                            | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Icon=2BD9_ADIF Analyzer.0'                                                                                     | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'StartupWMClass=adif analyzer.exe'                                                                              | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                          | sudo tee -a ${STARTMENU}/rmsadifanalyzer.desktop > /dev/null
+    cd ..
+}
+
+function run_installrmspacket()
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS Packet (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing RMS Packet . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "RMS_Packet_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS Packet download failed!" && run_giveup; }
+
+        # Extract/install RMS Packet
+            7z x RMS_Packet_install_*.zip -o"RMSPacketInstaller" -y -bsp0 -bso0
+            BOX86_DYNAREC=0 WINEDEBUG=-all wine RMSPacketInstaller/RMS_Packet_install.exe /SILENT
+
+	# Clean up
+            rm -rf RMSPacketInstaller
+	    sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Packet/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS Packet desktop shortcut
+            echo '[Desktop Entry]'                                                                                             | sudo tee ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Name=RMS Packet'                                                                                             | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'GenericName=RMS Packet'                                                                                      | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Comment=RMS Packet emulated with Box86/Wine'                                                                 | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/RMS\ Packet/RMS\ Packet.exe' | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Type=Application'                                                                                            | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                          | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Icon=3563_RMS Packet.0'                                                                                      | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'StartupWMClass=rms packet.exe'                                                                               | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                        | sudo tee -a ${STARTMENU}/rmspacket.desktop > /dev/null
+    cd ..
+}
+
+function run_installrmsrelay()
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS Relay (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing RMS Relay . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "RMS_Relay_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS Relay download failed!" && run_giveup; }
+
+        # Extract/install RMS Relay
+            7z x RMS_Relay_install_*.zip -o"RMSRelayInstaller" -y -bsp0 -bso0
+            BOX86_DYNAREC=0 WINEDEBUG=-all wine RMSRelayInstaller/RMS_Relay_install.exe /SILENT
+
+	# Clean up
+            rm -rf RMSRelayInstaller
+	    #sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Relay/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS Relay desktop shortcut
+            echo '[Desktop Entry]'                                                                                           | sudo tee ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'Name=RMS Relay'                                                                                            | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'GenericName=RMS Relay'                                                                                     | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'Comment=RMS Relay emulated with Box86/Wine'                                                                | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/RMS\ Relay/RMS\ Relay.exe' | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'Type=Application'                                                                                          | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                        | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            #echo 'Icon=2BD9_ADIF Analyzer.0'                                                                                 | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'StartupWMClass=rms relay.exe'                                                                              | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                      | sudo tee -a ${STARTMENU}/rmsrelay.desktop > /dev/null
+    cd ..
+}
+
+function run_installrmslinktest()
+{
+    mkdir downloads 2>/dev/null; cd downloads
+        # Download RMS Link Test (no matter its version number) [https://downloads.winlink.org/Sysop%20Programs/]
+            echo -e "\n${GREENTXT}Downloading and installing RMS Link Test . . .${NORMTXT}\n"
+            wget -q -r -l1 -np -nd -A "RMS_Link_Test_install_*.zip" https://downloads.winlink.org/Sysop%20Programs || { echo "RMS Link Test download failed!" && run_giveup; }
+
+        # Extract/install RMS Link Test
+            7z x RMS_Link_Test_install_*.zip -o"RMSLinkTestInstaller" -y -bsp0 -bso0
+            BOX86_DYNAREC=0 WINEDEBUG=-all wine RMSLinkTestInstaller/RMS_Link_Test_install.exe /SILENT
+
+	# Clean up
+            rm -rf RMSLinkTestInstaller
+	    sleep 3; sudo rm -rf ~/.local/share/applications/wine/Programs/RMS\ Link\ Test/ # Remove wine's auto-generated program icon from the start menu
+
+        # Make an RMS Link Test desktop shortcut
+            echo '[Desktop Entry]'                                                                                               | sudo tee ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Name=RMS Link Test'                                                                                            | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'GenericName=RMS Link Test'                                                                                     | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Comment=RMS Link Test emulated with Box86/Wine'                                                                | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Exec=env BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine '$HOME'/.wine/drive_c/RMS/RMS\ Link\ Test/RMS\ Link\ Test.exe' | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Type=Application'                                                                                              | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'StartupNotify=true'                                                                                            | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Icon=C08D_RMS Link Test.0'                                                                                     | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'StartupWMClass=rms link test.exe'                                                                              | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+            echo 'Categories=HamRadio;'                                                                                          | sudo tee -a ${STARTMENU}/rmslinktest.desktop > /dev/null
+    cd ..
+}
+
 function run_installvarAC()  # Download/extract/install varAC chat app
 {
     mkdir downloads 2>/dev/null; cd downloads
         # Download varAC linux working version 6.1 (static Link as no dynamic link known at the moment)
             echo -e "\n${GREENTXT}Downloading and installing VarAC . . .${NORMTXT}\n"
-            wget -q -r -l1 -np -nd https://288b5dcd-0898-4460-b829-4a40f1724acf.usrfiles.com/archives/288b5d_c0231e0495a34733b30bdd5155276fb3.zip -O varac_latest || { echo "VarAC download failed!" && run_giveup; }
+            wget -q https://varac.hopp.bio/varac_latest || { echo "VarAC download failed!" && run_giveup; }
             
         # Extract/install VarAC
             mkdir -p ${HOME}/.wine/drive_c/VarAC
@@ -1234,7 +1436,7 @@ function run_makevaraupdatescript()
 					
 				# Run varahf_install.ahk
 					echo -e "\n${GREENTXT}Installing VARA HF . . .${NORMTXT}\n"
-					BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varahf_install.ahk # install VARA silently using AHK
+					BOX86_DYNAREC=0 BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varahf_install.ahk # install VARA silently using AHK
 				
 				# Clean up the installation
 					rm ~/.wine/drive_c/VARA\ setup*.exe
@@ -1273,7 +1475,7 @@ function run_makevaraupdatescript()
 
 				# Run varafm_install.ahk
 					echo -e "\n${GREENTXT}Installing VARA FM . . .${NORMTXT}\n"
-					BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varafm_install.ahk # install VARA silently using AHK
+					BOX86_DYNAREC=0 BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varafm_install.ahk # install VARA silently using AHK
 
 				# Clean up the installation
 					rm ~/.wine/drive_c/VARA\ FM\ setup*.exe
@@ -1312,7 +1514,7 @@ function run_makevaraupdatescript()
 		#
 		#		# Run varasat_install.ahk
 		#			echo -e "\n${GREENTXT}Installing VARA SAT . . .${NORMTXT}\n"
-		#			BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varasat_install.ahk # install VARA silently using AHK
+		#			BOX86_DYNAREC=0 BOX86_NOBANNER=1 BOX86_DYNAREC_BIGBLOCK=0 WINEDEBUG=-all wine ${AHK}/AutoHotkey.exe ${AHK}/varasat_install.ahk # install VARA silently using AHK
 		#
 		#		# Clean up the installation
 		#			rm ~/.wine/drive_c/VARA\ SAT\ setup*.exe
@@ -1340,7 +1542,7 @@ function run_makevaraupdatescript()
 
 				# Run the VARA Chat installer silently
 					echo -e "\n${GREENTXT}Installing VARA Chat . . .${NORMTXT}\n"
-					wine ${VARAUPDATE}/VARAChatInstaller/VARA\ Chat\ setup*.exe /SILENT # install VARA Chat
+					BOX86_NOBANNER=1 BOX86_DYNAREC=0 wine ${VARAUPDATE}/VARAChatInstaller/VARA\ Chat\ setup*.exe /SILENT # install VARA Chat
 				
 				# Clean up the installer
 					rm ${VARAUPDATE}/VARAChatInstaller/VARA\ Chat\ setup*.exe
@@ -1590,9 +1792,12 @@ function run_makeuninstallscript()
 		UNWL=$? # the answer of the yes/no questions is stored in the $? variable ( 0 = yes, 1 = no ).
 		if	[ "$UNWL" = 0 ]; # If user answered 'yes', then ...
 		then
-			sudo rm ${STARTMENU}/winlinkexpress.desktop ${STARTMENU}/vara.desktop ${STARTMENU}/vara-fm.desktop \
-				${STARTMENU}/vara-sat.desktop ${STARTMENU}/vara-chat.desktop ${STARTMENU}/vara-soundcardsetup.desktop \
-				${STARTMENU}/vara-update.desktop ${STARTMENU}/resetwine.desktop ${STARTMENU}/VarAC.desktop 2>/dev/null # remove old shortcuts
+			sudo rm ${STARTMENU}/winlinkexpress.desktop ${STARTMENU}/rmssimpleterminal.desktop \
+				${STARTMENU}/rmstrimode.desktop ${STARTMENU}/rmsadifanalyzer.desktop \
+				${STARTMENU}/rmspacket.desktop ${STARTMENU}/rmsrelay.desktop ${STARTMENU}/rmslinktest.desktop \
+				${STARTMENU}/vara.desktop ${STARTMENU}/vara-fm.desktop ${STARTMENU}/vara-sat.desktop ${STARTMENU}/vara-chat.desktop \
+				${STARTMENU}/vara-soundcardsetup.desktop ${STARTMENU}/vara-update.desktop ${STARTMENU}/VarAC.desktop \
+				${STARTMENU}/resetwine.desktop 2>/dev/null # remove old shortcuts
 			sudo rm -rf ${HOME}/winelink 2>/dev/null
 			rm ${HOME}/RMS\ Express\ *.log 2>/dev/null # silently remove old RMS Express logs
 			rm ${HOME}/VarAC.ini ${HOME}/VarAC_cat_commands.ini ${HOME}/VarAC_frequencies.conf ${HOME}/VarAC_frequency_schedule.conf ${HOME}/VarAC_alert_tags.conf
@@ -2123,6 +2328,7 @@ function run_detect_othersbc()
 
 function run_giveup()  # If our script failed at any critical stages, notify the user and quit
 {
+    wineserver -k # for next run of script
     echo ""
     echo "Winelink installation failed."
     echo ""
@@ -2130,6 +2336,11 @@ function run_giveup()  # If our script failed at any critical stages, notify the
     echo "For help, please reference the '${HOME}/winelink\winelink.log' file"
     echo "You can also open an issue on github.com/WheezyE/Winelink/"
     echo ""
+
+    # LOGGING: Close the output
+    set +x
+    exec 77>&-
+    
     exit
 }
 
