@@ -1,7 +1,7 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE BETA**
-this is a early release still "beta" RC5
+this is a early release still "beta" RC5.5
   - a exiting enhancment WSJT-X WSJT-Z and JTDX JS8CALL now all installing properly!
 - no .desktop files yet for most things (no menu icons)
 - upgrade your OS first. This script is not upgrading the OS.
