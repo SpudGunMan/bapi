@@ -38,8 +38,7 @@ INSTALL(){
 
 VERSION(){
     if [ -f ${HOME}/YAAC/YAAC.jar ];then
-		CURRENT=NONE  
-		# $(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
+		CURRENT=$(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
     else
         CURRENT=NONE
     fi
