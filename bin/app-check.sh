@@ -42,20 +42,23 @@ for Job in $BAPAPPS_FILES_LOC; do
 		#add found to list
 		if [ "$CURRENT" != "NONE" ]; then
 			echo -e "INFORMATIONAL: found $ID $CURRENT is installed" | tee -a $FOUND_APPS_FILE
-		fi
 
-		#Status Update newer version
-		if [[ $NEWVER =~ "^[0-9]+$" ]]; then
-			#echo -e "ERROR: $ID: $NEWVER is not a valid version number!"
-			sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
-		else
-			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
-				sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
-			else
-				#echo -e "ERROR: $ID: UPDATE $NEWVER and $CURRENT version number!"
+			#Status Update newer version
+			if [[ $NEWVER =~ "^[0-9]+$" ]]; then
+				#echo -e "ERROR: $ID: $NEWVER is not a valid version number!"
 				sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
+			else
+				if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+					echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
+					sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
+				else
+					#echo -e "ERROR: $ID: UPDATE $NEWVER and $CURRENT version number!"
+					sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
+				fi
 			fi
+
+		else
+			CURRENT=NONE
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
