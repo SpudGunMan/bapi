@@ -55,7 +55,8 @@ for Job in $BAPAPPS_FILES_LOC; do
 				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
 				sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
 			else
-				echo -e "ERROR: $ID: $NEWVER and $CURRENT version number!"
+				#echo -e "ERROR: $ID: $NEWVER and $CURRENT version number!"
+				NEWVER=NONE
 				sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
 			fi
 		fi
