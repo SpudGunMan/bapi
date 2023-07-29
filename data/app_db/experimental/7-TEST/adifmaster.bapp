@@ -1,0 +1,38 @@
+BAPP=4
+ID=ADIFMaster
+Name=ADIFMaster
+Comment='ADIFMaster in box:wine tool for ADIF logs'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='http://www.dxshell.com/adif-master.html'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir ${HOME}/.wine/drive_c/ADIFMaster
+        cd ${HOME}/.wine/drive_c/ADIFMaster
+
+        wget --tries 2 --connect-timeout=60 http://www.dxshell.com/downloads/ADIFMasterSetup.zip
+
+        upzip ADIFMasterSetup.zip && rm ADIFMasterSetup.zip
+    fi
+
+    env WINEDEBUG=-all wine ~/.wine/drive_c/ADIFMaster/Setup.exe
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/ADIFMaster ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}

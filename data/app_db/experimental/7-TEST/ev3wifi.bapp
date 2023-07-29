@@ -12,18 +12,36 @@ INSTALL(){
     echo -e "INFORMATIONAL: installing wifi patch for evolve3 maestro ebook11"
     cd ${BAPSRC} || return
     sudo rm -rf rtl8723du
+    sudo rm -rf rtw88
 
-    git clone https://github.com/lwfinger/rtl8723du.git
-    cd rtl8723du
+
+    #Choice for release
+	action=$(yad --center --title "Question: Which Driver for wifi?" --image "dialog-question"\
+        --button="rtw88:0" --button="rtl8723du:2" \
+        --text "Use newer trw88 or older rtl8723du driver?" \")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+        #new version
+        git clone https://github.com/lwfinger/rtw88.git
+        cd rtw88
+    else
+        #older version
+        git clone https://github.com/lwfinger/rtl8723du.git
+        cd rtl8723du
+    fi
+
     make
     sudo make install
     sudo modprobe -v 8723du
-    echo -e "INFORMATIONAL:   sudo modprobe -rv 8723du         #This unloads the module"
-    echo -e "INFORMATIONAL:   sudo modprobe -v 8723du          #This loads the module "
+    #echo -e "INFORMATIONAL:   sudo modprobe -rv 8723du         #This unloads the module"
+    #echo -e "INFORMATIONAL:   sudo modprobe -v 8723du          #This loads the module "
 }
 
 VERSION(){
     if [[ -d "${BAPSRC}/rtl8723du" ]];then
+        CURRENT=0-git
+    elif [[ -d "${BAPSRC}/rtw88" ]];then
         CURRENT=0-git
     else
         CURRENT=NONE

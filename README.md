@@ -1,10 +1,10 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE BETA**
-this is a early release still "beta" RC6
+this is a early release still "beta" RC6.7
 - no .desktop files yet for most things (no menu icons)
 - upgrade your OS first. This script is not upgrading the OS.
-- VARA and winelink RMS etc, having global issues with ARM-BOX emulation
+- VARA and winelink RMS etc, having [global issues](https://github.com/WheezyE/Winelink/issues/72) with ARM-BOX emulation
 
 ## Description
 ![screenshot](data/screenshot.jpg)
