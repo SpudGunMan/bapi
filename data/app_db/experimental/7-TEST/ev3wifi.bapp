@@ -33,12 +33,14 @@ INSTALL(){
     make
     sudo make install
     sudo modprobe -v 8723du
-    echo -e "INFORMATIONAL:   sudo modprobe -rv 8723du         #This unloads the module"
-    echo -e "INFORMATIONAL:   sudo modprobe -v 8723du          #This loads the module "
+    #echo -e "INFORMATIONAL:   sudo modprobe -rv 8723du         #This unloads the module"
+    #echo -e "INFORMATIONAL:   sudo modprobe -v 8723du          #This loads the module "
 }
 
 VERSION(){
     if [[ -d "${BAPSRC}/rtl8723du" ]];then
+        CURRENT=0-git
+    elif [[ -d "${BAPSRC}/rtw88" ]];then
         CURRENT=0-git
     else
         CURRENT=NONE
