@@ -36,6 +36,8 @@ for Job in $BAPAPPS_FILES_LOC; do
 		if [[ $CURRENT =~ "^[0-9]+$" ]]; then
 			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
 		else
+			#no version found
+			CURRENT=NONE
 			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
 		fi
 
