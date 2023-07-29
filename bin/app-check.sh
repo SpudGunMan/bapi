@@ -28,6 +28,10 @@ for Job in $BAPAPPS_FILES_LOC; do
 		#CHECK NEW VER AND CUR VER with bad math checking as its strings
 		#update .bapp with new data gathered from .bapp VERSION function
 
+		#remove any spaces from version numbers
+		NEWVER=$(echo $NEWVER | sed 's/ //g')
+		CURRENT=$(echo $CURRENT | sed 's/ //g')
+
 		#Status Update current version
 		if [[ $CURRENT =~ "^[0-9]+$" ]]; then
 			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
