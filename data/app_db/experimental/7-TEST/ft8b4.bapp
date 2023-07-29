@@ -23,7 +23,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ -d "${BAPSRC}/rtl8723du" ]];then
+    if [[ -d "${BAPSRC}/ft8b4" ]];then
         CURRENT=0-git
     else
         CURRENT=NONE
