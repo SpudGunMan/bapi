@@ -11,7 +11,8 @@ NOTE='rtl8723du module install, uses main branch if you get setback a version ch
 INSTALL(){
     echo -e "INFORMATIONAL: installing wifi patch for evolve3 maestro ebook11"
     cd ${BAPSRC} || return
-    rm -rf rtl8723du
+    sudo rm -rf rtl8723du
+    sudo rm -rf rtw88
 
 
     #Choice for release
