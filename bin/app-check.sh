@@ -36,8 +36,6 @@ for Job in $BAPAPPS_FILES_LOC; do
 		if [[ $CURRENT =~ "^[0-9]+$" ]]; then
 			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
 		else
-			#no version found
-			CURRENT=NONE
 			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
 		fi
 
@@ -55,8 +53,7 @@ for Job in $BAPAPPS_FILES_LOC; do
 				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
 				sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
 			else
-				#echo -e "ERROR: $ID: $NEWVER and $CURRENT version number!"
-				NEWVER=NONE
+				echo -e "ERROR: $ID: UPDATE $NEWVER and $CURRENT version number!"
 				sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
 			fi
 		fi
