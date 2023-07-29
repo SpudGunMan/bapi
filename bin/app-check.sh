@@ -42,13 +42,14 @@ for Job in $BAPAPPS_FILES_LOC; do
 
 		#Status Update newer version
 		if [[ $NEWVER =~ "^[0-9]+$" ]]; then
+			echo -e "ERROR: $ID: $NEWVER is not a valid version number!"
 			sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
 		else
 			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
 				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
 				sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
 			else
-				#echo -e "INFORMATIONAL: $CURRENT appears the newest"
+				echo -e "ERROR: $ID: $NEWVER and $CURRENT version number!"
 				sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
 			fi
 		fi
