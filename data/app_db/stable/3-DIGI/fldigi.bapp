@@ -56,12 +56,28 @@ INSTALL(){
 		sudo ldconfig
 	fi
 
-	#Determine latest FLDIGI
-	FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
-	FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
+	#Choice for Alpha or Release with yad
+	action=$(yad --center --title "Question: Look for Alpha Code?" --image "dialog-question"\
+        --button="Alpha:0" --button="Release:2" \
+        --text "Use Alpha or Normal Release (recomend: Release)")
+    return_code="${?:-'2'}"
 
-	#Download latest FLDIGI tar file
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+    if [ "$return_code" -eq 0 ]; then
+		#alpha of FLRIG
+		echo -e "INFORMATIONAL: installing Alpha of FLDIGI"
+		FLTAR=$(curl -s http://www.w1hkj.com/alpha/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+		FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
+		#Download latest FLDIGI tar file
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/alpha/fldigi/${FLTAR}
+
+	else
+		#Determine latest FLDIGI
+		FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+		FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
+		#Download latest FLDIGI tar file
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+	fi
+	
 	tar -zxvf ${FLTAR}
 
 	#build FLDIGI
