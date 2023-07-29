@@ -39,14 +39,13 @@ INSTALL(){
 VERSION(){
     if [ -f ${HOME}/YAAC/YAAC.jar ];then
 		CURRENT=NONE  
-		# $(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//)')
+		# $(java -jar ${HOME}/YAAC/YAAC.jar -version | grep beta | sed 's/.*beta//;s/(.*//')
     else
         CURRENT=NONE
     fi
 
 	wget -q https://sourceforge.net/projects/yetanotheraprsc/files/YAACBuildLabel.txt -O /run/user/${UID}/latestyaac.txt
-    NEWVER=NONE 
-	#$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//)')
+    NEWVER=$(cat /run/user/${UID}/latestyaac.txt | sed 's/1.0-beta//;s/(.*//')
 }
 
 DEPENDS(){
