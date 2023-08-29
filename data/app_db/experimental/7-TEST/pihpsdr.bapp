@@ -42,7 +42,7 @@ INSTALL(){
 
     cd release
     tar xvf pihpsdr.tar
-    sh ./install.sh
+    sh ./pihpsdr/install.sh
 
 }
 
