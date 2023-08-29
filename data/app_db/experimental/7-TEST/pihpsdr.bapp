@@ -37,6 +37,10 @@ INSTALL(){
     echo -e "INFORMATIONAL: Enabling soapysdr support"
     sed -i 's/#SOAPYSDR_INCLUDE=SOAPYSDR/SOAPYSDR_INCLUDE=SOAPYSDR/g' Makefile
 
+    #main.c modification to change screen size to 1366 x 768
+    sed -i '/^#define MAX_DISPLAY_WIDTH  800/c\#define MAX_DISPLAY_WIDTH  1366' main.c
+    sed -i '/^#define MAX_DISPLAY_HEIGHT 480/c\#define MAX_DISPLAY_HEIGHT 768' main.c
+
     make clean
     make -j4
     make release
