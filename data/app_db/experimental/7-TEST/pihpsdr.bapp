@@ -1,12 +1,12 @@
 BAPP=4
 ID=HPSDR
 Name=HPSDR
-Comment='Raspberry Pi 3/4 standalone code for HPSDR'
+Comment='RadioBerry Pi 3/4 standalone code for HPSDR'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/g0orx/pihpsdr/wiki/Compiling-piHPSDR-on-Raspberry-Pi-running-Raspberry-Pi-OS'
 Author='spud'
-NOTE='hpsdr for pi3/4, see the wiki for more info'
+NOTE='see the wiki for more info, radioberry driver install script in ~/bapi/src/pihpsdr-src did it fail try adding "arm_64bit=0" to config.txt, reboot and try again remember to enable interface for i2c'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -41,7 +41,17 @@ INSTALL(){
     make -j4
     make release
 
+    # install pihpsdr to home directory
     tar xvf release/pihpsdr.tar -C ~/
+
+    #radio berry driver install script
+    cd ../
+    git clone  --depth=1 https://github.com/pa3gsb/Radioberry-2.x
+
+    wget https://raw.githubusercontent.com/pa3gsb/Radioberry-2.x/master/SBC/rpi-4/releases/dev/radioberry_install.sh
+    chmod +x radioberry_install.sh
+
+    #install script for pihpsdr
     sh ~/pihpsdr/install.sh
 
 }
