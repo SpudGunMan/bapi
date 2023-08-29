@@ -16,9 +16,9 @@ INSTALL(){
     sudo apt-get -y install libi2c-dev
 
     cd ${BAPSRC}
-    sudo rm -rf pihpsdr-working
-    mkdir pihpsdr-working
-    cd pihpsdr-working
+    sudo rm -rf pihpsdr-src
+    mkdir pihpsdr-src
+    cd pihpsdr-src
 
     git clone https://github.com/g0orx/pihpsdr.git
 
@@ -34,20 +34,20 @@ INSTALL(){
     cd ../pihpsdr
 
     # enable soapysdr support
+    echo -e "INFORMATIONAL: Enabling soapysdr support"
     sed -i 's/#SOAPYSDR_INCLUDE=SOAPYSDR/SOAPYSDR_INCLUDE=SOAPYSDR/g' Makefile
 
     make clean
     make -j4
     make release
 
-    cd release
-    tar xvf pihpsdr.tar
-    sh ./pihpsdr/install.sh
+    tar xvf release/pihpsdr.tar -C ~/
+    sh ~/pihpsdr/install.sh
 
 }
 
 VERSION(){
-    if [[ $(whereis pihpsdr | grep bin) ]];then
+    if [[ -d "~/pihpsdr" ]];then
         CURRENT=0-git
     else
         CURRENT=NONE
