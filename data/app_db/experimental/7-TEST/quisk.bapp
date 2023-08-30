@@ -1,0 +1,35 @@
+BAPP=4
+ID=QUISK
+Name=QUISK
+Comment='Quisk, a Software Defined Radio (SDR)'
+VerLocal=0
+VerRemote=0
+W3='http://james.ahlstrom.name/quisk/docs.html#Installation'
+Author='spud'
+NOTE='Hermes-Lite and other SDRs'
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install python3-pip python3-dev libpython3-dev
+    sudo apt-get -y install libfftw3-dev python3-setuptools	
+    sudo apt-get -y install libasound2-dev portaudio19-dev libpulse-dev
+    sudo apt-get -y install python3-wxgtk4.0
+    sudo apt-get -y install python3-usb
+
+    pip3 install quisk
+
+}
+
+VERSION(){
+    if [[ $(whereis quisk | grep bin) ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-pip
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
