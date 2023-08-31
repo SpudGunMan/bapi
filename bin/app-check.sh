@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------
 # house keeping script to update bapp files
 # ------------------------------------------------------------------
-SH_VERSION=1.0.0
+SH_VERSION=1.0.5
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: app-check.sh"; fi
 if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
@@ -20,45 +20,33 @@ for Job in $BAPAPPS_FILES_LOC; do
 	if [ -f $Job ];then
 		#get the version function ran to have access here
     	source "${Job}"
-		#pull function from file
+
+		#check function in.bapp file
 		[[ $(type -t VERSION) == function ]] && VERSION > >(tee -a $BAP_ERROR_LOG) 2> >(tee -a $BAP_ERROR_LOG >&2)
-		#echo "###################################"
-		#echo "Check Version  $ID 	"
 
-		#CHECK NEW VER AND CUR VER with bad math checking as its strings
-		#update .bapp with new data gathered from .bapp VERSION function
-
-		#remove any spaces from version numbers
-		NEWVER=$(echo $NEWVER | sed 's/ //g')
-		CURRENT=$(echo $CURRENT | sed 's/ //g')
-
-		#Status Update current version
-		if [[ $CURRENT =~ "^[0-9]+$" ]]; then
-			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
+		#Status Update newer version
+		if [[ $NEWVER != "NONE" ]]; then
+			sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
 		else
-			sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
+			sed -i "s/VerRemote=.*/VerRemote='NONE'/" $Job
 		fi
 
-		#add found to list
+		#add found apps to list and metadata update
 		if [ "$CURRENT" != "NONE" ]; then
 			echo -e "INFORMATIONAL: found $ID $CURRENT is installed" | tee -a $FOUND_APPS_FILE
 
-			#Status Update newer version
-			if [[ $NEWVER =~ "^[0-9]+$" ]]; then
-				#echo -e "ERROR: $ID: $NEWVER is not a valid version number!"
-				sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
+			#check if update is available
+			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
+				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
+				#Status Update newer version
+				sed -i "s/VerLocal=.*/VerLocal='Update:$CURRENT'/" $Job
+				
 			else
-				if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-					echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
-					sed -i "s/VerRemote=.*/VerRemote='Update:$NEWVER'/" $Job
-				else
-					#echo -e "ERROR: $ID: UPDATE $NEWVER and $CURRENT version number!"
-					sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
-				fi
+				#Status Update current version
+				sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
 			fi
-
 		else
-			CURRENT=NONE
+			sed -i "s/VerLocal=.*/VerLocal='NONE'/" $Job
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
