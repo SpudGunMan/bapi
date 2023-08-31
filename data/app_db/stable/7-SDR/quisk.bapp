@@ -22,7 +22,7 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis quisk | grep bin) ]];then
-        CURRENT=0-git
+        CURRENT=0-pip
     else
         CURRENT=NONE
     fi

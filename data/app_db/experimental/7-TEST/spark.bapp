@@ -23,7 +23,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=0-deb
+    NEWVER=0-git
 }
 
 DEPENDS(){

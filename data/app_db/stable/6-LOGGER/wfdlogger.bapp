@@ -24,9 +24,9 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wfdlogger | grep bin) ]];then
-        CURRENT=fixme
+        CURRENT=0-pip
     else
         CURRENT=NONE
     fi
-    NEWVER=0-git
+    NEWVER=0-pip
 }
