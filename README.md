@@ -34,7 +34,7 @@ In theory any Debian platform will work, however the only tested/customized plat
 - ubuntu ***testing phase***
 
 ### Additional Requirements
-The project depends on yad which is a funny word for a GUI manager to give the menu some life in all the bashing about. All listed platforms have access to yad `sudo apt-get install -y yad` will confirm if this script will function at all. Needless to say you also need a Radio Callsign!
+The project depends on yad which is a funny word for a GUI manager to give the menu some life in all the bashing about. All listed platforms have access to yad `sudo apt-get install -y yad git` will confirm if this script will function at all. Needless to say you also need a Radio Callsign!
 
 Additionally fast install profiles are new! (but not setup fully yet) Quickly deploy a common group of applications which fast installs the critical components for typical EMCOMM work so you dont need to worry.
 
