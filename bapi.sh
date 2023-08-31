@@ -1,6 +1,6 @@
 #! /bin/bash
 #loader
-SH_VERSION=1.0.0a #set up git missing installer 
+SH_VERSION=1.0.7a #set up git missing installer (huh?)
 echo "###################################"
 echo "#      Build-A-Pi mark II         #"
 echo "###################################"
