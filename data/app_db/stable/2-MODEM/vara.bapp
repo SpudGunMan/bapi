@@ -44,9 +44,10 @@ INSTALL(){
                 ./install-wine.sh
             fi
 
-            echo -e "INFORMATIONAL: try run again, after installing Box86 and wine(x86) in pi-apps on the desktop."
+            echo -e "INFORMATIONAL: try run again, Box86(arm) and wine(x86) if a Pi use pi-apps on the desktop."
+            echo -e "INFORMATIONAL: in mint try running:  sudo apt-get install wine-devel"
             yad --title="bAPi - vara installer" --center --button="OK" \
-            --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
+            --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status. \n in mint try running:  sudo apt-get install wine-devel"
         fi
         
     fi
