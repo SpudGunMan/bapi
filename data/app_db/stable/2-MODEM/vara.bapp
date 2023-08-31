@@ -28,7 +28,7 @@ INSTALL(){
             yad --title="bAPi - vara installer" --center --button="OK" \
             --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
         else
-            yad --title="bAPi - vara installer" --center --button="OK" \
+            yad --title="bAPi - vara installer" --width=420 --height=200 --fixed --center  --button="OK" \
             --text="Vara is emulated in wine, we need to install that and some .net\n \
             If you find you have issues with downloading vara a work work around\n \
             https://pi-apps.io/install/ project cloned into bapi/src for install\n \
@@ -37,7 +37,8 @@ INSTALL(){
 
             #pi-apps backup installer
             git clone https://github.com/Botspot/pi-apps
-            ~/pi-apps/install
+            cd pi-apps
+            bash install
         fi
         
     fi
