@@ -15,23 +15,31 @@ INSTALL(){
     cd winelink
 
     cp $BAPDIR/data/install-wine.sh ${BAPSRC}/winelink/
-
+    
+    
     if [ -f ${HOME}/winelink/'Update VARA' ];then
         cd ${HOME}/winelink/
         ./'Update VARA'
     else
-        #xdg-open https://rosmodem.wordpress.com/
-        yad --title="bAPi - vara installer" --center --button="OK" \
-        --text="Vara is emulated in wine, we need to install that and some .net\n \
-        If you find you have issues with downloading vara this has an added work around\n \
-        please stop now and browse to https://rosmodem.wordpress.com \n \
-        save all the -disk icon files- to default downloads folder, 5 disks. \n \
-        this is a megadownload hosting failsafe, you can also just ignore this. "
+        if [ -d ${HOME}/.wine/drive_c ];then
+            #box is OK, likely
+            ./install-wine.sh
+            echo -e "INFORMATIONAL: try run again, if not clean exit."
+            yad --title="bAPi - vara installer" --center --button="OK" \
+            --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
+        else
+            yad --title="bAPi - vara installer" --center --button="OK" \
+            --text="Vara is emulated in wine, we need to install that and some .net\n \
+            If you find you have issues with downloading vara a work work around\n \
+            https://pi-apps.io/install/ project cloned into bapi/src for install\n \
+            after its installed find box86 in the search and install it as well\n \
+            then re-run this install script. It should have made a desktop icon."
 
-        ./install-wine.sh
-        echo -e "INFORMATIONAL: try run again, if not clean exit."
-        yad --title="bAPi - vara installer" --center --button="OK" \
-        --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
+            #pi-apps backup installer
+            git clone https://github.com/Botspot/pi-apps
+            ~/pi-apps/install
+        fi
+        
     fi
 }
 
@@ -51,6 +59,6 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED=''
+    NEEDED='PULSE'
     #apt-gets will be checked on app-check
 }
