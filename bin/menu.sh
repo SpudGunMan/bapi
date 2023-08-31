@@ -30,7 +30,7 @@ done | yad --width=1150 --height=650 --title="Build-A-Pi mark II - The leading e
             --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"' \
             --column="" --column="ID" --column="App" --column="description" --column="available version" --column="installed version" --column="source"\
             --text="Select package to install. you can sort, or search by typing. <b>Double click for package notes and support details.</b> Detected: $BAPARCH bit $BAPDIST" | \
-           grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
+            --button="Nope":1 --button="Lets Go":2 grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
 
 wait
 unset BAP_CONFIG_MENU
