@@ -1,0 +1,39 @@
+BAPP=4
+ID=RPITX
+Name=rpiTX
+Comment='Use your Raspbery as Tx doesn't require any other hardware'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/F5OEO/rpitx'
+Author='spud'
+NOTE='frequencies from 5 KHz up to 1500 MHz
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    cd ${BAPSRC}
+
+   if [[ "$BAPCPU" == *"ar"* ]]; then
+        rm -rf fm_transmitter
+        git clone https://github.com/F5OEO/rpitx
+        cd rpitx
+        bash install.sh
+    else
+        echo -e "ERROR: Pi only package"
+    fi
+
+}
+
+
+VERSION(){
+    if [[ $(whereis rpitx | grep bin) ]];then
+        CURRENT=unknown
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
