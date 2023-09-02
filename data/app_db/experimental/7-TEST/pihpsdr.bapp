@@ -1,7 +1,7 @@
 BAPP=4
 ID=HPSDR
 Name=HPSDR
-Comment='RadioBerry Pi 3/4 standalone code for HPSDR'
+Comment='piHPSDR by g0orx Pi 3/4 standalone code for HPSDR'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/g0orx/pihpsdr/wiki/Compiling-piHPSDR-on-Raspberry-Pi-running-Raspberry-Pi-OS'
