@@ -1,5 +1,5 @@
 BAPP=4
-ID=PULSESDR
+ID=PSDR
 Name=PULSESDR
 Comment='Pulse, a multi-Digi mode Software Defined Radio'
 VerLocal=0
