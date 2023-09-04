@@ -26,7 +26,7 @@ INSTALL(){
         #x86
         wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-x64.deb 
     fi
-    dpkg -i SparkSDR.$DLVER.linux-*.deb
+    sudo dpkg -i SparkSDR.$DLVER.linux-*.deb
 }
 
 VERSION(){
