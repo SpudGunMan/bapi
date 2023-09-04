@@ -1,0 +1,44 @@
+BAPP=4
+ID=VAR-AC
+Name=varAC
+Comment='varAC Chat software'
+VerLocal=0
+VerRemote=0
+W3='https://www.varac-hamradio.com'
+Author='spud'
+NOTE='stand alone installer for wheezy winelink and varac'
+
+INSTALL(){
+    cd ${BAPSRC} || return
+    
+
+    # install https://github.com/SpudGunMan/segoe-ui-linux
+
+    WEBVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....' -m 1 | cut -c 2-)
+
+    #update zip installer
+    if [ -d ${HOME}/.wine/drive_c ];then
+        mkdir -p ${HOME}/.wine/drive_c/VarAC
+        wget https://varac.hopp.bio/varac_latest -O ${HOME}/.wine/drive_c/VarAC/varac.zip
+        unzip -o ${HOME}/.wine/drive_c/VarAC/varac.zip -d ${HOME}/.wine/drive_c/VarAC
+        rm ${HOME}/.wine/drive_c/VarAC/varac.zip
+        echo $WEBVER > ${HOME}/.bap.varac.ver
+    else
+        echo "ERROR: wine not installed"
+    fi
+
+}
+
+VERSION(){
+    if [ -f ${HOME}/.bap.varac.ver ];then
+        CURRENT=$(cat ${HOME}/.bap.varac.ver)
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....' -m 1 | cut -c 2-)
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}

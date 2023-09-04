@@ -55,6 +55,7 @@ distribution=$(grep ^ID= /etc/os-release | cut -d= -f2)
 version=$(sed -n 's/^VERSION_ID=//p' /etc/os-release | tr -d '"')
 arch=$(sed -n 's/^Architecture:                    //p' /tmp/bap-env-lscpu)
 cpu=$(sed -n 's/^CPU(s):                          //p' /tmp/bap-env-lscpu)
+opmode=$(sed -n 's/^CPU op-mode(s):                 //p' /tmp/bap-env-lscpu)
 
 #fix older version output
 if [ -z $cpu ]; then
@@ -101,7 +102,13 @@ case "$arch" in
         if [ -f "/usr/bin/wine" ]; then export BAPWINEARCH=32; fi
         ;;
     aarch64)
-        CPU=64
+        #if the op-mode is missing we assume 32bit
+        if [ -z "$opmode" ]; then
+            CPU=32
+        else
+            CPU=64
+        fi
+        
         if [ -f "/usr/bin/wine" ]; then export BAPWINEARCH=64; fi
         ;;
     x86_64)

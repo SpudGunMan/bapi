@@ -1,0 +1,45 @@
+BAPP=4
+ID=PSDR
+Name=PULSESDR
+Comment='Pulse, a multi-Digi mode Software Defined Radio'
+VerLocal=0
+VerRemote=0
+W3='https://www.sparksdr.com/'
+Author='spud'
+NOTE='SparkSDR is a multi-mode SDR application for Windows that supports CW, CW-Skimmer, DigiPan, FSK31, FSK441, JT65, JT9, JT4, FT8, FT4, EchoLink, PSK31, PSK63, PSK125, RTTY, SSTV, NBEMS, MSK144, WSPR, NAVTEX and QRA64.'
+
+INSTALL(){
+	#echo -e "INFORMATIONAL: apt-get required packages"
+    DLVER=$(curl --max-time 20 -s https://www.sparksdr.com/downloads | grep '</p><h3>.*</h3>' -m 1 -o | sed 's/<\/p><h3>//' | sed 's/<\/h3>//g')
+    
+    cd ${BAPSRC}
+    #detect pi or x86
+    echo "Detected CPU: $BAPCPU $BAPARCH"
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+            if [[ "$BAPARCH" == *"32"* ]]; then
+                #32bit
+                wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm.deb
+            else
+                #arm 64bit
+                wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm64.deb
+            fi
+    else
+        #x86
+        wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-x64.deb 
+    fi
+    sudo dpkg -i SparkSDR.$DLVER.linux-*.deb
+}
+
+VERSION(){
+    if [[ $(whereis SparkSDR | grep bin) ]];then
+        CURRENT=0-deb
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://www.sparksdr.com/downloads | grep '</p><h3>.*</h3>' -m 1 -o | sed 's/<\/p><h3>//' | sed 's/<\/h3>//g')
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

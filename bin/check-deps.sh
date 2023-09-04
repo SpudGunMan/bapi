@@ -28,6 +28,7 @@ for Job in $JOBLIST; do
 			### Check deps!
 			CURRENTLY_REQ=$(grep -ie $MISSING_BASE $APP_ID_FILE) || echo ''
 			ADD_DEP_LIST=$(grep -ie $MISSING_BASE $BAPAPPS_LIST_FILE) || echo ''
+
 			if [ -f $FOUND_APPS_FILE ];then FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || echo '' ; fi
 
 			if [ ! -z "$DEP_BASE_ISSUES" ];then
@@ -67,7 +68,7 @@ for Job in $JOBLIST; do
 		done
 		echo -e "INFORMATIONAL: finished processing jobs, new joblist:\n$(cat $JOB_FILE)\n"
 	else
-	echo -e "INFORMATIONAL: check-deps: nothing to process."
+		echo -e "INFORMATIONAL: check-deps: nothing to process."
     fi
 done
 exit 0
