@@ -31,7 +31,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis sparksdr | grep bin) ]];then
+    if [[ $(whereis SparkSDR | grep bin) ]];then
         CURRENT=0-deb
     else
         CURRENT=NONE
