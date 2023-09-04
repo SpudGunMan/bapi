@@ -12,6 +12,7 @@ INSTALL(){
 	#echo -e "INFORMATIONAL: apt-get required packages"
     DLVER=$(curl --max-time 20 -s https://www.sparksdr.com/downloads | grep '</p><h3>.*</h3>' -m 1 -o | sed 's/<\/p><h3>//' | sed 's/<\/h3>//g')
     
+    cd ${BAPSRC}
     #detect pi or x86
     if [[ "$BAPCPU" == *"ar"* ]]; then
             if [[ "$BAPARCH" == *"arm"* ]]; then
@@ -19,13 +20,13 @@ INSTALL(){
                 wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm.deb
             else
                 #arm 64bit
-                https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm64.deb
+                wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm64.deb
             fi
     else
         #x86
         wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-x64.deb 
     fi
-
+    deb -i SparkSDR.$DLVER.linux*.deb
 }
 
 VERSION(){
