@@ -21,10 +21,9 @@ INSTALL(){
         wget --tries 2 --connect-timeout=60 http://www.sv2agw.com/downloads/tcpip.zip
         wget --tries 2 --connect-timeout=60 https://www.soundcardpacket.org/Programs/agwtermTcp.zip
 
-        upzip agwpe.zip && rm agwpe.zip
-        unzip agwtermTcp.zip && rm agwtermTcp.zip
-        unzip agwtermTcp.zip && rm agwtermTcp.zip
-        unzip tcpipXP.zip && rm tcpipXP.zip
+        upzip -o agwpe.zip && rm agwpe.zip
+        unzip -o agwtermTcp.zip && rm agwtermTcp.zip
+        unzip -o tcpip.zip && rm tcpip.zip
     fi
 
     #env WINEDEBUG=-all wine /home/pi/.wine/drive_c/agwpe/'AGW Packet Engine.exe'
