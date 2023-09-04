@@ -21,7 +21,7 @@ INSTALL(){
         wget --tries 2 --connect-timeout=60 http://www.sv2agw.com/downloads/tcpip.zip
         wget --tries 2 --connect-timeout=60 https://www.soundcardpacket.org/Programs/agwtermTcp.zip
 
-        upzip -o agwpe.zip && rm agwpe.zip
+        unzip -o agwpe.zip && rm agwpe.zip
         unzip -o agwtermTcp.zip && rm agwtermTcp.zip
         unzip -o tcpip.zip && rm tcpip.zip
     fi
