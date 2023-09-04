@@ -19,11 +19,14 @@ INSTALL(){
 
     sudo apt-get -y install libqcustomplot-doc >> errors/apt.log
     sudo apt-get -y install libqcustomplot-dev >> errors/apt.log
+
+    sudo apt-get -y install librtaudio-dev librtaudio6 
     
     #echo -e "INFORMATIONAL: if you see a failure on the next apt-get request its ok"
-    #E=0
-    #sudo apt-get -y install libqcustomplot1.3 || ((E=E+1))
-    #sudo apt-get -y install libqcustomplot2.0 || ((E=E+1))
+    E=0
+    sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev || ((E=E+1))
+    sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev || ((E=E+1))
+    sudo apt-get -y install libqcustomplot2.1 libqcustomplot-dev || ((E=E+1))
 
     cd ${BAPSRC} || return
     sudo rm -rf wfview
