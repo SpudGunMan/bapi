@@ -35,7 +35,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....' -m 1)
+    NEWVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....' -m 1 | cut -c 2-)
 }
 
 DEPENDS(){
