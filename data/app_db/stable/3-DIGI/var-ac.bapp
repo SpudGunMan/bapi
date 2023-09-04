@@ -20,7 +20,7 @@ INSTALL(){
     if [ -d ${HOME}/.wine/drive_c ];then
         mkdir -p ${HOME}/.wine/drive_c/VarAC
         wget https://varac.hopp.bio/varac_latest -O ${HOME}/.wine/drive_c/VarAC/varac.zip
-        unzip ${HOME}/.wine/drive_c/VarAC/varac.zip -d ${HOME}/.wine/drive_c/VarAC
+        unzip -o ${HOME}/.wine/drive_c/VarAC/varac.zip -d ${HOME}/.wine/drive_c/VarAC
         rm ${HOME}/.wine/drive_c/VarAC/varac.zip
         echo $WEBVER > ${HOME}/.bap.varac.ver
     else
