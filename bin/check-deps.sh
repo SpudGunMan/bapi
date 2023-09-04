@@ -28,8 +28,9 @@ for Job in $JOBLIST; do
 			### Check deps!
 			CURRENTLY_REQ=$(grep -ie $MISSING_BASE $APP_ID_FILE) || echo 'check-dep:error1'
 			ADD_DEP_LIST=$(grep -ie $MISSING_BASE $BAPAPPS_LIST_FILE) || echo 'check-dep:error2'
+			FOUND_APPS_FILE=$(grep -ie $MISSING_BASE $BAPAPPS_LIST_FILE) || echo 'check-dep:error3'
 
-			if [ -f $FOUND_APPS_FILE ];then FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || echo 'check-dep:error3' ; fi
+			if [ -f $FOUND_APPS_FILE ];then FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || echo 'check-dep:error4' ; fi
 
 			if [ ! -z "$DEP_BASE_ISSUES" ];then
 				echo -e "\nWARNING: missing dependency $MISSING_BASE needs resolved!" | tee -a $BAP_ERROR_LOG
