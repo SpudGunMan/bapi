@@ -103,7 +103,7 @@ case "$arch" in
         ;;
     aarch64)
         #if the op-mode is missing we assume 32bit
-        [[ ! -z "$opmode" ]]; then
+        if [ -z "$opmode" ]; then
             CPU=32
         else
             CPU=64
