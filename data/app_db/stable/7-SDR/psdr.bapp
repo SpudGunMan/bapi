@@ -15,7 +15,7 @@ INSTALL(){
     cd ${BAPSRC}
     #detect pi or x86
     if [[ "$BAPCPU" == *"ar"* ]]; then
-            if [[ "$BAPARCH" == *"arm"* ]]; then
+            if [[ "$BAPARCH" == *"hf"* ]]; then
                 #32bit
                 wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm.deb
             else
