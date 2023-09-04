@@ -15,6 +15,7 @@ INSTALL(){
     if [[ $(whereis npx | grep bin) ]];then
         echo -e "INFORMATIONAL: found npx"
     else
+        #script needs updated https://github.com/nodesource/distributions
         curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
         sudo apt-get -y install nodejs >> errors/apt.log
         sudo npm install -g n >> errors/apt.log
