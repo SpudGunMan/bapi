@@ -26,7 +26,7 @@ INSTALL(){
     git clone https://github.com/g0orx/wdsp.git
     cd wdsp
     make clean
-    make -j4
+    make -j$BAPCORE
     sudo make install
     cp libwdsp.so ../pihpsdr/release/pihpsdr
 
@@ -42,7 +42,7 @@ INSTALL(){
     sed -i '/^#define MAX_DISPLAY_HEIGHT 480/c\#define MAX_DISPLAY_HEIGHT 768' main.c
 
     make clean
-    make -j4
+    make -j$BAPCORE
     make release
 
     # install pihpsdr to home directory
