@@ -14,8 +14,7 @@ INSTALL(){
 
     # install https://github.com/SpudGunMan/segoe-ui-linux
 
-    WEBVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....')
-    echo $WEBVER > ${HOME}/.bap.varac.ver
+    WEBVER=$(curl --max-time 20 -s https://www.varac-hamradio.com/forum/manuals-troubleshooting/varac-releases-list#viewer-21ces | grep -o 'V8....' -m 1 | cut -c 2-)
 
     #update zip installer
     if [ -d ${HOME}/.wine/drive_c ];then
@@ -23,6 +22,7 @@ INSTALL(){
         wget https://varac.hopp.bio/varac_latest -O ${HOME}/.wine/drive_c/VarAC/varac.zip
         unzip ${HOME}/.wine/drive_c/VarAC/varac.zip -d ${HOME}/.wine/drive_c/VarAC
         rm ${HOME}/.wine/drive_c/VarAC/varac.zip
+        echo $WEBVER > ${HOME}/.bap.varac.ver
     else
         echo "ERROR: wine not installed"
     fi
