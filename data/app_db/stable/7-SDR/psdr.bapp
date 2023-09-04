@@ -17,11 +17,11 @@ INSTALL(){
     echo "Detected CPU: $BAPCPU"
     if [[ "$BAPCPU" == *"ar"* ]]; then
             if [[ "$BAPARCH" == *"64"* ]]; then
-                #arm 64bit
-                wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm64.deb
-            else
                 #32bit
                 wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm.deb
+            else
+                #arm 64bit
+                wget https://www.sparksdr.com/download/SparkSDR.$DLVER.linux-arm64.deb
             fi
     else
         #x86
