@@ -27,7 +27,7 @@ In theory any Debian platform will work, however the only tested/customized plat
 
 ### ARM
 - Cortex-A53 raspian 32bit PI3
-- Cortex-A72 debian 32/64bit PI4
+- Cortex-A72 debian(rasp-os) 32/64bit PI4
 
 ### x86_64
 - platforms on linuxmint and raspberryDesktopOS
