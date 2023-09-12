@@ -23,7 +23,7 @@ INSTALL(){
 
     #call local file
     if [[ "$BAPCPU" == *"ar"* ]]; then 
-        bash data/Autohotspot/autohotspot-yad-setup.sh
+        sudo bash data/Autohotspot/autohotspot-yad-setup.sh
         echo -e "INFORMATIONAL: reboot needed on clean exit"
         read -n 1 -s -r -p "Press any key to continue"
     else
