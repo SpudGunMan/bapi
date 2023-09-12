@@ -14,9 +14,9 @@ INSTALL(){
 
     #cd ${BAPSRC}
 
-    $rm -rf AutoHotspot-Installer
-    $git clone https://github.com/RaspberryConnect/AutoHotspot-Installer
-    $cd AutoHotspot-Installer/Autohotspot
+    rm -rf AutoHotspot-Installer
+    git clone https://github.com/RaspberryConnect/AutoHotspot-Installer
+    cd AutoHotspot-Installer/Autohotspot
 
     #tar -xzvf AutoHotspot-Setup.tar.xz 
     # sudo ./autohotspot-setup.sh
