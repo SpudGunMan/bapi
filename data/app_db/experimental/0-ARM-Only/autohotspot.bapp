@@ -14,18 +14,17 @@ INSTALL(){
 
     #cd ${BAPSRC}
 
-    rm -rf AutoHotspot-Installer
-    git clone https://github.com/RaspberryConnect/AutoHotspot-Installer
-    cd AutoHotspot-Installer/AutoHotspot-Setup
+    #rm -rf AutoHotspot-Installer
+    #git clone https://github.com/RaspberryConnect/AutoHotspot-Installer
+    #cd AutoHotspot-Installer/AutoHotspot-Setup
 
     #tar -xzvf AutoHotspot-Setup.tar.xz 
     # sudo ./autohotspot-setup.sh
 
     #call local file
     if [[ "$BAPCPU" == *"ar"* ]]; then 
-        x-terminal-emulator -e data/Autohotspot/autohotspot-yad-setup.sh
+        bash data/Autohotspot/autohotspot-yad-setup.sh
         echo -e "INFORMATIONAL: reboot needed on clean exit"
-        echo -e "WARNING: if you reboot in the app .. fix that eh"
         read -n 1 -s -r -p "Press any key to continue"
     else
         echo echo -e "INFORMATIONAL: this is for raspberry pi hardware"
