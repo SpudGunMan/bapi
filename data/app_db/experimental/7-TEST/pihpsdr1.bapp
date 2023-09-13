@@ -1,0 +1,78 @@
+BAPP=4
+ID=HPSDR2
+Name=HPSDR2
+Comment='piHPSDR by g0orx Pi 3/4 standalone code for HPSDR'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/g0orx/pihpsdr/wiki/Compiling-piHPSDR-on-Raspberry-Pi-running-Raspberry-Pi-OS'
+Author='spud'
+NOTE='see the wiki for more info, radioberry driver install script in ~/bapi/src/pihpsdr-src did it fail try adding arm_64bit=0 to config.txt, reboot and try again remember to enable interface for i2c'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libsoapysdr-dev
+    sudo apt-get -y install libgpiod-dev 
+    sudo apt-get -y install libgtk-3-dev 
+    sudo apt-get -y install libi2c-dev
+
+    cd ${BAPSRC}
+    sudo rm -rf pihpsdr-src
+    mkdir pihpsdr-src
+    cd pihpsdr-src
+
+    git clone https://github.com/g0orx/pihpsdr.git
+
+    echo -e "INFORMATIONAL: WDSP is a dependency for pihpsdr.  It will be installed now."    
+    git clone https://github.com/g0orx/wdsp.git
+    cd wdsp
+    make clean
+    make -j$BAPCORE
+    sudo make install
+    cp libwdsp.so ../pihpsdr/release/pihpsdr
+
+    echo -e "INFORMATIONAL: Building pihpsdr.  This will take a while."
+    cd ../pihpsdr
+
+    # enable soapysdr support
+    echo -e "INFORMATIONAL: Enabling soapysdr support"
+    sed -i 's/#SOAPYSDR_INCLUDE=SOAPYSDR/SOAPYSDR_INCLUDE=SOAPYSDR/g' Makefile
+
+    #main.c modification to change screen size to 1366 x 768
+    sed -i '/^#define MAX_DISPLAY_WIDTH  800/c\#define MAX_DISPLAY_WIDTH  1366' main.c
+    sed -i '/^#define MAX_DISPLAY_HEIGHT 480/c\#define MAX_DISPLAY_HEIGHT 768' main.c
+
+    make clean
+    make -j$BAPCORE
+    make release
+
+    # install pihpsdr to home directory
+    tar xvf release/pihpsdr.tar -C ~/
+
+    #radio berry driver install script
+    cd ../
+    git clone  --depth=1 https://github.com/pa3gsb/Radioberry-2.x
+
+    echo -e "INFORMATIONAL: radioberry download but not installed"
+    wget https://raw.githubusercontent.com/pa3gsb/Radioberry-2.x/master/SBC/rpi-4/releases/dev/radioberry_install.sh
+    chmod +x radioberry_install.sh
+
+    #install script for pihpsdr
+    echo -e "INFORMATIONAL: attempting isntall of pihpsdr."
+    cd ~/pihpsdr
+    sh ~/pihpsdr/install.sh
+
+}
+
+VERSION(){
+    if [[ -d "~/pihpsdr" ]];then
+        CURRENT=0-git
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
