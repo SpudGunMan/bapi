@@ -1,12 +1,12 @@
 BAPP=4
 ID=LINHPSDR
 Name=LINHPSDR
-Comment='linHPSDR by g0orx HPSDR'
+Comment='linHPSDR by g0orx HPSDR for linux (non raspberry)'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/g0orx/linhpsdr'
 Author='spud'
-NOTE='see the wiki for more info, radioberry driver install script in ~/bapi/src/pihpsdr-src did it fail try adding arm_64bit=0 to config.txt, reboot and try again remember to enable interface for i2c'
+NOTE=''
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -20,12 +20,6 @@ INSTALL(){
     sudo rm -rf linhpsdr-src
     mkdir linhpsdr-src
     cd linhpsdr-src
-
-    #radio berry driver install script
-    git clone  --depth=1 https://github.com/pa3gsb/Radioberry-2.x
-    echo -e "INFORMATIONAL: radioberry download but not installed"
-    wget https://raw.githubusercontent.com/pa3gsb/Radioberry-2.x/master/SBC/rpi-4/releases/dev/radioberry_install.sh
-    chmod +x radioberry_install.sh
 
     echo -e "INFORMATIONAL: WDSP is a dependency for linhpsdr.  It will be installed now."    
     git clone https://github.com/g0orx/wdsp.git
@@ -47,7 +41,7 @@ INSTALL(){
 
     echo -e "INFORMATIONAL: Building linhpsdr.  This will take a while."
     git clone https://github.com/g0orx/linhpsdr
-    cd ../linhpsdr
+    cd linhpsdr
 
     # enable soapysdr support
     #echo -e "INFORMATIONAL: Enabling soapysdr support"
