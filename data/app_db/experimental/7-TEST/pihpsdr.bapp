@@ -39,8 +39,17 @@ INSTALL(){
     echo -e "INFORMATIONAL: Building pihpsdr.  This will take a while."
     git clone https://github.com/dl1ycf/pihpsdr
     cd pihpsdr
+
+    # main.c modification to change screen size to 1366 x 768
+    #sed -i '/^#define MAX_DISPLAY_WIDTH  800/c\#define MAX_DISPLAY_WIDTH  1366' main.c
+    #sed -i '/^#define MAX_DISPLAY_HEIGHT 480/c\#define MAX_DISPLAY_HEIGHT 768' main.c
     
     make -j$BAPCORE
+    make release
+
+
+    # install pihpsdr to home directory
+    tar xvf release/pihpsdr.tar -C ~/
 
 }
 
