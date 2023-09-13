@@ -1,6 +1,6 @@
 BAPP=4
 ID=XHPSDR
-Name=XJPSDR
+Name=XHPSDR
 Comment='piHPSDR by g0orx Pi 3/4 standalone code for HPSDR older simpler version'
 VerLocal=0
 VerRemote=0
