@@ -30,10 +30,8 @@ INSTALL(){
     cd ../
 
     #radio berry driver install script
-    cd ../
-    git clone  --depth=1 https://github.com/pa3gsb/Radioberry-2.x
-
     echo -e "INFORMATIONAL: radioberry download but not installed"
+    git clone  --depth=1 https://github.com/pa3gsb/Radioberry-2.x
     wget https://raw.githubusercontent.com/pa3gsb/Radioberry-2.x/master/SBC/rpi-4/releases/dev/radioberry_install.sh
     chmod +x radioberry_install.sh
 
