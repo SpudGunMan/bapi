@@ -1,7 +1,7 @@
 BAPP=4
 ID=PIHPSDR
 Name=PIHPSDR
-Comment='piHPSDR by dl1ycf Pi standalone code for HPSDR'
+Comment='piHPSDR by DL1YCF Pi newer code for piHPSDR'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/dl1ycf/pihpsdr'
