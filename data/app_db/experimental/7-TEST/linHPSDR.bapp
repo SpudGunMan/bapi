@@ -66,7 +66,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ -d "~/pihpsdr" ]];then
+    if [[ -d "~/linhpsdr" ]];then
         CURRENT=0-git
     else
         CURRENT=NONE
