@@ -46,7 +46,7 @@ INSTALL(){
     
     make -j$BAPCORE
     make release
-
+    #sudo make install
 
     # install pihpsdr to home directory
     tar xvf release/pihpsdr.tar -C ~/
