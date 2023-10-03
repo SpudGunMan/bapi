@@ -1,0 +1,46 @@
+BAPP=4
+ID=APRSD
+Name=APRSD
+Comment='APRSD Projet aprs server. with web interface.'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/craigerl/aprsd'
+Author='spud'
+NOTE='aprsd is a python3 based aprs server. with web interface.'
+
+#reference:
+
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+
+	cd ${BAPSRC}
+    #git clone https://github.com/craigerl/aprsd
+
+    if [[ $(whereis aprsd | grep bin) ]];then
+        echo -e "INFORMATIONAL: aprsd already installed"
+    else
+        echo -e "INFORMATIONAL: installing aprsd"
+        sudo apt-get -y install python3-pip
+        sudo pip3 install aprsd
+    fi
+
+    mkdir ~/.config/aprsd/
+    aprsd sample-config > ~/.config/aprsd/aprsd.yml
+    echo -e "INFORMATIONAL: edit ~/.config/aprsd/aprsd.yml"
+    
+}
+
+VERSION(){
+    if [[ $(whereis aprsd | grep bin) ]];then
+        CURRENT=0-pip
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='AX25'
+    #apt-gets will be checked on app-check
+}
