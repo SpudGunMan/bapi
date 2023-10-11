@@ -19,6 +19,7 @@ INSTALL(){
 
     if [[ $(whereis aprsd | grep bin) ]];then
         echo -e "INFORMATIONAL: aprsd already installed"
+        sudo pip3 install --upgrade aprsd
     else
         echo -e "INFORMATIONAL: installing aprsd"
         sudo apt-get -y install python3-pip
@@ -28,6 +29,8 @@ INSTALL(){
     mkdir ~/.config/aprsd/
     aprsd sample-config > ~/.config/aprsd/aprsd.yml
     echo -e "INFORMATIONAL: edit ~/.config/aprsd/aprsd.yml"
+    #replace callsign
+    sed -i "s/<None>/${BAPCALL}/g" ~/.config/aprsd/aprsd.yml
     
 }
 
@@ -41,6 +44,6 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED='AX25'
+    NEEDED=''
     #apt-gets will be checked on app-check
 }
