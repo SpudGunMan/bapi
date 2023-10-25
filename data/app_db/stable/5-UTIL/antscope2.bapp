@@ -10,11 +10,12 @@ NOTE='installs to HOME, using static links to code from web along with git'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get install -y qt5-qmake  >> errors/apt.log
-    sudo apt-get install -y qt5-default  >> errors/apt.log
-    sudo apt-get install -y libegl1-mesa  >> errors/apt.log
-    sudo apt-get install -y libgles2-mesa  >> errors/apt.log
-    sudo apt-get install -y libqt5serialport5-dev  >> errors/apt.log
+    sudo apt-get install -y qt5-qmake >> errors/apt.log
+    sudo apt-get install -y qt5-default >> errors/apt.log
+    sudo apt-get install -y libegl1-mesa >> errors/apt.log
+    sudo apt-get install -y libgles2-mesa >> errors/apt.log
+    sudo apt-get install -y libqt5serialport5-dev >> errors/apt.log
+    sudo apt-get install -y qtconnectivity5-dev >> errors/apt.log
 
     cd ${BAPSRC}
     sudo rm -rf antscope
