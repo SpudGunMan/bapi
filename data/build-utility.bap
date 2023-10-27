@@ -37,9 +37,9 @@ VNC_PERF(){
         if [[ $(grep -L "BAPi_" /boot/config.txt) ]];then
 
             until [ "$select" = "8" ]; do
-                    action=$(yad --form --width=420 --height=200 --fixed --center --entry --title="Config.txt edits" \
+                    action=$(yad --form --width=420 --height=200 --fixed --center --entry --title="VNC Config.txt edits" \
                     --image-on-top --button="gtk-ok" \
-                    --text="Is your Pi connected to LCD or VNC, will modify for VNC" \
+                    --text="Is your Pi connected to LCD or VNC. will enable hotplug. disable dtoverlay and max_frame" \
                     --entry-text LCD-LEAVE-Config.txt-Alone VNC-Edit-Config.txt)
                     
                     case $action in

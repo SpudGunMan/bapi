@@ -1,5 +1,9 @@
 # Codename bAPi mark 2
 
+October 2023 Bookworm note:
+- yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
+
+
 **PLEASE NOTE BETA**
 this is a early release still "beta" RC7
 - no .desktop files yet for most things (no menu icons)
