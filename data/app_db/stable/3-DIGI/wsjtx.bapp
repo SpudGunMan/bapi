@@ -40,8 +40,8 @@ INSTALL(){
 	cd wsjtx
 
 	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[2]}')
-	FT8DIR=curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1 | sed 's/downloads\///'
-	# old oct23 $(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
+	FT8DIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1 | sed 's/downloads\///' | sed 's/.tgz//')
+	# old DIR oct23 $(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
 	FT8VER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}' | sed 's/wsjtx-//')
 
 	wget --tries 2 --connect-timeout=20 https://wsjt.sourceforge.io/$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
