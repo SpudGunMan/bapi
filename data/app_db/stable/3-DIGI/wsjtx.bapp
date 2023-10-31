@@ -39,24 +39,37 @@ INSTALL(){
 	mkdir wsjtx
 	cd wsjtx
 
+	# stable
 	FT8PKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[2]}')
 	FT8DIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1 | sed 's/downloads\///' | sed 's/.tgz//')
-	# old DIR oct23 $(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}')
 	FT8VER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html| grep .tgz | sed 's/.*="//;s/">.*$//' | sed 's/^.*files\///' | awk '{split($0,a,"/"); print a[1]}' | sed 's/wsjtx-//')
+	# dev
+	FT8NEXTDL=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | tail -n1 | sed -n 's/.*href="\([^"]*\).*/\1/p')
+	FT8NEXTPKG=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | tail -n1 | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's:.*/::')
+	FT8NEXTDIR=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | tail -n1 | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's:.*/::' | sed 's/.tgz//')
+	FT8NEXTVER=$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | tail -n1 | sed -n 's/.*href="\([^"]*\).*/\1/p' | sed 's:.*/::' | sed 's/.tgz//' | sed 's/wsjtx-//')
 
-	wget --tries 2 --connect-timeout=20 https://wsjt.sourceforge.io/$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
-	tar -xvf $FT8PKG
-	rm $FT8PKG
-	cd $FT8DIR
+	action=$(yad --center --title "Question which release" --image "dialog-question" --button="Stable:0" --button="$FT8NEXTVER:2" --text "Use stable, or dev $FT8NEXTVER branch? (recomend: stable)")
+    return_code="${?:-'2'}"
 
-	echo $FT8VER > ${HOME}/.bap.wsjt.txt
+    if [ "$return_code" -eq 0 ]; then
+		# release
+		wget --tries 2 --connect-timeout=20 https://wsjt.sourceforge.io/$(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | sed 's/.*="//;s/">.*$//' | head -1) -O $FT8PKG
+		tar -xvf $FT8PKG
+		rm $FT8PKG
+		cd $FT8DIR
+		echo $FT8VER > ${HOME}/.bap.wsjt.txt
+	else
+		# beta
+		wget --tries 2 --connect-timeout=20 $(curl -s https://wsjt.sourceforge.io/wsjtx.html | grep .tgz | tail -1 |  sed -n 's/.*href="\([^"]*\).*/\1/p') -O $FT8NEXTPKG
+		tar -xvf $FT8NEXTPKG
+		rm $FT8NEXTPKG
+		cd wsjt*
+		echo $FT8NEXTVER > ${HOME}/.bap.wsjt.txt
+    fi
 	
 	cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
 	sudo cmake --build . --target install -j$BAPCORE
-	
-	#sudo mv ${FT8DIR}/bin/* /usr/local/bin/
-	#sudo cp ${FT8DIR}/share/applications/wsjtx.desktop /usr/share/applications/
-	#sudo cp ${FT8DIR}/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
 
 	# Detect cortex chip (ARM's)
     if [[ "$BAPCPU" == *"ar"* ]]; then 
