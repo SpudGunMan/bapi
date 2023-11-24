@@ -65,6 +65,10 @@ if [ -z $arch ]; then
     arch=$(sed -n 's/^Architecture:        //p' /tmp/bap-env-lscpu)
 fi
 
+#this needs reworked this is getting messy
+#remove any spaces from the arch string
+arch=$(echo $arch | sed 's/ //g')
+
 #errors are bad so exit 1 if we still have a mess
 if [ -z "$arch" -o -z "$cpu" ]; then
   echo "Error: cannot determine architecture and number of CPUs"
