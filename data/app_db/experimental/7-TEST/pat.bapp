@@ -25,16 +25,16 @@ INSTALL(){
 		# install go
 		if [[ "$BAPCPU" == *"ar"* ]]; then 
 			if [ `getconf LONG_BIT` = '64' ]; then
-				wget -q https://go.dev/dl/go1.17.7.linux-arm64.tar.gz
+				wget -q https://go.dev/dl/go1.21.4.linux-arm64.tar.gz
 				sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
 			else
 				#pi3
-				wget -q https://dl.google.com/go/go1.17.7.linux-armv6l.tar.gz
+				wget -q https://dl.google.com/go/go1.21.4.linux-armv6l.tar.gz
 				sudo tar -C /usr/local -xzf go1.17.7.linux-armv6l.tar.gz
 			fi
 		else
 			#desktop
-			sudo wget -q https://golang.org/dl/go1.17.7.linux-amd64.tar.gz
+			sudo wget -q https://golang.org/dl/go1.21.4.linux-amd64.tar.gz
 			sudo tar -C /usr/local -xzf go1.17.7.linux-amd64.tar.gz
 		fi
 
