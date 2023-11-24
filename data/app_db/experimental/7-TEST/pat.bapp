@@ -20,8 +20,21 @@ INSTALL(){
 
 	cd ${BAPSRC}
 
-	#install Go
+	# check if go is installed
 	if [ ! -d /usr/local/go/bin ];then
+		return_code = 0
+	else
+		# yad ask to overwrite go if installed
+		GOVER=$(go version | awk '{print $3}' | sed 's/go//')
+		action=$(yad --center --title "Question" --image "dialog-question"\
+			--button="Yes:0" --button="No:2" \
+			--text "Overwrite Go installed?, current $GOVER (recomend: yes)")
+		return_code="${?:-'2'}"
+	fi
+
+    if [ "$return_code" -eq 0 ]; then
+		echo "INFORMATIONAL: Installing Go 1.21.4"
+		
 		# install go
 		if [[ "$BAPCPU" == *"ar"* ]]; then 
 			if [ `getconf LONG_BIT` = '64' ]; then
