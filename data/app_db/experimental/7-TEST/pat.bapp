@@ -25,7 +25,7 @@ INSTALL(){
 		return_code = 0
 	else
 		# yad ask to overwrite go if installed
-		GOVER=$(go version | awk '{print $3}' | sed 's/go//')
+		GOVER=$(/usr/local/go/bin/go version | awk '{print $3}' | sed 's/go//')
 		action=$(yad --center --title "Question" --image "dialog-question"\
 			--button="Yes:0" --button="No:2" \
 			--text "Overwrite Go installed?, current $GOVER (recomend: yes)")
@@ -33,22 +33,23 @@ INSTALL(){
 	fi
 
     if [ "$return_code" -eq 0 ]; then
-		echo "INFORMATIONAL: Installing Go 1.21.4"
-		
+		GOVAL="go1.21.4"
+		echo "INFORMATIONAL: Installing Go $GOVAL"
+		sudo rm -rf /usr/local/go
 		# install go
 		if [[ "$BAPCPU" == *"ar"* ]]; then 
 			if [ `getconf LONG_BIT` = '64' ]; then
-				wget -q https://go.dev/dl/go1.21.4.linux-arm64.tar.gz
-				sudo tar -C /usr/local -xzf go1.17.7.linux-arm64.tar.gz
+				wget -q https://go.dev/dl/$GOVAL.linux-arm64.tar.gz
+				sudo tar -C /usr/local -xzf $GOVAL.linux-arm64.tar.gz
 			else
 				#pi3
-				wget -q https://dl.google.com/go/go1.21.4.linux-armv6l.tar.gz
-				sudo tar -C /usr/local -xzf go1.17.7.linux-armv6l.tar.gz
+				wget -q https://dl.google.com/go/$GOVAL.linux-armv6l.tar.gz
+				sudo tar -C /usr/local -xzf $GOVAL.linux-armv6l.tar.gz
 			fi
 		else
 			#desktop
-			sudo wget -q https://golang.org/dl/go1.21.4.linux-amd64.tar.gz
-			sudo tar -C /usr/local -xzf go1.17.7.linux-amd64.tar.gz
+			sudo wget -q https://golang.org/dl/$GOVAL.linux-amd64.tar.gz
+			sudo tar -C /usr/local -xzf $GOVAL.linux-amd64.tar.gz
 		fi
 
 		PATH=$PATH:/usr/local/go/bin 
