@@ -34,7 +34,7 @@ INSTALL(){
 
     if [ "$return_code" -eq 0 ]; then
 		GOVAL="go1.21.4"
-		echo "INFORMATIONAL: Installing Go $GOVAL"
+		echo "INFORMATIONAL: Installing $GOVAL"
 		sudo rm -rf /usr/local/go
 		# install go
 		if [[ "$BAPCPU" == *"ar"* ]]; then 
