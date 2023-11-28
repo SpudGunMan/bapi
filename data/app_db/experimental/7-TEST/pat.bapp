@@ -75,12 +75,11 @@ INSTALL(){
 	sudo /usr/share/pat/ardopc/install-systemd-ardop-unit.bash
 	sudo /usr/share/pat/rigctld/install-systemd-rigctld-unit.bash
 
-	patcfg="${HOME}/.config/pat/config.json"
 	mkdir -p ${HOME}/.config/pat
 	cp $BAPDIR/data/pat-config.json ${HOME}/.config/pat/
-	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${MYCALL}\",/" ${patcfg}
-	#sed -i 's/enable_http\": false/enable_http\": true/' ${patcfg}
-	#sed -i 's/allow_forms\": false/allow_forms\": true/' ${patcfg}
+	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${MYCALL}\",/" ${HOME}/.config/pat/config.json
+	#sed -i 's/enable_http\": false/enable_http\": true/' ${HOME}/.config/pat/config.json
+	#sed -i 's/allow_forms\": false/allow_forms\": true/' ${HOME}/.config/pat/config.json
 
 	sudo systemctl start pat@$BAPWHOAMI
 	sudo systemctl enable pat@$BAPWHOAMI
