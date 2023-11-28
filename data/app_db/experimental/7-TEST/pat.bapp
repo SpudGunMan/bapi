@@ -22,7 +22,7 @@ INSTALL(){
 
 	# check if go is installed
 	if [ ! -d /usr/local/go/bin ];then
-		return_code = 0
+		return_code="0"
 	else
 		# yad ask to overwrite go if installed
 		GOVER=$(/usr/local/go/bin/go version | awk '{print $3}' | sed 's/go//')
