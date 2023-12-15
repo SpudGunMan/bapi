@@ -18,3 +18,6 @@ Load up Pi-Apps http://pi-apps.io
 - Download Vara, VarAC, WineLink, Install them all, if you install VarAC first it will open the Vara Modem download page from CLI you can run with "wine setup.exe"
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
+
+- [missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) they are not installed as part of this tool yet
+- remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/

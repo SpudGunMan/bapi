@@ -9,7 +9,7 @@ December 2023 Bookworm note:
 this is a early release still "beta" RC7
 - no .desktop files yet for most things (no menu icons)
 - upgrade your OS first. This script is not upgrading the OS.
-- VARA and winelink RMS etc, having [global issues](https://github.com/WheezyE/Winelink/issues/72) with ARM-BOX emulation [missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) they are not installed as part of this tool yet, remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
+- VARA and winelink RMS etc, having [global issues](https://github.com/WheezyE/Winelink/issues/72) with ARM-BOX emulation
 
 ## Description
 ![screenshot](data/screenshot.jpg)
