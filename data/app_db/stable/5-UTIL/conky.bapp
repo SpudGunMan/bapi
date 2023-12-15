@@ -1,12 +1,12 @@
 BAPP=4
 ID=CONKY
 Name=CONKY
-Comment='Conky Telemetry Display'
+Comment='Conky Telemetry Display ==Bookworm ISSUES=='
 VerLocal=0
 VerRemote=0
 W3=''
 Author='spud'
-NOTE=''
+NOTE='This isnt working well in bookworm, but it does work in bullseye.'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
