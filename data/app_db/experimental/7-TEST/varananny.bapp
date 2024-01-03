@@ -43,6 +43,7 @@ INSTALL(){
 			sudo wget -q https://golang.org/dl/$GOVAL.linux-amd64.tar.gz
 			sudo tar -C /usr/local -xzf $GOVAL.linux-amd64.tar.gz
 		fi
+	fi
 
 
 	cd ${BAPSRC}
