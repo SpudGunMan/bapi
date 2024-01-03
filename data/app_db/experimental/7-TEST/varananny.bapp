@@ -8,9 +8,6 @@ W3='https://github.com/islandmagic/varanny'
 Author='spud'
 NOTE=''
 
-#reference:
-
-
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get install -y libatomic1
