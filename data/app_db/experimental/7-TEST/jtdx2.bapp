@@ -1,0 +1,98 @@
+BAPP=4
+ID=JTDX2
+Name=JTDX2
+Comment='WSJT DX Improved Project'
+VerLocal=0
+VerRemote=0
+W3='https://sourceforge.net/projects/jtdx-improved/'
+Author='spud'
+NOTE='binary is put into ~/jtdx/bin'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libfftw3-dev >> errors/apt.log
+    sudo apt-get -y install qtdeclarative5-dev >> errors/apt.log
+    sudo apt-get -y install asciidoc >> errors/apt.log
+    sudo apt-get -y install libqt5websockets5 >> errors/apt.log
+    sudo apt-get -y install libqt5websockets5-dev >> errors/apt.log
+    sudo apt-get -y install ntp >> errors/apt.log
+
+    # Detect cortex chip (ARM's)
+    if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
+		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+		#increase swap file if less than 3G memory
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Increasing Swap size for build"
+			#increase swap size
+			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+
+    cd ${BAPSRC}
+    sudo rm -rf jtdx
+    mkdir jtdx
+    cd jtdx
+
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/ | grep -m 1 jtdx_ | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+    echo $VER > ${HOME}/.bap.jtdx.txt
+
+    #alternate hamlib code idea ## it should use the default hamlib
+    #git clone git://git.code.sf.net/p/jtdx/hamlib hamlib-src
+    #cd hamlib-src
+    #mkdir ../hl-build
+    #./bootstrap
+    #cd ../hl-build
+    #../src/configure --prefix=${BAPSRC}/jtdx/hamlib-prefix \
+    #--disable-static --enable-shared --without-readline \
+    #--without-indi --without-cxx-binding --disable-winradio \
+    #CFLAGS="-g -O2 -fdata-sections -ffunction-sections" \
+    #LDFLAGS="-Wl,--gc-sections"
+    #make -j$BAPCORE
+    #make install-strip
+    #cd ../../
+
+    git clone git://git.code.sf.net/p/jtdx-improved/code src
+    mkdir build
+    cd src
+
+    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx2 -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
+	sudo cmake --build . --target install -j$BAPCORE
+
+    sudo make install/strip
+    
+
+    # Detect cortex chip (ARM's)
+    if [[ "$BAPCPU" == *"ar"* ]]; then 
+		#reset swap size to default
+		if [ ${FREEMEM} -lt 3000 ]; then
+			echo "Resetting swap size to default"
+			#increase swap size
+			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+			sudo /etc/init.d/dphys-swapfile restart
+			sleep 10
+		fi
+	fi
+}
+
+VERSION(){
+    if [ -d ${HOME}/jtdx2 ];then
+		if [ -f ${HOME}/.bap.jtdx2.txt ]; then
+			CURRENT=$(cat ${HOME}/.bap.jtdx2.txt)
+		else
+        	CURRENT=UNKNOWN
+		fi
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep -m 1 jtdx_ | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}

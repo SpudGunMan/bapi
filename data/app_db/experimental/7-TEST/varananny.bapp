@@ -1,0 +1,75 @@
+BAPP=4
+ID=VARNANY
+Name=VARNANY
+Comment='varanny is an enhancement tool for VARA'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/islandmagic/varanny'
+Author='spud'
+NOTE=''
+
+#reference:
+
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get install -y libatomic1
+
+    # check if go is installed
+	if [ ! -d /usr/local/go/bin ];then
+		return_code="0"
+	else
+		# yad ask to overwrite go if installed
+		GOVER=$(/usr/local/go/bin/go version | awk '{print $3}' | sed 's/go//')
+		action=$(yad --center --title "Question" --image "dialog-question"\
+			--button="Yes:0" --button="No:2" \
+			--text "Overwrite Go installed?, current $GOVER (recomend: yes)")
+		return_code="${?:-'2'}"
+	fi
+
+    if [ "$return_code" -eq 0 ]; then
+		GOVAL="go1.21.4"
+		echo "INFORMATIONAL: Installing $GOVAL"
+		sudo rm -rf /usr/local/go
+		# install go
+		if [[ "$BAPCPU" == *"ar"* ]]; then 
+			if [ `getconf LONG_BIT` = '64' ]; then
+				wget -q https://go.dev/dl/$GOVAL.linux-arm64.tar.gz
+				sudo tar -C /usr/local -xzf $GOVAL.linux-arm64.tar.gz
+			else
+				#pi3
+				wget -q https://dl.google.com/go/$GOVAL.linux-armv6l.tar.gz
+				sudo tar -C /usr/local -xzf $GOVAL.linux-armv6l.tar.gz
+			fi
+		else
+			#desktop
+			sudo wget -q https://golang.org/dl/$GOVAL.linux-amd64.tar.gz
+			sudo tar -C /usr/local -xzf $GOVAL.linux-amd64.tar.gz
+		fi
+
+
+	cd ${BAPSRC}
+    sudo rm -rf varanny
+
+    echo "INFORMATIONAL: Installing varanny"
+
+    git checkout git@github.com:islandmagic/varanny.git
+    cd varanny
+    CGO_ENABLED=1 CGO_LDFLAGS="-latomic" go build
+    # sudo cp varanny /usr/local/bin
+
+}
+
+VERSION(){
+    if [[ $(whereis openwebrx | grep bin) ]];then
+        CURRENT=FIX-ME
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='VARA'
+    #apt-gets will be checked on app-check
+}
