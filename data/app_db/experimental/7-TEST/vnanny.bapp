@@ -53,14 +53,18 @@ INSTALL(){
 
     git clone https://github.com/islandmagic/varanny
     cd varanny
-    CGO_ENABLED=1 CGO_LDFLAGS="-latomic" go build
-    # sudo cp varanny /usr/local/bin
+    CGO_ENABLED=1 CGO_LDFLAGS="-latomic" /usr/local/go/bin/go build
+
+	mkdir -p ~/varanny
+    cp varanny ~/varanny/
+	cp varanny.json ~/varanny/
+
 
 }
 
 VERSION(){
     if [[ $(whereis openwebrx | grep bin) ]];then
-        CURRENT=FIX-ME
+        CURRENT=0-git
     else
         CURRENT=NONE
     fi
@@ -68,6 +72,6 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED='VARA'
+    NEEDED=''
     #apt-gets will be checked on app-check
 }
