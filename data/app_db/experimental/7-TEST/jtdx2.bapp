@@ -25,33 +25,14 @@ INSTALL(){
     VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
     echo 2.2.159 > ${HOME}/.bap.jtdx.txt
 
-    #wget -O jtdx2.zip https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Source%20code/jtdx_$VER_improved_source.zip/download
-    #unzip jtdx2.zip
-    #cd jtdx*
-    #cd build
-    #cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix ../
-	#sudo cmake --build . --target install -j$BAPCORE
-    #sudo make install/strip
+    wget -O jtdx2.zip https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Source%20code/jtdx_$VER_improved_with_JTDX_GUI_source.zip/download
+    unzip jtdx2.zip
+    cd jtdx*
+    cd build
+    cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix ../
+	sudo cmake --build . --target install -j$BAPCORE
+    sudo make install/strip
 
-    if [[ "$BAPCPU" == *"ar"* ]]; then
-        
-		#determine if pi-64 bit and install correct dependencies.
-		if [ `getconf LONG_BIT` = '64' ]; then
-            echo "64 bit pi"
-            wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_2.2.159/Raspberry%20Pi/jtdx_2.2.159_improved_Rpi_arm64.deb/download
-        else
-            echo "32 bit pi"
-            wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_2.2.159/Raspberry%20Pi/jtdx_2.2.159_improved_RPi_armhf.deb/download
-        fi
-
-    else
-        echo "x86"
-        wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_2.2.159/Linux/jtdx_2.2.159_improved_LINUX_amd64.deb/download
-    fi
-    
-    sudo dpkg -i jtdx.deb
-
-}
 
 VERSION(){
     if [ -d ${HOME}/jtdx2 ];then
