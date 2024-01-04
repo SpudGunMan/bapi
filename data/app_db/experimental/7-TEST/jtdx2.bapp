@@ -44,10 +44,11 @@ INSTALL(){
     unzip jtdx2.zip
     cd jtdx*
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx2 -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
+    cd build
+    cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix ../
 	sudo cmake --build . --target install -j$BAPCORE
 
-    #sudo make install/strip
+    sudo make install/strip
     
 
     # Detect cortex chip (ARM's)
