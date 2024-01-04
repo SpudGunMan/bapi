@@ -12,7 +12,13 @@ NOTE='installs from github source, very basic setup'
 
 
 INSTALL(){
-	echo -e "INFORMATIONAL: apt-get required packages"
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install libyaml-cpp-dev >> errors/apt.log
+    sudo apt-get -y install qtbase5-dev >> errors/apt.log
+    sudo apt-get -y install qttools5-dev >> errors/apt.log
+    sudo apt-get -y install qttools5-dev-tools >> errors/apt.log
+    sudo apt-get -y install qtpositioning5-dev >> errors/apt.log
+    sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
 
 	cd ${BAPSRC}
 	
