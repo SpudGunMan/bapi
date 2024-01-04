@@ -30,7 +30,7 @@ INSTALL(){
     cd jtdx*
     cd build
     cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix ../
-	sudo cmake --build . --target install -j$BAPCORE
+	sudo cmake --build ../ --target install -j$BAPCORE
     sudo make install/strip
 
 
