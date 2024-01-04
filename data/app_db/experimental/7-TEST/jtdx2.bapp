@@ -33,6 +33,7 @@ INSTALL(){
 	sudo cmake --build ../ --target install -j$BAPCORE
     sudo make install/strip
 
+}
 
 VERSION(){
     if [ -d ${HOME}/jtdx2 ];then
