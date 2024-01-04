@@ -34,6 +34,8 @@ INSTALL(){
     make
     sudo make install
     sudo ldconfig
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger
 
 }
 
