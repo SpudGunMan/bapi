@@ -136,6 +136,8 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get install -y libusb-1.0-0
     sudo apt-get -y install libtool
 
+    sudo apt-get install libudev-dev
+
     sudo apt-get -y install libfftw3-dev 
 
     sudo apt-get -y install libv4l-dev 
