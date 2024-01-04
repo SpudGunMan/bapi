@@ -1,12 +1,12 @@
 BAPP=4
 ID=QDMR
 Name=QDMR
-Comment='Code plug program DMR radios'
+Comment='QDMR Code plug manager'
 VerLocal=0
 VerRemote=0
-W3='https://dm3mat.darc.de/qdmr/'
+W3='https://dm3mat.darc.de/qdmr/install.html'
 Author='spud'
-NOTE='non functioning TODO'
+NOTE='installs from github source, very basic setup'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -17,25 +17,32 @@ INSTALL(){
     sudo apt-get -y install qtpositioning5-dev >> errors/apt.log
     sudo apt-get -y install libqt5serialport5-dev >> errors/apt.log
 
-    cd ${BAPSRC} || return
+	cd ${BAPSRC}
+	
     sudo rm -rf qdmr
-    git clone https://github.com/hmatuschek/qdmr
+    mkdir -p qdmr
     cd qdmr
+    #git clone https://github.com/hmatuschek/qdmr
+
+    wget https://github.com/hmatuschek/qdmr/archive/refs/tags/v0.11.3.tar.gz
+    tar -xzf v0.11.3.tar.gz
+    cd qdmr-0.11.3
+
 
     mkdir build 
     cd build 
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
-    make 
-    
-    sudo make install 
+    make
+    sudo make install
     sudo ldconfig
     sudo udevadm control --reload-rules
     sudo udevadm trigger
+
 }
 
 VERSION(){
     if [[ $(whereis qdmr | grep bin) ]];then
-        CURRENT=unknown
+        CURRENT=0.11.3
     else
         CURRENT=NONE
     fi

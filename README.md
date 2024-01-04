@@ -1,7 +1,7 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE BETA**
-December 2023 Bookworm note:
+January 2024 Bookworm note:
 - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
 - Conky isnt working well
 - VARA [needs installed manually](data/VARA.md)
