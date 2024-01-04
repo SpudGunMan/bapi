@@ -8,9 +8,6 @@ W3='https://dm3mat.darc.de/qdmr/install.html'
 Author='spud'
 NOTE='installs from github source, very basic setup'
 
-#reference:
-
-
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get -y install libyaml-cpp-dev >> errors/apt.log
