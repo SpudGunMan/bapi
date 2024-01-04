@@ -25,9 +25,13 @@ INSTALL(){
     sudo rm -rf qdmr
     mkdir -p qdmr
     cd qdmr
+    #git clone https://github.com/hmatuschek/qdmr
+
     wget https://github.com/hmatuschek/qdmr/archive/refs/tags/v0.11.3.tar.gz
     tar -xzf v0.11.3.tar.gz
     cd qdmr-0.11.3
+
+
     mkdir build 
     cd build 
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
