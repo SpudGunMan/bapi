@@ -37,13 +37,16 @@ INSTALL(){
         
 		#determine if pi-64 bit and install correct dependencies.
 		if [ `getconf LONG_BIT` = '64' ]; then
-            wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Raspberry%20Pi/jtdx_$VER_improved_Rpi_arm64.deb/download
+            echo "64 bit pi"
+            wget -O jtdx.deb "https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Raspberry%20Pi/jtdx_$VER_improved_Rpi_arm64.deb/download"
         else
-            wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Raspberry%20Pi/jtdx_$VER_improved_RPi_armhf.deb/download
+            echo "32 bit pi"
+            wget -O jtdx.deb "https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Raspberry%20Pi/jtdx_$VER_improved_RPi_armhf.deb/download"
         fi
 
     else
-        wget -O jtdx.deb https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Linux/jtdx_$VER_improved_LINUX_amd64.deb/download
+        echo "x86"
+        wget -O jtdx.deb "https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Linux/jtdx_$VER_improved_LINUX_amd64.deb/download"
     fi
     
     sudo dpkg -i jtdx.deb
