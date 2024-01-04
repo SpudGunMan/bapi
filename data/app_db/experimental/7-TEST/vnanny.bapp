@@ -51,7 +51,7 @@ INSTALL(){
 
     echo "INFORMATIONAL: Installing varanny"
 
-    git checkout git@github.com:islandmagic/varanny.git
+    git clone https://github.com/islandmagic/varanny
     cd varanny
     CGO_ENABLED=1 CGO_LDFLAGS="-latomic" go build
     # sudo cp varanny /usr/local/bin
