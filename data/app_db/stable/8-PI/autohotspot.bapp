@@ -30,6 +30,14 @@ INSTALL(){
         echo echo -e "INFORMATIONAL: this is for raspberry pi hardware"
     fi
 
+    #Pi5
+    #https://www.raspberryconnect.com/projects/65-raspberrypi-hotspot-accesspoints/203-automated-switching-accesspoint-wifi-network
+    #curl "https://www.raspberryconnect.com/images/scripts/AccessPopup.tar.gz" -o AccessPopup.tar.gz
+    #tar -xvf ./AccessPopup.tar.gz
+    #cd AccessPopup
+    #sudo ./installconfig.sh
+
+
 }
 
 VERSION(){
