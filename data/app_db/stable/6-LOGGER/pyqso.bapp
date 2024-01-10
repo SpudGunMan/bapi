@@ -13,6 +13,15 @@ INSTALL(){
     #sudo apt-get -y install pyqso >> errors/apt.log
     sudo apt-get -y install python3-pip >> errors/apt.log
 
+    sudo apt-get install -y python3-numpy >> errors/apt.log
+    sudo apt-get install -y python3-matplotlib >> errors/apt.log
+    sudo apt-get install -y python3-cairocffi >> errors/apt.log
+    sudo apt-get install -y python3-cartopy >> errors/apt.log
+    sudo apt-get install -y python3-sphinx >> errors/apt.log
+    sudo apt-get install -y python3-geocoder >> errors/apt.log
+    sudo apt-get install -y python3-sphinx >> errors/apt.log
+    
+
     pip install --upgrade pip
     pip install numpy
     pip install matplotlib

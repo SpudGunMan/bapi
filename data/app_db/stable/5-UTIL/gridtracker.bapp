@@ -22,9 +22,9 @@ INSTALL(){
 	ver=1.23.040
 	echo -e "INFORMATIONAL: GridTracker version $ver"
 
-	arm64=https://downloads.gridtracker.org/v1.23.0402/GridTracker-1.23.0402-linux-arm64.tar.gz
-	arm32=https://downloads.gridtracker.org/v1.23.0402/GridTracker-1.23.0402-linux-arm32.tar.gz
-	deb=https://downloads.gridtracker.org/v1.23.0402/gridtracker_1.23.0402_all.deb
+	arm64=https://downloads.gridtracker.org/v1.24.0104/GridTracker-1.24.0104-linux-x64.tar.gz
+	arm32=https://downloads.gridtracker.org/v1.24.0104/GridTracker-1.24.0104-linux-x86.tar.gz
+	deb=https://downloads.gridtracker.org/v1.24.0104/gridtracker_1.24.0104_all.deb
 
 	# Download gridtracker binary
     if [[ "$BAPCPU" == *"ar"* ]]; then

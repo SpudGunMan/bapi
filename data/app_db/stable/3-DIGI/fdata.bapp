@@ -29,6 +29,14 @@ INSTALL(){
     sudo apt-get -y install python3-pyaudio >> errors/apt.log
     sudo apt-get -y install python3-colorama >> errors/apt.log
 
+    sudo apt-get -y install python3-psutil >> errors/apt.log
+    sudo apt-get -y install python3-crcengine >> errors/apt.log
+    sudo apt-get -y install python3-ujson >> errors/apt.log
+    sudo apt-get -y install python3-pyserial >> errors/apt.log
+    sudo apt-get -y install python3-numpy >> errors/apt.log
+    sudo apt-get -y install python3-structlog >> errors/apt.log
+    sudo apt-get -y install python3-sounddevice >> errors/apt.log
+
     pip install psutil 
     pip install crcengine 
     pip install ujson 

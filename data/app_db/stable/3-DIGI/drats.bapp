@@ -21,6 +21,21 @@ INSTALL(){
 	sudo apt-get -y install python3-gtk2 >> errors/apt.log
 	sudo apt-get -y install python3-suds >> errors/apt.log
 
+	sudo apt-get -y install python3-pil >> errors/apt.log
+	sudo apt-get -y install python3-geopy >> errors/apt.log
+	sudo apt-get -y install python3-cairo >> errors/apt.log
+	sudo apt-get -y install python3-gi >> errors/apt.log
+	sudo apt-get -y install python3-serial >> errors/apt.log
+	sudo apt-get -y install python3-simplejson >> errors/apt.log
+	sudo apt-get -y install python3-flask >> errors/apt.log
+	sudo apt-get -y install python3-gevent >> errors/apt.log
+	sudo apt-get -y install python3-gevent-socketio >> errors/apt.log
+	sudo apt-get -y install python3-greenlet >> errors/apt.log
+
+	sudo apt-get -y install python3-libxml2 >> errors/apt.log
+	sudo apt-get -y install python3-feedparser >> errors/apt.log
+	sudo apt-get -y install python-gi-dev >> errors/apt.log
+
 	pip install Pillow
 	pip install geopy
 	pip install pycairo

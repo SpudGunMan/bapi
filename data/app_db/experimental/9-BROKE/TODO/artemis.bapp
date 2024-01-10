@@ -10,6 +10,15 @@ NOTE='non functioning TODO'
 
 INSTALL(){
     sudo apt-get -y install python3-pip >> errors/apt.log
+    sudo apt-get -y install python3-pyqt5 >> errors/apt.log
+    sudo apt-get -y install python3-pygame >> errors/apt.log
+    sudo apt-get -y install python3-pandas >> errors/apt.log
+    sudo apt-get -y install python3-numpy >> errors/apt.log
+    sudo apt-get -y install python3-aiohttp >> errors/apt.log
+    sudo apt-get -y install python3-urllib3 >> errors/apt.log
+    sudo apt-get -y install python3-certifi >> errors/apt.log
+    
+
     pip install numpy>=1.23.1 --no-warn-script-location
     pip install pandas>=1.4.3 --no-warn-script-location
     pip install certifi>=2022.6.15 --no-warn-script-location
