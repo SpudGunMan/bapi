@@ -13,6 +13,22 @@ INSTALL(){
 	sudo apt-get -y install python3-pip >> errors/apt.log
 	sudo apt-get -y install python3-dev >> errors/apt.log
     sudo apt-get -y install python3-tk >> errors/apt.log
+
+    sudo apt-get -y install python3-maidenhead >> errors/apt.log
+    sudo apt-get -y install python3-serial >> errors/apt.log
+    sudo apt-get -y install python3-gps >> errors/apt.log
+    sudo apt-get -y install python3-astroid >> errors/apt.log
+    sudo apt-get -y install python3-colorama >> errors/apt.log
+    sudo apt-get -y install python3-isort >> errors/apt.log
+    sudo apt-get -y install python3-lazy-object-proxy >> errors/apt.log
+    sudo apt-get -y install python3-mccabe >> errors/apt.log
+    sudo apt-get -y install python3-pylint >> errors/apt.log
+    sudo apt-get -y install python3-toml >> errors/apt.log
+    sudo apt-get -y install python3-wrapt >> errors/apt.log
+    sudo apt-get -y install python3-tk >> errors/apt.log
+
+
+
     pip install maidenhead 
     pip install astroid
     pip install colorama

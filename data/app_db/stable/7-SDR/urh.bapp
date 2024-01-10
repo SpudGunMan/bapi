@@ -22,6 +22,9 @@ INSTALL(){
     sudo apt-get -y install gnuradio-dev >> errors/apt.log
     sudo apt-get -y install gr-osmosdr >> errors/apt.log
 
+    sudo apt-get -y install python3-cython >> errors/apt.log
+    
+
     #sudo pip install urh
     #sudo pip install --upgrade urh
     
