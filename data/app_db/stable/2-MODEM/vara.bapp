@@ -16,7 +16,7 @@ INSTALL(){
 
     #download VARA
     echo -e "INFORMATIONAL: downloading vara and winlink binary"
-    wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/' >> errors/apt.log
+    wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/' >> ${BAPSRC}/errors/vara.log
     
     if [ -f ${HOME}/winelink/'Update VARA' ];then
         cd ${HOME}/winelink/
