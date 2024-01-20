@@ -46,9 +46,26 @@ INSTALL(){
                 bash install
                 echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm)"
             else
-                echo -e "INFORMATIONAL: running:  sudo apt-get install wine-devel"
-                sudo apt-get install wine-installer
-                sudo apt-get install wine
+                #x86
+                action=$(yad --center --title "Question" --image "dialog-question"\
+                    --button="Wine-HQ:0" --button="Dist-Repo:2" \
+                    --text "Use OSrepo or add Wine-HQ")
+                    return_code="${?:-'2'}"
+
+                if [ "$return_code" -eq 0 ]; then
+                    echo -e "INFORMATIONAL: attempting wine HQ"
+                    sudo mkdir -pm755 /etc/apt/keyrings
+                    sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+                    sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+                    sudo apt update
+                    sudo apt install --install-recommends winehq-stable
+                else
+                    echo -e "INFORMATIONAL: using Dist Sources"
+                    sudo apt-get install wine-installer
+                    sudo apt-get install wine
+                fi
+
+                wine winecfg
 
             fi
 
