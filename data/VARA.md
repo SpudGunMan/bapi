@@ -5,7 +5,7 @@ switch to 4k-page adding
 - `kernel=kernel8.img` to /boot/config.txt
 - reboot
 
-## To manually install VARA and WinLink on a Pi
+## To manually install VARA and WinLink on a Pi 4 or 5 in 2024 / bookworm
 Load up Pi-Apps http://pi-apps.io
 - `wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash`
 - Use the Pi-Apps GUI navigate to Tools->Emulation
@@ -15,7 +15,8 @@ Load up Pi-Apps http://pi-apps.io
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
     - comdlg32ocx, pdh-nt4, vb6run, ahk
-- Download Vara, VarAC, WineLink, Install them all, if you install VarAC first it will open the Vara Modem download page from CLI you can run with "wine setup.exe"
+- Download Vara, VarAC, WineLink, Install them all
+  - `wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'`
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
 

@@ -1,7 +1,7 @@
 BAPP=4
 ID=VARA
 Name=VARA++
-Comment='WINE/Box(86) - VARA Modem, RMS Express==FAILS ON Bookworm'
+Comment='WINE/Box(86) - VARA Modem'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/WheezyE/Winelink/tree/main/docs'
@@ -14,8 +14,9 @@ INSTALL(){
     mkdir winelink
     cd winelink
 
-    cp $BAPDIR/data/install-wine.sh ${BAPSRC}/winelink/
-    
+    #download VARA
+    echo -e "INFORMATIONAL: downloading vara and winlink binary"
+    wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/' >> errors/vara.log
     
     if [ -f ${HOME}/winelink/'Update VARA' ];then
         cd ${HOME}/winelink/
@@ -36,19 +37,26 @@ INSTALL(){
                 after its installed find box86 and wine(x86) in the search and install it as well\n \
                 then re-run this install script. It should have made a desktop icon."
 
+                #legacy installer
+                cp $BAPDIR/data/install-wine.sh ${BAPSRC}/winelink/
+
                 #pi-apps backup installer
                 git clone https://github.com/Botspot/pi-apps
                 cd pi-apps
                 bash install
+                echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm)"
             else
-                ./install-wine.sh
+                echo -e "INFORMATIONAL: running:  sudo apt-get install wine-devel"
+                sudo apt-get install wine-devel
             fi
 
-            echo -e "INFORMATIONAL: try run again, after use pi-apps on the desktop."
-            echo -e "INFORMATIONAL: Wine/Box in pi-apps Tools, Emulation, Box86(arm) and wine(x86)"
-            echo -e "INFORMATIONAL: in mint try running:  sudo apt-get install wine-devel"
             yad --title="bAPi - vara installer" --center --button="OK" \
-            --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status. \n in mint try running:  sudo apt-get install wine-devel"
+            --text="Winlink and VARA binary need manually installed \n downloaded to ${BAPSRC}/winelink/downloads.winlink.org"
+            
+            if -f ${BAPSRC}/winelink/downloads.winlink.org;then
+                xdg-open ${BAPSRC}/winelink/downloads.winlink.org
+            fi
+
         fi
         
     fi
