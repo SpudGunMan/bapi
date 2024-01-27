@@ -5,18 +5,28 @@ switch to 4k-page adding
 - `kernel=kernel8.img` to /boot/config.txt
 - reboot
 
-## To manually install VARA and WinLink on a Pi 4 or 5 in 2024 / bookworm
+## To manually install Box/Wine on a Pi
 Load up Pi-Apps http://pi-apps.io
 - `wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash`
 - Use the Pi-Apps GUI navigate to Tools->Emulation
-  - install Box86 (also installs wine)
+  - install Box86 32
+  - install Wine 32
+
+## To manually install latest winetricks
+```
+wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+chmod +x winetricks 
+sudo mv -v winetricks /usr/local/bin
+```
+### Configure Wine
 - Install DLL with winetricks by running "winetricks" from CLI
+  - You may want to run `WINEARCH=win32 winetricks`
   - press OK for 'default prefix'
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
-    - comdlg32ocx, pdh-nt4, vb6run, ahk
+    - comdlg32ocx, comctl32oxc, pdh-nt4, vb6run, ahk
 - Download Vara, VarAC, WineLink, Install them all
-  - `wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'`
+  - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
 
