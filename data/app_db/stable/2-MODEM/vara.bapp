@@ -6,13 +6,19 @@ VerLocal=0
 VerRemote=0
 W3='https://github.com/WheezyE/Winelink/tree/main/docs'
 Author='WheezyE/spud'
-NOTE='WheezyE/Winelink installer script: failure? try re-running'
+NOTE='installer script failure? please report'
 
 INSTALL(){
     cd ${BAPSRC}
     rm -rf winelink
     mkdir winelink
     cd winelink
+
+    #winetricks
+    echo -e "INFORMATIONAL: installing winetricks"
+    wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+    chmod +x winetricks 
+    sudo mv -v winetricks /usr/local/bin
     
     if [ -f ${HOME}/winelink/'Update VARA' ];then
         cd ${HOME}/winelink/
@@ -59,13 +65,11 @@ INSTALL(){
                     sudo apt-get install wine
                 fi
 
-            fi
+                /usr/local/bin/winetricks --force pdh_nt4
+                /usr/local/bin/winetricks --force vb6run
+                WINEARCH=win32 winecfg
 
-            #winetricks
-            echo -e "INFORMATIONAL: installing winetricks"
-            wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
-            chmod +x winetricks 
-            sudo mv -v winetricks /usr/local/bin
+            fi
 
             #vara bins / download VARA
             echo -e "INFORMATIONAL: downloading vara and winlink binary"
