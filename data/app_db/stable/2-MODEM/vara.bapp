@@ -47,10 +47,8 @@ INSTALL(){
                 echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) review the bapi/data/VARA.md file for more information."
             else
                 #x86
-                action=$(yad --center --title "Question" --image "dialog-question"\
-                    --button="Wine-HQ:0" --button="Dist-Repo:2" \
-                    --text "Use OSrepo or add Wine-HQ")
-                    return_code="${?:-'2'}"
+                action=$(yad --center --title "Question" --image "dialog-question" \
+                    --button="Wine-HQ:0" --button="Dist-Repo:2" --text "Use OSrepo or add Wine-HQ") return_code="${?:-'2'}"
 
                 if [ "$return_code" -eq 0 ]; then
                     echo -e "INFORMATIONAL: attempting wine HQ"
@@ -62,7 +60,6 @@ INSTALL(){
                 else
                     echo -e "INFORMATIONAL: using OS Sources"
                     sudo apt-get install wine-installer
-                    sudo apt-get install wine
                 fi
 
                 /usr/local/bin/winetricks --force pdh_nt4
