@@ -62,13 +62,21 @@ INSTALL(){
                     sudo apt-get install wine-installer
                 fi
 
-                #winetricks
+                #winetricks and such
                 sudo apt-get install cabextract
+                sudo apt-get install ttf-mscorefonts-installer
+
                 WINEARCH=win32 winecfg
 
                 /usr/local/bin/winetricks --force pdh_nt4
                 /usr/local/bin/winetricks --force vb6run
-                
+                /usr/local/bin/winetricks --force comdlg32ocx
+                /usr/local/bin/winetricks --force comctl32ocx
+                /usr/local/bin/winetricks --force vcrun2003
+                /usr/local/bin/winetricks --force vcrun2005
+                /usr/local/bin/winetricks --force vcrun2008
+                /usr/local/bin/winetricks --force vcrun2010
+
 
             fi
 
