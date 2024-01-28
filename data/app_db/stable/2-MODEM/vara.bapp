@@ -49,9 +49,9 @@ INSTALL(){
     else
         if [[ "$BAPCPU" == *"ar"* ]]; then
             yad --title="bAPi - vara installer" --width=420 --height=200 --fixed --center  --button="OK" \
-            --text="Vara is emulated in wine, we need to install that and some more\n \
-            please review the data/VARA.md file for more information.\n \
-            This method of install may not work at the moment, please report any issues."
+                --text="Vara is emulated in wine, we need to install that and some more\n \
+                please review the data/VARA.md file for more information.\n \
+                This method of install may not work at the moment, please report any issues."
 
             #pi-apps backup installer
             git clone https://github.com/Botspot/pi-apps
