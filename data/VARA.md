@@ -24,7 +24,7 @@ sudo mv -v winetricks /usr/local/bin
   - press OK for 'default prefix'
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
-    - comdlg32ocx, comctl32oxc, pdh-nt4, vb6run, ahk
+    - comdlg32ocx, comctl32oxc, pdh-nt4, vb6run, vcrun2003, vcrun2005, vcrun2008, vcrun2010
 - Download Vara, VarAC, WineLink, Install them all
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
 - copy all the OCX files in VARA rather then set paths or register
