@@ -62,9 +62,13 @@ INSTALL(){
                     sudo apt-get install wine-installer
                 fi
 
+                #winetricks
+                sudo apt-get install cabextract
+                WINEARCH=win32 winecfg
+
                 /usr/local/bin/winetricks --force pdh_nt4
                 /usr/local/bin/winetricks --force vb6run
-                WINEARCH=win32 winecfg
+                
 
             fi
 
