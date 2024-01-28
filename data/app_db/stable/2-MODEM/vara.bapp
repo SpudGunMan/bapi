@@ -5,10 +5,15 @@ Comment='WINE/Box(86) - VARA Modem'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/WheezyE/Winelink/tree/main/docs'
-Author='WheezyE/spud'
+Author='spud'
 NOTE='installer script failure? please report'
 
 INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install cabextract
+    sudo apt-get -y install ttf-mscorefonts-installer
+
+
     cd ${BAPSRC}
     rm -rf winelink
     mkdir winelink
@@ -20,77 +25,83 @@ INSTALL(){
     chmod +x winetricks 
     sudo mv -v winetricks /usr/local/bin
     
-    if [ -f ${HOME}/winelink/'Update VARA' ];then
-        cd ${HOME}/winelink/
-        ./'Update VARA'
+
+    if [ -d ${HOME}/.wine/drive_c ];then
+        #wine already installed
+        echo -e "INFORMATIONAL: wine already installed"
+        action=$(yad --center --title "Question" --image "dialog-question" \
+            --button="ConfigWine:0" --button="Close:2" --text "Attempt winetricks configs?") return_code="${?:-'2'}"
+
+        if [ "$return_code" -eq 0 ]; then
+            #winetricks and such
+            WINEARCH=win32 winecfg
+            /usr/local/bin/winetricks --force pdh_nt4
+            /usr/local/bin/winetricks --force vb6run
+            /usr/local/bin/winetricks --force comdlg32ocx
+            /usr/local/bin/winetricks --force comctl32ocx
+            /usr/local/bin/winetricks --force vcrun2003
+            /usr/local/bin/winetricks --force vcrun2005
+            /usr/local/bin/winetricks --force vcrun2008
+            /usr/local/bin/winetricks --force vcrun2010
+            /usr/local/bin/winetricks --force corefonts
+        fi
+
     else
-        if [ -d ${HOME}/.wine/drive_c ];then
-            #box is OK, likely
-            ./install-wine.sh
-            echo -e "INFORMATIONAL: try run again, if not clean exit."
-            yad --title="bAPi - vara installer" --center --button="OK" \
-            --text="finished install, however you may need to run again or reboot \n re-launch menu, and check version for status."
+        if [[ "$BAPCPU" == *"ar"* ]]; then
+            yad --title="bAPi - vara installer" --width=420 --height=200 --fixed --center  --button="OK" \
+            --text="Vara is emulated in wine, we need to install that and some more\n \
+            please review the data/VARA.md file for more information.\n \
+            This method of install may not work at the moment, please report any issues."
+
+            #pi-apps backup installer
+            git clone https://github.com/Botspot/pi-apps
+            cd pi-apps
+            bash install
+            echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) run this again to configure"
         else
-            if [[ "$BAPCPU" == *"ar"* ]]; then
-                yad --title="bAPi - vara installer" --width=420 --height=200 --fixed --center  --button="OK" \
-                --text="Vara is emulated in wine, we need to install that and some more\n \
-                please review the data/VARA.md file for more information.\n \
-                This method of install may not work at the moment, please report any issues."
+            #x86
+            action=$(yad --center --title "Question" --image "dialog-question" \
+                --button="Wine-HQ:0" --button="Dist-Repo:2" --text "Use OSrepo or add Wine-HQ (recomend Wine-HQ is newer)") return_code="${?:-'2'}"
 
-                #legacy installer
-                cp $BAPDIR/data/install-wine.sh ${BAPSRC}/winelink/
-
-                #pi-apps backup installer
-                git clone https://github.com/Botspot/pi-apps
-                cd pi-apps
-                bash install
-                echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) review the bapi/data/VARA.md file for more information."
+            if [ "$return_code" -eq 0 ]; then
+                echo -e "INFORMATIONAL: attempting wine HQ"
+                sudo mkdir -pm755 /etc/apt/keyrings
+                sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+                sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+                sudo apt update
+                sudo apt-get -y install --install-recommends wine-stable winehq-stable
             else
-                #x86
-                action=$(yad --center --title "Question" --image "dialog-question" \
-                    --button="Wine-HQ:0" --button="Dist-Repo:2" --text "Use OSrepo or add Wine-HQ (recomend Wine-HQ is newer)") return_code="${?:-'2'}"
-
-                if [ "$return_code" -eq 0 ]; then
-                    echo -e "INFORMATIONAL: attempting wine HQ"
-                    sudo mkdir -pm755 /etc/apt/keyrings
-                    sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-                    sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-                    sudo apt update
-                    sudo apt-get -y install --install-recommends wine-stable winehq-stable
-                else
-                    echo -e "INFORMATIONAL: using OS Sources typically older"
-                    sudo apt-get install wine-installer wine-stable wine32
-                fi
-
-                #winetricks and such
-                sudo apt-get -y install cabextract
-                sudo apt-get -y install ttf-mscorefonts-installer
-
-                WINEARCH=win32 winecfg
-
-                /usr/local/bin/winetricks --force pdh_nt4
-                /usr/local/bin/winetricks --force vb6run
-                /usr/local/bin/winetricks --force comdlg32ocx
-                /usr/local/bin/winetricks --force comctl32ocx
-                /usr/local/bin/winetricks --force vcrun2003
-                /usr/local/bin/winetricks --force vcrun2005
-                /usr/local/bin/winetricks --force vcrun2008
-                /usr/local/bin/winetricks --force vcrun2010
-                /usr/local/bin/winetricks --force corefonts
-
+                echo -e "INFORMATIONAL: using OS Sources typically older"
+                sudo apt-get install wine-installer wine-stable wine32
             fi
 
-            #vara bins / download VARA
-            echo -e "INFORMATIONAL: downloading vara and winlink binary"
-            wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
+            #winetricks and such
+            WINEARCH=win32 winecfg
 
-            yad --title="bAPi - vara installer" --center --button="OK" \
-            --text="Winlink and VARA binary need manually installed \n downloaded to ${BAPSRC}/winelink/downloads.winlink.org"
-            
-            if [ -d ${BAPSRC}/winelink/downloads.winlink.org ];then
-                xdg-open ${BAPSRC}/winelink/downloads.winlink.org
-            fi
+            /usr/local/bin/winetricks --force pdh_nt4
+            /usr/local/bin/winetricks --force vb6run
+            /usr/local/bin/winetricks --force comdlg32ocx
+            /usr/local/bin/winetricks --force comctl32ocx
+            /usr/local/bin/winetricks --force vcrun2003
+            /usr/local/bin/winetricks --force vcrun2005
+            /usr/local/bin/winetricks --force vcrun2008
+            /usr/local/bin/winetricks --force vcrun2010
+            /usr/local/bin/winetricks --force corefonts
 
+        fi
+
+        #vara bins / download VARA
+        echo -e "INFORMATIONAL: downloading vara and winlink binary"
+        wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
+
+        echo -e "INFORMATIONAL: downloading VarAC binary"
+        wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe
+
+        yad --title="bAPi - vara installer" --center --button="OK" \
+        --text="Winlink and VARA binary need manually installed \n downloaded to ${BAPSRC}/winelink/downloads.winlink.org"
+        
+        if [ -d ${BAPSRC}/winelink/downloads.winlink.org ];then
+            xdg-open ${BAPSRC}/winelink/downloads.winlink.org
         fi
         
     fi
