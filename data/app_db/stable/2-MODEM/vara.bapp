@@ -48,7 +48,7 @@ INSTALL(){
             else
                 #x86
                 action=$(yad --center --title "Question" --image "dialog-question" \
-                    --button="Wine-HQ:0" --button="Dist-Repo:2" --text "Use OSrepo or add Wine-HQ") return_code="${?:-'2'}"
+                    --button="Wine-HQ:0" --button="Dist-Repo:2" --text "Use OSrepo or add Wine-HQ (recomend Wine-HQ is newer)") return_code="${?:-'2'}"
 
                 if [ "$return_code" -eq 0 ]; then
                     echo -e "INFORMATIONAL: attempting wine HQ"
@@ -58,7 +58,7 @@ INSTALL(){
                     sudo apt update
                     sudo apt install --install-recommends wine-stable winehq-stable
                 else
-                    echo -e "INFORMATIONAL: using OS Sources"
+                    echo -e "INFORMATIONAL: using OS Sources typically older"
                     sudo apt-get install wine-installer
                 fi
 
@@ -76,6 +76,8 @@ INSTALL(){
                 /usr/local/bin/winetricks --force vcrun2005
                 /usr/local/bin/winetricks --force vcrun2008
                 /usr/local/bin/winetricks --force vcrun2010
+                /usr/local/bin/winetricks --force corefonts
+
 
 
             fi
