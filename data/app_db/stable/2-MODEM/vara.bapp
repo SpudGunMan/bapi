@@ -56,15 +56,15 @@ INSTALL(){
                     sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
                     sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
                     sudo apt update
-                    sudo apt install --install-recommends wine-stable winehq-stable
+                    sudo apt-get -y install --install-recommends wine-stable winehq-stable
                 else
                     echo -e "INFORMATIONAL: using OS Sources typically older"
-                    sudo apt-get install wine-installer
+                    sudo apt-get install wine-installer wine-stable wine32
                 fi
 
                 #winetricks and such
-                sudo apt-get install cabextract
-                sudo apt-get install ttf-mscorefonts-installer
+                sudo apt-get -y install cabextract
+                sudo apt-get -y install ttf-mscorefonts-installer
 
                 WINEARCH=win32 winecfg
 
@@ -77,8 +77,6 @@ INSTALL(){
                 /usr/local/bin/winetricks --force vcrun2008
                 /usr/local/bin/winetricks --force vcrun2010
                 /usr/local/bin/winetricks --force corefonts
-
-
 
             fi
 
