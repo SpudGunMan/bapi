@@ -33,12 +33,6 @@ INSTALL(){
 
         if [ "$return_code" -eq 0 ]; then
 
-            echo -e "INFORMATIONAL: downloading vara and winlink binary"
-            wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
-
-            echo -e "INFORMATIONAL: downloading VarAC binary"
-            wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe
-
             #winetricks and such
             WINEARCH=win32 winecfg
             /usr/local/bin/winetricks --force pdh_nt4
@@ -52,12 +46,18 @@ INSTALL(){
             /usr/local/bin/winetricks --force corefonts
         fi
 
-        echo -e "INFORMATIONAL: Ideally everything works now but if not please report"
         if [ -d ${BAPSRC}/winelink/downloads.winlink.org ];then
             xdg-open ${BAPSRC}/winelink/downloads.winlink.org
         else
             echo -e "INFORMATIONAL: MISSING VARA download folder"
+            echo -e "INFORMATIONAL: downloading vara and winlink binary"
+            wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
+
+            echo -e "INFORMATIONAL: downloading VarAC binary"
+            wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe
         fi
+
+        echo -e "INFORMATIONAL: Ideally everything works now but if not please report"
 
     else
         if [[ "$BAPCPU" == *"ar"* ]]; then
