@@ -46,7 +46,7 @@ sudo mv -v winetricks /usr/local/bin
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
 
-  - [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
+- [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
 
 ## VarAC
 - needs a free login get it from https://www.varac-hamradio.com/downloadlinux
