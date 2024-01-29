@@ -50,3 +50,5 @@ sudo mv -v winetricks /usr/local/bin
 
 - remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
   - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=ON/' ~/.wine/drive_c/VarAC/VarAC.ini`
+
+- [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
