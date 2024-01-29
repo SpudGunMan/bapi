@@ -1,15 +1,15 @@
 # Codename bAPi mark 2
 
-**PLEASE NOTE BETA**
-January 2024 Bookworm note:
+**PLEASE NOTE**
+Feb2024
 - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
-- Conky isnt working well
-- VARA [needs installed manually](data/VARA.md)
-
-this is a early release still "beta" RC7
-- no .desktop files yet for most things (no menu icons)
-- upgrade your OS first. This script is not upgrading the OS.
+- Conky isnt working well (likely need to move to a new tool)
 - VARA and winelink RMS etc, having [global issues](https://github.com/WheezyE/Winelink/issues/72) with ARM-BOX emulation
+  - [install manually](data/VARA.md) bapi will assist, the Wheezy/WineLink is offline at the moment
+
+Reminder
+- no .desktop files yet for most things (no menu icons)
+- upgrade your OS first. This script is not upgrading the OS/reboot before using tool.
 
 ## Description
 ![screenshot](data/screenshot.jpg)
@@ -30,12 +30,13 @@ A major fork of this build changes the architecture into a .bapp file for each a
 In theory any Debian platform will work, however the only tested/customized platforms so far. but if you still have python2 as a functioning system or using a distro with python2 .. its getting too old man..
 
 ### ARM
-- Cortex-A53 raspian 32bit PI3
-- Cortex-A72 debian(rasp-os) 32/64bit PI4
-
+- Cortex-A53 raspian 32bit Pi3
+- Cortex-A72 debian(rasp-os) 32/64bit Pi4
+- Cortex-A76 debian(rasp-os) 32/64bit Pi5
+ 
 ### x86_64
 - platforms on linuxmint and raspberryDesktopOS
-- ubuntu ***testing phase***
+- ubuntu (report issues)
 
 ### Additional Requirements
 The project depends on yad which is a funny word for a GUI manager to give the menu some life in all the bashing about. All listed platforms have access to yad `sudo apt-get install -y yad git` will confirm if this script will function at all. Needless to say you also need a Radio Callsign!
