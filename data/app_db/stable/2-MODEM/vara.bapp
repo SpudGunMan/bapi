@@ -62,12 +62,10 @@ INSTALL(){
     else
         if [[ "$BAPCPU" == *"ar"* ]]; then
             #arm
-            #install pi-apps
             if [[ $(whereis pi-apps | grep bin) ]];then
                 pi-apps 
             else
-                #vara bins / download VARA
-
+                #install pi-apps
                 git clone https://github.com/Botspot/pi-apps
                 cd pi-apps
                 bash install
@@ -76,7 +74,6 @@ INSTALL(){
                     install Wine/Box in Pi-Apps Tools, Emulation, Box86(arm).\n \
                     This method of install may not work at the moment, please report any issues."
                 echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) run this again to configure"
-                pi-apps
             fi
         else
             #x86
