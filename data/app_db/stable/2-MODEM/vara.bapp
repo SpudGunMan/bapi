@@ -52,12 +52,9 @@ INSTALL(){
             echo -e "INFORMATIONAL: MISSING VARA download folder"
             echo -e "INFORMATIONAL: downloading vara and winlink binary"
             wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
-
-            echo -e "INFORMATIONAL: downloading VarAC binary"
-            wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe
         fi
 
-        echo -e "INFORMATIONAL: Ideally everything works now but if not please report"
+        echo -e "INFORMATIONAL: Ideally everything works now but if not please report, good time to reboot"
 
     else
         if [[ "$BAPCPU" == *"ar"* ]]; then
@@ -95,9 +92,6 @@ INSTALL(){
             #vara bins / download VARA
             echo -e "INFORMATIONAL: downloading vara and winlink binary"
             wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
-
-            echo -e "INFORMATIONAL: downloading VarAC binary"
-            wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe
 
             #winetricks and such
             WINEARCH=win32 winecfg
