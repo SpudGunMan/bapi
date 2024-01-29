@@ -39,16 +39,20 @@ sudo mv -v winetricks /usr/local/bin
             /usr/local/bin/winetricks --force corefonts
 ```
 
-- Download Vara, VarAC, WineLink, Install them all
+## Vara
+- Download Vara, WinLink bundle
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
-  - `https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe`
 
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
 
+  - [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
+
+## VarAC
+- needs a free login get it from https://www.varac-hamradio.com/downloadlinux
 - [missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) they are not installed as part of this tool yet
 
 - remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
   - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=ON/' ~/.wine/drive_c/VarAC/VarAC.ini`
 
-- [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
+- VarAC isn't loading well in older wine recommend version 8 or higher
