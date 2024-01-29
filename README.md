@@ -4,8 +4,7 @@
 Feb2024
 - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
 - Conky isnt working well (likely need to move to a new tool)
-- VARA and winelink RMS etc, having [global issues](https://github.com/WheezyE/Winelink/issues/72) with ARM-BOX emulation
-  - [install manually](data/VARA.md) bapi will assist, the Wheezy/WineLink is offline at the moment
+- VARA and winlink varac RMS etc, install [manually](data/VARA.md) the [Wheezy/WineLink](https://github.com/WheezyE/Winelink/issues/72) is offline at the moment
 
 Reminder
 - no .desktop files yet for most things (no menu icons)
