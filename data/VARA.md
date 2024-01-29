@@ -18,7 +18,7 @@ wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetri
 chmod +x winetricks 
 sudo mv -v winetricks /usr/local/bin
 ```
-### Configure Wine
+## Configure Wine
 - Install DLL with winetricks by running "winetricks" from CLI
   - You may want to run `WINEARCH=win32 winetricks` to set it up the first time
   - press OK for 'default prefix'
