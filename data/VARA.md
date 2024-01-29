@@ -27,7 +27,7 @@ sudo mv -v winetricks /usr/local/bin
     - comdlg32ocx, comctl32oxc, pdh-nt4, vb6run
     - VarAC
       - vcrun2003, vcrun2005, vcrun2008, vcrun2010
-```            WINEARCH=win32 winecfg
+```         WINEARCH=win32 winecfg
             /usr/local/bin/winetricks --force pdh_nt4
             /usr/local/bin/winetricks --force vb6run
             /usr/local/bin/winetricks --force comdlg32ocx
@@ -41,9 +41,12 @@ sudo mv -v winetricks /usr/local/bin
 
 - Download Vara, VarAC, WineLink, Install them all
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
+  - `wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe`
+
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
 
 - [missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) they are not installed as part of this tool yet
+
 - remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
   - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=ON/' ~/.wine/drive_c/VarAC/VarAC.ini`
