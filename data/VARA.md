@@ -41,7 +41,7 @@ sudo mv -v winetricks /usr/local/bin
 
 - Download Vara, VarAC, WineLink, Install them all
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
-  - `wget https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe`
+  - `https://www.dropbox.com/scl/fi/r69gwmt3tqfvlp95u4bko/VarAC_Installer_V8_4_4.exe`
 
 - copy all the OCX files in VARA rather then set paths or register
   - `cp ~/.wine/drive_c/VARA/OCX/* ~/.wine/drive_c/VARA/`
