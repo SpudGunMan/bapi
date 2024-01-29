@@ -1,8 +1,8 @@
-## Pi5 only bookworm 16K pagesize incompatible with wine/box (Dec42023)
+## Pi5 only 16K pagesize incompatible with wine/box
 - https://github.com/raspberrypi/bookworm-feedback/issues/107
  
-switch to 4k-page adding 
-- `kernel=kernel8.img` to /boot/config.txt
+switch to 4k-page
+- add `kernel=kernel8.img` to /boot/config.txt
 - reboot
 
 ## To manually install Box/Wine on a Pi
@@ -24,19 +24,20 @@ sudo mv -v winetricks /usr/local/bin
   - press OK for 'default prefix'
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
-    - comdlg32ocx, comctl32oxc, pdh-nt4, vb6run
-    - VarAC
-      - vcrun2003, vcrun2005, vcrun2008, vcrun2010
-```         WINEARCH=win32 winecfg
-            /usr/local/bin/winetricks --force pdh_nt4
-            /usr/local/bin/winetricks --force vb6run
-            /usr/local/bin/winetricks --force comdlg32ocx
-            /usr/local/bin/winetricks --force comctl32ocx
-            /usr/local/bin/winetricks --force vcrun2003
-            /usr/local/bin/winetricks --force vcrun2005
-            /usr/local/bin/winetricks --force vcrun2008
-            /usr/local/bin/winetricks --force vcrun2010
-            /usr/local/bin/winetricks --force corefonts
+    - Vara comdlg32ocx, comctl32oxc, pdh-nt4, vb6run
+    - VarAC vcrun2010
+ 
+```
+WINEARCH=win32 winecfg
+/usr/local/bin/winetricks --force pdh_nt4
+/usr/local/bin/winetricks --force vb6run
+/usr/local/bin/winetricks --force comdlg32ocx
+/usr/local/bin/winetricks --force comctl32ocx
+/usr/local/bin/winetricks --force vcrun2003
+/usr/local/bin/winetricks --force vcrun2005
+/usr/local/bin/winetricks --force vcrun2008
+/usr/local/bin/winetricks --force vcrun2010
+/usr/local/bin/winetricks --force corefonts
 ```
 
 ## Vara
