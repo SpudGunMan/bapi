@@ -29,7 +29,7 @@ INSTALL(){
         #wine already installed
         echo -e "INFORMATIONAL: wine already installed"
         action=$(yad --center --title "Question" --image "dialog-question" \
-            --button="ConfigWine:0" --button="Close:2" --text "Attempt winetricks configs?") return_code="${?:-'2'}"
+            --button="ConfigWine:0" --button="Close:2" --text "Attempt winetricks configs? (assume yes)") return_code="${?:-'2'}"
 
         if [ "$return_code" -eq 0 ]; then
 
