@@ -45,7 +45,7 @@ INSTALL(){
     mkdir build
     cd build
 
-    cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix -D CMAKE_INSTALL_PREFIX=${HOME}/jtdx2 ../
+    cmake -D CMAKE_PREFIX_PATH=~/hamlib-prefix -D -D WSJT_SKIP_MANPAGES=ON CMAKE_INSTALL_PREFIX=${HOME}/jtdx2 ../
 	sudo cmake --build . --target install -j$BAPCORE
 
     sudo make install/strip
