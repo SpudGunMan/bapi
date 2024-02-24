@@ -144,6 +144,9 @@ case "$distribution" in
             echo -e "WARNING: UNTESTED reasonably old, upgrade!:" | tee -a $BAP_ERROR_LOG
         fi
         ;;
+    pop)
+        ls > /dev/null #nothing yet
+        ;;
     *)
         echo -e "ERROR: Unsupported: $distribution $version you have a $arch with $cpu cores no plans currently"
         exit 1

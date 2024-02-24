@@ -34,8 +34,8 @@ In theory any Debian platform will work, however the only tested/customized plat
 - Cortex-A76 debian(rasp-os) 32/64bit Pi5
  
 ### x86_64
-- platforms on linuxmint and raspberryDesktopOS
-- ubuntu (report issues)
+- linuxmint and raspberryDesktopOS
+- ubuntu,pop (report issues please)
 
 ### Additional Requirements
 The project depends on yad which is a funny word for a GUI manager to give the menu some life in all the bashing about. All listed platforms have access to yad `sudo apt-get install -y yad git` will confirm if this script will function at all. Needless to say you also need a Radio Callsign!
