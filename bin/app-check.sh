@@ -68,6 +68,11 @@ done
 
 #rebuild app list file
 find apps/* -name '*.bapp' > $BAPAPPS_LIST_FILE
+#remove duplicates
+awk '!seen[$0]++' $BAPAPPS_LIST_FILE > $BAPAPPS_LIST_FILE.tmp
+mv $BAPAPPS_LIST_FILE.tmp $BAPAPPS_LIST_FILE
+rm -f $BAPAPPS_LIST_FILE.tmp
+
 echo -e "INFORMATIONAL: Updated $(cat $BAPAPPS_LIST_FILE | grep .bapp | wc -l) apps meta-data fields."
 
 #first boot checking
