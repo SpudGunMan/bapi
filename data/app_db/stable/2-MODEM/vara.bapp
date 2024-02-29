@@ -40,7 +40,7 @@ INSTALL(){
             /usr/local/bin/winetricks --force comdlg32ocx
             /usr/local/bin/winetricks --force comctl32ocx
             /usr/local/bin/winetricks --force vcrun2003
-            /usr/local/bin/winetricks --force vcrun2005
+            #/usr/local/bin/winetricks --force vcrun2005
             /usr/local/bin/winetricks --force vcrun2008
             /usr/local/bin/winetricks --force vcrun2010
             /usr/local/bin/winetricks --force corefonts
@@ -49,9 +49,14 @@ INSTALL(){
         if [ -d ${BAPSRC}/winelink/downloads.winlink.org ];then
             xdg-open ${BAPSRC}/winelink/downloads.winlink.org
         else
-            echo -e "INFORMATIONAL: MISSING VARA download folder"
+            #vara bins / download VARA
+            cd ${BAPSRC}/winelink
             echo -e "INFORMATIONAL: downloading vara and winlink binary"
             wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
+
+            yad --title="bAPi - vara installer" --center --button="OK" \
+            --text="Winlink and VARA binary need manually installed \n downloaded to ${BAPSRC}/winelink/downloads.winlink.org"
+            xdg-open ${BAPSRC}/winelink/downloads.winlink.org
         fi
 
         echo -e "INFORMATIONAL: Ideally everything works now but if not please report, good time to reboot"
@@ -98,7 +103,7 @@ INSTALL(){
             /usr/local/bin/winetricks --force comdlg32ocx
             /usr/local/bin/winetricks --force comctl32ocx
             /usr/local/bin/winetricks --force vcrun2003
-            /usr/local/bin/winetricks --force vcrun2005
+            #/usr/local/bin/winetricks --force vcrun2005
             /usr/local/bin/winetricks --force vcrun2008
             /usr/local/bin/winetricks --force vcrun2010
             /usr/local/bin/winetricks --force corefonts
