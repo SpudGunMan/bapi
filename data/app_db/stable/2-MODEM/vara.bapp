@@ -71,6 +71,7 @@ INSTALL(){
                     install Wine/Box in Pi-Apps Tools, Emulation, Box86(arm).\n \
                     This method of install may not work at the moment, please report any issues."
                 echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) run this again to configure"
+                cd ..
             fi
         else
             #x86
@@ -111,6 +112,7 @@ INSTALL(){
             xdg-open ${BAPSRC}/winelink/downloads.winlink.org
         else
             #vara bins / download VARA
+            cd ${BAPSRC}/winelink
             echo -e "INFORMATIONAL: downloading vara and winlink binary"
             wget -r -A "*.zip" 'https://downloads.winlink.org/VARA%20Products/'
 
