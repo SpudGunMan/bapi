@@ -70,10 +70,12 @@ INSTALL(){
 
     if [ "$return_code" -eq 0 ]; then
 		#alpha of FLRIG
-		RIGTAR=$(curl -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+		echo -e "INFORMATIONAL: installing FLRIG Alpha"
+		RIGTAR=$(curl -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/".*$//')
 		FLink=http://www.w1hkj.com/alpha/flrig/${RIGTAR}
 	else
 		#release of FLRIG
+		echo -e "INFORMATIONAL: installing FLRIG Release"
 		RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 		FLink=http://www.w1hkj.com/files/flrig/${RIGTAR}
 	fi
