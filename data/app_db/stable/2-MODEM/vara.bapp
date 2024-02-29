@@ -9,12 +9,6 @@ Author='spud'
 NOTE='installer script failure? please report'
 
 INSTALL(){
-    echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install cabextract
-    echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-    sudo apt-get -y install ttf-mscorefonts-installer
-
-
     cd ${BAPSRC}
     rm -rf winelink
     mkdir winelink
@@ -63,6 +57,11 @@ INSTALL(){
         echo -e "INFORMATIONAL: Ideally everything works now but if not please report, good time to reboot"
 
     else
+        echo -e "INFORMATIONAL: apt-get required packages"
+        sudo apt-get -y install cabextract
+        echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+        sudo apt-get -y install ttf-mscorefonts-installer
+        
         if [[ "$BAPCPU" == *"ar"* ]]; then
             #arm
             if [[ $(whereis pi-apps | grep bin) ]];then
