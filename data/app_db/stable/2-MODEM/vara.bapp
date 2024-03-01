@@ -61,7 +61,7 @@ INSTALL(){
         sudo apt-get -y install cabextract
         echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
         sudo apt-get -y install ttf-mscorefonts-installer
-        
+
         if [[ "$BAPCPU" == *"ar"* ]]; then
             #arm
             if [[ $(whereis pi-apps | grep bin) ]];then
@@ -77,6 +77,7 @@ INSTALL(){
                     This method of install may not work at the moment, please report any issues."
                 echo -e "INFORMATIONAL: Now go install Wine/Box in pi-apps Tools, Emulation, Box86(arm) run this again to configure"
                 cd ..
+                rm -rf pi-apps
             fi
         else
             #x86
