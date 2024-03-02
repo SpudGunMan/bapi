@@ -76,10 +76,10 @@ INSTALL(){
 	sudo /usr/share/pat/rigctld/install-systemd-rigctld-unit.bash
 
 	mkdir -p ${HOME}/.config/pat
-	cp $BAPDIR/data/pat-config.json ${HOME}/.config/pat/
-	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${MYCALL}\",/" ${HOME}/.config/pat/pat-config.json
-	#sed -i 's/enable_http\": false/enable_http\": true/' ${HOME}/.config/pat/pat-config.json
-	#sed -i 's/allow_forms\": false/allow_forms\": true/' ${HOME}/.config/pat/pat-config.json
+	cp $BAPDIR/data/pat-config.json ${HOME}/.config/pat/config.json
+	sed -i "s/\"mycall\": \".*\",/\"mycall\": \"${MYCALL}\",/" ${HOME}/.config/pat/config.json
+	#sed -i 's/enable_http\": false/enable_http\": true/' ${HOME}/.config/pat/config.json
+	#sed -i 's/allow_forms\": false/allow_forms\": true/' ${HOME}/.config/pat/config.json
 
 	sudo systemctl start pat@$BAPWHOAMI
 	sudo systemctl enable pat@$BAPWHOAMI
