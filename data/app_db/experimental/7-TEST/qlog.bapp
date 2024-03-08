@@ -1,0 +1,25 @@
+BAPP=4
+ID=Qlog
+Name=Qlog
+Comment='Qlog Logging Application'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/foldynl/QLog'
+Author='spud'
+NOTE='QLog from DEB'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages" >> errors/apt.log
+    sudo add-apt-repository ppa:foldyna/qlog >> errors/apt.log
+    sudo apt update >> errors/apt.log
+    sudo apt-get -y install qlog >> errors/apt.log
+}
+
+VERSION(){
+    if [[ $(whereis qlog | grep bin) ]];then
+        CURRENT=0-DEB
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-DEB
+}
