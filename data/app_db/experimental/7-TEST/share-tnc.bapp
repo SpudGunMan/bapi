@@ -14,7 +14,7 @@ INSTALL(){
         echo -e "INFORMATIONAL: found npx"
     else
         #curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
         sudo apt-get -y install nodejs >> errors/apt.log
         sudo npm install -g n >> errors/apt.log
         sudo n stable >> errors/apt.log
