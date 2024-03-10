@@ -44,7 +44,7 @@ INSTALL(){
     pip install numpy 
     pip install structlog 
     pip install sounddevice
-    pip3 install websockets-client
+    pip3 install websocket-client
 
     cd ${HOME}
 
