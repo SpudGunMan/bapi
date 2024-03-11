@@ -49,6 +49,8 @@ INSTALL(){
     pip3 install flask_cors
     pip3 install sqlalchemy
 
+    #npm install electron
+    #npm install vite
 
     cd ${HOME}
 
@@ -72,8 +74,8 @@ INSTALL(){
         sudo ln -s run_freedata.sh /usr/local/bin/freedata
 
         #set config.ini 
-        cp ${HOME}/FreeDATA/config.ini.example ${HOME}/FreeDATA/config.ini
-        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/config.ini"
+        cp ${HOME}/FreeDATA/modem/config.ini.example ${HOME}/FreeDATA/modem/config.ini
+        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/modem/config.ini"
     fi
 
 }
