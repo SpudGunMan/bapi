@@ -70,6 +70,10 @@ INSTALL(){
         echo -e "npm start" >> run_freedata.sh
         chmod +x run_freedata.sh
         sudo ln -s run_freedata.sh /usr/local/bin/freedata
+
+        #set config.ini 
+        cp ${HOME}/FreeDATA/config.ini.example ${HOME}/FreeDATA/config.ini
+        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/config.ini"
     fi
 
 }
