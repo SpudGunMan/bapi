@@ -49,9 +49,6 @@ INSTALL(){
     pip3 install flask_cors
     pip3 install sqlalchemy
 
-    #npm install electron
-    #npm install vite
-
     cd ${HOME}
 
     if [ -d FreeDATA ];then
@@ -61,8 +58,7 @@ INSTALL(){
         git clone https://github.com/DJ2LS/FreeDATA -o FreeDATA
         cd FreeDATA
         cd gui
-
-        npm i
+        npm i --force
 
         cd ..
         echo -e "#!/bin/bash" > run_freedata.sh
