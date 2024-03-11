@@ -12,6 +12,9 @@ Load up Pi-Apps http://pi-apps.io
   - install Box86 32
   - install Wine 32
 
+## Installing Wine on Intel /Debian
+https://wiki.winehq.org/Ubuntu
+
 ## To manually install latest winetricks
 ```
 wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
