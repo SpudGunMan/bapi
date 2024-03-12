@@ -26,11 +26,11 @@ for bappfile in $BAPAPPS_FILES_LOC; do
         grep -m 1 -e '^[[:blank:]]*VerLocal' $bappfile | cut -d = -f 2
         grep -m 1 -e '^[[:blank:]]*LOC' $bappfile | cut -d = -f 2
     fi
-done | yad --width=1150 --height=650 --title="Build-A-Pi mark II - The leading edge Ham Radio Software Package Manager - $BAPCALL" --image="gtk-execute" \
+done | yad 2> /dev/null --width=1150 --height=650 --title="Build-A-Pi mark II - The leading edge Ham Radio Software Package Manager - $BAPCALL" --image="gtk-execute" \
             --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"' \
             --column="" --column="ID" --column="App" --column="description" --column="available version" --column="installed version" --column="source"\
             --text="Select package to install. you can sort, or search by typing. <b>Double click for package notes and support details.</b> Detected: $BAPARCH bit $BAPDIST" --button="Nope":1 --button="Lets Go!":2 | \
-           grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE 2> /dev/null
+           grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
 
 wait
 unset BAP_CONFIG_MENU
