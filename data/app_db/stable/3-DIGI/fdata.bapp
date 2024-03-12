@@ -35,6 +35,10 @@ INSTALL(){
     sudo apt-get -y install python3-numpy >> errors/apt.log
     sudo apt-get -y install python3-structlog >> errors/apt.log
     sudo apt-get -y install python3-sounddevice >> errors/apt.log
+    sudo apt-get -y install python3-websocket >> errors/apt.log
+    sudo apt-get -y install python3-flask >> errors/apt.log
+    sudo apt-get -y install python3-flask-cors >> errors/apt.log
+    sudo apt-get -y install python3-sqlalchemy >> errors/apt.log
 
     pip3 install psutil 
     pip3 install crcengine 
