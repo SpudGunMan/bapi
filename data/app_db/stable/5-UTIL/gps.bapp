@@ -23,7 +23,7 @@ INSTALL(){
     # Detect cortex chip (ARM's)
     if [[ "$BAPCPU" == *"ar"* ]]; then 
         #I found that on the raspberry pi - KM4ACK
-        pip3 uninstall serial
+        pip3 uninstall serial --break-system-packages
         #line below added per this issue - https://github.com/km4ack/pi-build/issues/146 24SEPT2020
         sudo ln -s /lib/systemd/system/gpsd.service /etc/systemd/system/multi-user.target.wants/
     fi
