@@ -36,18 +36,33 @@ INSTALL(){
 	sudo apt-get -y install python3-feedparser >> errors/apt.log
 	sudo apt-get -y install python-gi-dev >> errors/apt.log
 
-	pip install Pillow
-	pip install geopy
-	pip install pycairo
-	pip install PyGObject
-	pip install pyserial
-	pip install simplejson
-	pip install feedparser
-	pip install libxml2
-	pip install flask
-	pip install gevent
-	pip install gevent-socketio
-	pip install greenlet
+	if [[ "$BAPCPU" == *"ar"* ]]; then
+		pip install Pillow --break-system-packages
+		pip install geopy --break-system-packages
+		pip install pycairo --break-system-packages
+		pip install PyGObject --break-system-packages
+		pip install pyserial --break-system-packages
+		pip install simplejson --break-system-packages
+		pip install feedparser --break-system-packages
+		pip install libxml2 --break-system-packages
+		pip install flask --break-system-packages
+		pip install gevent --break-system-packages
+		pip install gevent-socketio --break-system-packages
+		pip install greenlet --break-system-packages
+	else
+		pip install Pillow
+		pip install geopy
+		pip install pycairo
+		pip install PyGObject
+		pip install pyserial
+		pip install simplejson
+		pip install feedparser
+		pip install libxml2
+		pip install flask
+		pip install gevent
+		pip install gevent-socketio
+		pip install greenlet
+	fi
 
  	if [ -f ${HOME}/D-Rats/d-rats.py ] ; then
  		echo "updating D-rats"
