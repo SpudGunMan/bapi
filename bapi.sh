@@ -52,7 +52,7 @@ if [ $DEBUG -eq 1 ];then echo -e "DEBUG: ON: additional tools:   touch .skip-dev
 
 YAD_INFO_F(){
     msg_txt=${1:-'dialog box'}
-    yad --title="bAPi" --center --button="OK" --text="$msg_txt"
+    yad 2> /dev/null --title="bAPi" --center --button="OK" --text="$msg_txt"
 }
 
 #####################################
