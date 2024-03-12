@@ -10,8 +10,8 @@ NOTE='this will install java and the jre packages'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get install -y librxtx-java >> errors/apt.log
-	sudo apt-get install -y openjdk-10-dbg >> errors/apt.log
+	sudo apt-get install -y default-jdk >> errors/apt.log
+	sudo apt-get install -y librxtx-java >> errors/apt.log
 
     cd ${BAPSRC}
 	rm -rf yaac
