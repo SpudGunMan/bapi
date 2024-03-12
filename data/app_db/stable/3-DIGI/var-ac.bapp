@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3='https://www.varac-hamradio.com'
 Author='spud'
-NOTE='stand alone installer for wheezy winelink and varac'
+NOTE='DEPRICATED'
 
 INSTALL(){
     cd ${BAPSRC} || return
