@@ -165,7 +165,7 @@ mkdir -p ${HOME}/.config/autostart
 
 #####################################
 #   set the station call sign, if youre here to snip this remember to give credit for the rest!
-N0CALL=$(yad --form --width=420 --text-align=center --center \
+N0CALL=$(yad 2> /dev/null --form --width=420 --text-align=center --center \
     --title="Amature Radio Callsign Required" --center --image="gtk-execute" \
     --field="Call Sign" \
     --field="<b>Required</b>":LBL \
@@ -203,7 +203,7 @@ BAPDIST=$distribution
 # Show once dialog and profile selections
 list="Default-Chosen EM1COM APRS Skip-Installing-DEV-tools"
 until [ "$select" = "8" ]; do
-        action=$(yad --form --width=420 --height=200 --fixed --center --entry --title="Welcome!" \
+        action=$(yad 2> /dev/null --form --width=420 --height=200 --fixed --center --entry --title="Welcome!" \
         --image=data/ico/logo.png --image-on-top --text-align=fill --button="gtk-ok" \
         --text="\n<b>$MYCALL DE K7MHI</b> \n
         Welcome to the new and improved.. \n
