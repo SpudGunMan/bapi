@@ -32,8 +32,8 @@ In theory any Debian platform will work, however the only tested/customized plat
 
 ### ARM
 - Cortex-A53 raspian 32bit Pi3
-- Cortex-A72 debian(rasp-os) 32/64bit Pi4
-- Cortex-A76 debian(rasp-os) 32/64bit Pi5
+- Cortex-A72 debian(rasp-os) 32/64bit Pi4 (there is more stability with the 32bit OS)
+- Cortex-A76 debian(rasp-os) 32/64bit Pi5 (there appears to be some speed advantages to 64bit OS)
  
 ### x86_64
 - linuxmint and raspberryDesktopOS
