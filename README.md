@@ -2,7 +2,7 @@
 
 **PLEASE NOTE**
 March2024
-- bookworm and wayland are possible problems for WSJT, Xastir
+- bookworm and wayland are possible problems for WSJT, Xastir, Conky
   - switch back to [X11](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland) or revert to buster
   - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
   - conky needs review of the following in .conkyrc `out_to_wayland = true,`
