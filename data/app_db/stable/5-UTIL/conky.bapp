@@ -17,6 +17,11 @@ INSTALL(){
 	sudo touch /var/lib/misc/dnsmasq.leases
 	touch /run/user/1000/gridinfo.txt
 
+	wget https://raw.githubusercontent.com/SpudGunMan/SpudGunMan/main/pota-scripts/potactivate.sh
+	chmod +x potactivate.sh
+	sudo mv potactivate.sh ${HOME}/gpsd2ham/potactivate.sh
+
+
 	cp $BAPDIR/data/conky/conky-7inch ${HOME}/.conkyrc
 	sed -i "s/N0CALL/${MYCALL}/" ${HOME}/.conkyrc
 	
