@@ -9,8 +9,8 @@ switch to 4k-page
 Load up Pi-Apps http://pi-apps.io
 - `wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash`
 - Use the Pi-Apps GUI navigate to Tools->Emulation
+  - install Wine32 but 64 might be the only option
   - install Box86 32
-  - install Wine 32
 
 ## Installing Wine on Intel /Debian
 https://wiki.winehq.org/Ubuntu
