@@ -62,7 +62,7 @@ WINEARCH=win32 winecfg
 # VarAC
 - needs a free login get it from https://www.varac-hamradio.com/downloadlinux
 
-- remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
+- remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` .net crash seems to happen with it ON
   - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=OFF/' ~/.wine/drive_c/VarAC/VarAC.ini`
   - [possible missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) its unclear why they are not being used by varac.
     - VarAC isn't loading well in older wine recommend version 8 or higher the "linux mode" causes a debug crash for missing font.
