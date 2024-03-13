@@ -12,6 +12,8 @@ Load up Pi-Apps http://pi-apps.io
   - install Wine32 but 64 might be the only option
   - install Box86 32
 
+The pi-apps project is adding a lot which isnt helping our minimal needs, you might want to delete the .wine folder created and build a new one with winecfg
+
 ## Installing Wine on Intel /Debian
 https://wiki.winehq.org/Ubuntu
 
@@ -23,7 +25,7 @@ sudo mv -v winetricks /usr/local/bin
 ```
 ## Configure Wine
 - Install DLL with winetricks by running "winetricks" from CLI
-  - You may want to run `WINEARCH=win32 winetricks` to set it up the first time
+  - You may want to run `WINEARCH=win32 winetricks` to set it up the first time, on ARM64 wow64 it will fail
   - press OK for 'default prefix'
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
@@ -36,11 +38,7 @@ WINEARCH=win32 winecfg
 /usr/local/bin/winetricks --force vb6run
 /usr/local/bin/winetricks --force comdlg32ocx
 /usr/local/bin/winetricks --force comctl32ocx
-/usr/local/bin/winetricks --force vcrun2003
-/usr/local/bin/winetricks --force vcrun2005
-/usr/local/bin/winetricks --force vcrun2008
 /usr/local/bin/winetricks --force vcrun2010
-/usr/local/bin/winetricks --force corefonts
 ```
 
 ## Vara
