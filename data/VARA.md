@@ -1,18 +1,19 @@
 
-## To manually install Box/Wine on a Pi
+# To manually install Box/Wine on a Pi
+
+## Pi4 or 5 tip for stability March2023
+wine-wow64 isnt helpfull for vara.exe a 32bit app
+
+RECOMEND: use a 32bit OS image to cheat
 
 ## Pi5 only 16K pagesize incompatible with wine/box
 - https://github.com/raspberrypi/bookworm-feedback/issues/107
  
-switch to 4k-page
+switch to 4k-page (pi-apps will do this for you)
 - add `kernel=kernel8.img` to /boot/config.txt
 - reboot
 
-## Pi4 or 5 tip for stability March2023
-wine-wow64 isnt helpfull for vara.exe a 32bit app
-RECOMEND: use a 32bit OS image to cheat
-
-# Pi4 or 5 to load box 86
+## Pi4 or 5 to load box 86
 Load up Pi-Apps http://pi-apps.io
 - `wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash`
 - Use the Pi-Apps GUI navigate to Tools->Emulation
@@ -21,7 +22,7 @@ Load up Pi-Apps http://pi-apps.io
 
 the .wine folder they build for you is bloated you may consider deleting it and starting fresh
 
-## Installing Wine on Intel /Debian
+# Installing Wine on Intel /Debian - Start here for non pi
 https://wiki.winehq.org/Ubuntu
 
 ## To manually install latest winetricks
