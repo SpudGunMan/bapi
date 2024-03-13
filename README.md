@@ -2,7 +2,7 @@
 
 **PLEASE NOTE**
 March2024
-- bookworm and wayland are problems for Conky, WSJT, Xastir
+- bookworm and wayland are possible problems for Conky, WSJT, Xastir
   - switch back to [X11](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland) or revert to buster
   - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
 - VARA and winlink varac RMS etc, install [manually](data/VARA.md) the [Wheezy/WineLink](https://github.com/WheezyE/Winelink/issues/72) is offline at the moment
