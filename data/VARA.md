@@ -4,7 +4,7 @@ Box enables x86 binary to run on arm, wine enables windows to run in linux
 ## Pi4 or 5 tip for stability March2023
 wine64-wow64 isnt helpfull for vara.exe, a 32bit app
 
-RECOMEND: use a 32bit OS image to get up and running quickly with these tips.
+RECOMMEND: use a 32bit OS image to get up and running quickly with these tips.
 
 ## Pi5 only 16K pagesize incompatible with wine/box
 - https://github.com/raspberrypi/bookworm-feedback/issues/107
@@ -24,8 +24,6 @@ If you only see 64bit, you cant use this method and you need to look at installi
 
 # Installing Wine on Intel /Debian
 Reference the following https://wiki.winehq.org/Ubuntu
-
-
 
 ## Configure Wine
 ## To manually install latest winetricks
@@ -63,9 +61,8 @@ WINEARCH=win32 winecfg
 
 ## VarAC
 - needs a free login get it from https://www.varac-hamradio.com/downloadlinux
-- [missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) they are not installed as part of this tool yet
 
 - remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
-  - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=ON/' ~/.wine/drive_c/VarAC/VarAC.ini`
-
-- VarAC isn't loading well in older wine recommend version 8 or higher
+  - `sed -i 's/LinuxCompatibleMode=OFF/LinuxCompatibleMode=OFF/' ~/.wine/drive_c/VarAC/VarAC.ini`
+  - [possible missing fonts?](https://github.com/SpudGunMan/segoe-ui-linux) its unclear why they are not being used by varac.
+    - VarAC isn't loading well in older wine recommend version 8 or higher the "linux mode" causes a debug crash for missing font.
