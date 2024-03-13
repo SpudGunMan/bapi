@@ -1,10 +1,10 @@
-
 # To manually install Box/Wine on a Pi
+Box enables x86 binary to run on arm, wine enables windows to run in linux
 
 ## Pi4 or 5 tip for stability March2023
-wine-wow64 isnt helpfull for vara.exe a 32bit app
+wine64-wow64 isnt helpfull for vara.exe, a 32bit app
 
-RECOMEND: use a 32bit OS image to cheat
+RECOMEND: use a 32bit OS image to get up and running quickly with these tips.
 
 ## Pi5 only 16K pagesize incompatible with wine/box
 - https://github.com/raspberrypi/bookworm-feedback/issues/107
@@ -20,20 +20,23 @@ Load up Pi-Apps http://pi-apps.io
   - install Wine 32bit
   - install Box86 32bit
 
-the .wine folder they build for you is bloated you may consider deleting it and starting fresh
+If you only see 64bit, you cant use this method and you need to look at installing box32 and wine32 on the OS which at this time, isnt documented here. 
 
-# Installing Wine on Intel /Debian - Start here for non pi
-https://wiki.winehq.org/Ubuntu
+# Installing Wine on Intel /Debian
+Reference the following https://wiki.winehq.org/Ubuntu
 
+
+
+## Configure Wine
 ## To manually install latest winetricks
 ```
 wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
 chmod +x winetricks 
 sudo mv -v winetricks /usr/local/bin
 ```
-## Configure Wine
+
 - Install DLL with winetricks by running "winetricks" from CLI
-  - You may want to run `WINEARCH=win32 winetricks` to set it up the first time, on ARM64 wow64 it will fail
+  - You may want to run `WINEARCH=win32 winetricks` to set it up the first time, on wow64 it will fail
   - press OK for 'default prefix'
   - choose install a DLL or component
   - Select some needed DLL and press OK to install
