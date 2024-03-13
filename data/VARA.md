@@ -25,7 +25,7 @@ If you only see 64bit, you cant use this method and you need to look at installi
 # Installing Wine on Intel /Debian
 Reference the following https://wiki.winehq.org/Ubuntu
 
-## Configure Wine
+# Configure Wine
 ## To manually install latest winetricks
 ```
 wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
