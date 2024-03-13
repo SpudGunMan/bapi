@@ -6,13 +6,6 @@ wine64-wow64 isnt helpfull for vara.exe, a 32bit app
 
 RECOMMEND: use a 32bit OS image to get up and running quickly with these tips.
 
-## Pi5 only 16K pagesize incompatible with wine/box
-- https://github.com/raspberrypi/bookworm-feedback/issues/107
- 
-switch to 4k-page (pi-apps will do this for you)
-- add `kernel=kernel8.img` to /boot/config.txt
-- reboot
-
 ## Pi4 or 5 to load box 86
 Load up Pi-Apps http://pi-apps.io
 - `wget -qO- https://raw.githubusercontent.com/Botspot/pi-apps/master/install | bash`
@@ -21,6 +14,13 @@ Load up Pi-Apps http://pi-apps.io
   - install Box86 32bit
 
 If you only see 64bit, you cant use this method and you need to look at installing box32 and wine32 on the OS which at this time, isnt documented here. 
+
+## Pi5 only 16K pagesize incompatible with wine/box
+- https://github.com/raspberrypi/bookworm-feedback/issues/107
+ 
+switch to 4k-page (pi-apps will do this for you)
+- add `kernel=kernel8.img` to /boot/config.txt
+- reboot
 
 # Installing Wine on Intel /Debian
 Reference the following https://wiki.winehq.org/Ubuntu
