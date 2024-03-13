@@ -39,6 +39,7 @@ INSTALL(){
     sudo apt-get -y install python3-flask >> errors/apt.log
     sudo apt-get -y install python3-flask-cors >> errors/apt.log
     sudo apt-get -y install python3-sqlalchemy >> errors/apt.log
+    sudo apt-get -y install python3-flask_socketio >> errors/apt.log
 
     if [[ "$BAPCPU" == *"ar"* ]]; then
         pip3 install psutil --break-system-packages
@@ -49,10 +50,10 @@ INSTALL(){
         pip3 install structlog --break-system-packages
         pip3 install sounddevice --break-system-packages
         pip3 install websocket-client --break-system-packages
-        pip3 install flask_socket --break-system-packages
         pip3 install flask --break-system-packages
         pip3 install flask_cors --break-system-packages
         pip3 install sqlalchemy --break-system-packages
+        pip3 install flask_sock --break-system-packages
     else
         pip3 install psutil 
         pip3 install crcengine 
@@ -62,7 +63,7 @@ INSTALL(){
         pip3 install structlog 
         pip3 install sounddevice
         pip3 install websocket-client
-        pip3 install flask_socket
+        pip3 install flask_sock
         pip3 install flask
         pip3 install flask_cors
         pip3 install sqlalchemy
