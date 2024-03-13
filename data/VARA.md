@@ -50,7 +50,7 @@ WINEARCH=win32 winecfg
 /usr/local/bin/winetricks --force vcrun2010
 ```
 
-## Vara
+# Vara
 - Download Vara, WinLink bundle
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
 
@@ -59,7 +59,7 @@ WINEARCH=win32 winecfg
 
 - [https://github.com/islandmagic/varanny](https://github.com/islandmagic/varanny)
 
-## VarAC
+# VarAC
 - needs a free login get it from https://www.varac-hamradio.com/downloadlinux
 
 - remember to validate your VarAC.ini and disable `LinixCompatibleMode=OFF` liklely misplaced in ~/
