@@ -31,9 +31,11 @@ A major fork of this build changes the architecture into a .bapp file for each a
 In theory any Debian platform will work, however the only tested/customized platforms so far. but if you still have python2 as a functioning system or using a distro with python2 .. its getting too old man..
 
 ### ARM
+There is more stability with the 32bit OS, there appears to be some speed advantages to 64bit OS
+
 - Cortex-A53 raspian 32bit Pi3
-- Cortex-A72 debian(rasp-os) 32/64bit Pi4 (there is more stability with the 32bit OS)
-- Cortex-A76 debian(rasp-os) 32/64bit Pi5 (there appears to be some speed advantages to 64bit OS)
+- Cortex-A72 debian(rasp-os) 32/64bit Pi4
+- Cortex-A76 debian(rasp-os) 32/64bit Pi5
  
 ### x86_64
 - linuxmint and raspberryDesktopOS
