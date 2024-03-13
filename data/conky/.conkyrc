@@ -35,7 +35,7 @@ conky.config = {
 
 conky.text = [[
 
-${font Arial:bold:size=20}${color Orange}${alignc}BUILD-A-PI
+${font Arial:bold:size=20}${color Orange}${alignc}N0CALL
 
 ${voffset -30}
 ${font Arial:bold:size=15}${color White}Gridsquare ${alignr}${color Yellow}${execi 60 cat /run/user/1000/gridinfo.txt | cut -c1-8}
