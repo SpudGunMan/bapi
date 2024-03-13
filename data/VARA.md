@@ -50,6 +50,10 @@ WINEARCH=win32 winecfg
 /usr/local/bin/winetricks --force vcrun2010
 ```
 
+## Serial Ports
+wine regedit
+`HKEY_LOCAL_MACHINE\Software\Wine\Ports` add a new `String Value` for example of: `COM1` and the value `/dev/ttyUSB0`
+
 # Vara
 - Download Vara, WinLink bundle
   - `wget -r -A "*.zip" 'https://downloads.winlink.org/'`
