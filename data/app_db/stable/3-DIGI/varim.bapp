@@ -4,7 +4,7 @@ Name=vARIM
 Comment='Vara AR-IM'
 VerLocal=0
 VerRemote=0
-W3=''
+W3='https://www.whitemesa.net/varim/varim.html'
 Author='spud'
 NOTE='needs VARA modem but not required'
 
@@ -14,9 +14,9 @@ INSTALL(){
 	sudo apt-get install -y libfltk1.1-dev  >> errors/apt.log
 	sudo apt-get install -y libfltk1.3-dev  >> errors/apt.log
     
-	VPKG=$(curl -s https://www.whitemesa.net/varim/src/ | grep tar.gz | tail -1 | sed 's/^.*varim/varim/' | sed 's/tar.gz.*$/tar.gz/')
+	VPKG=$(curl --max-time 20 -s https://www.whitemesa.net/varim/varim.html | grep -m 1 "armv7l.tar.gz" | awk -F '-' '{print $2}')
 
-	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/$VPKG
+	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/varim-$VPKG.tar.gz
 	tar -xzvf $VPKG
     rm *.gz
 	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
