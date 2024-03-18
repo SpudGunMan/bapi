@@ -7,7 +7,7 @@ VerRemote=0
 W3='https://gridtracker.org'
 Author='spud'
 
-NOTE='commonly has download issues needs NWJS a 1.3GB package FYI'
+NOTE='via custom repro needs NWJS a 1.3GB package FYI'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
@@ -18,64 +18,9 @@ INSTALL(){
 	mkdir gridtracker
 	cd gridtracker
 
-	# https://gitlab.com/gridtracker.org/gridtracker/-/releases scrape the version number
-	ver=1.23.040
-	echo -e "INFORMATIONAL: GridTracker version $ver"
-
-	arm64=https://downloads.gridtracker.org/v1.24.0104/GridTracker-1.24.0104-linux-x64.tar.gz
-	arm32=https://downloads.gridtracker.org/v1.24.0104/GridTracker-1.24.0104-linux-x86.tar.gz
-	deb=https://downloads.gridtracker.org/v1.24.0104/gridtracker_1.24.0104_all.deb
-
-	# Download gridtracker binary
-    if [[ "$BAPCPU" == *"ar"* ]]; then
-      if [ `getconf LONG_BIT` = '32' ]; then
-        wget --quiet --tries 2 --connect-timeout=60 $arm32 -O GridTracker.tar.gz
-      else
-        wget --quiet --tries 2 --connect-timeout=60 $arm64 -O GridTracker.tar.gz
-      fi
-    else
-		    wget --quiet --tries 2 --connect-timeout=60 $deb -O GridTracker.tar.gz
-	    fi
-
-	######install nwjs
-	# https://github.com/nwjs/npm-installer
-	# https://nwjs.io/downloads/
-	# https://github.com/LeonardLaszlo/nw.js-armv7-binaries
-	
-	#nwjs_status=$(dpkg -s nwjs-downloader | grep 'install ok installed')
-
-	#if [[ "$nwjs_status" == *"install ok"* ]]; then
-	#	echo -e "INFORMATIONAL: node-webkit Node.js found installed"
-	#else
-	#	echo -e "INFORMATIONAL: node-webkit Node.js instaling 1.3GB download"
-
-	#	wget  --quiet --connect-timeout=30 https://downloads.gridtracker.org/nwjs-downloader/v0.68.1-5/nwjs-downloader_0.68.1-1_all.deb
-	#	sudo dpkg -i nwjs-downloader_0.68.1-1_all.deb
-	#fi
-
-	# get gridtracker
-	if [[ "$BAPCPU" == *"ar"* ]]; then
-		echo -e "INFORMATIONAL: PI install unpacking archives"
-		tar -xzvf GridTracker.tar.gz > /dev/null 2>&1
-		rm -f *.tar.gz
-		mv GridTracker-* GridTracker
-
-		if [ -d "${HOME}/GridTracker" ];then
-			echo -e "INFORMATIONAL: GridTracker into ${HOME} exists replacing"
-			mv ${HOME}/GridTracker ./GridTracker.bak
-			cp -r GridTracker/ ${HOME}
-			sudo ln -fns ${HOME}/GridTracker/GridTracker /usr/local/bin/GridTracker
-		else
-			echo -e "INFORMATIONAL: installing into ${HOME}"
-			cp -r GridTracker/ ${HOME}
-		fi
-		echo $ver > ${HOME}/GridTracker/GridTrackerVersion.txt
-	else
-		#not-a-PI
-		echo -e "INFORMATIONAL: DEB install package"
-		grid_status=$(dpkg -s gridtracker | grep 'install ok installed')
-		sudo dpkg -i gridtracker*.deb
-	fi
+	curl  https://debian.gridtracker.org/gridtracker_deb_install.sh | sudo bash
+	sudo apt-get update >> errors/apt.log
+	sudo apt-get install -y gridtracker
 }
 
 VERSION(){
@@ -84,7 +29,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER='0-web'
+    NEWVER='0-deb'
 }
 
 DEPENDS(){
