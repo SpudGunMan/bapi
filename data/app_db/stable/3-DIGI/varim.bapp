@@ -9,11 +9,11 @@ Author='spud'
 NOTE='needs VARA modem but not required'
 
 INSTALL(){
-    cd ${BAPSRC} || return
 	echo -e "INFORMATIONAL: apt-get required packages"
 	sudo apt-get install -y libfltk1.1-dev  >> errors/apt.log
 	sudo apt-get install -y libfltk1.3-dev  >> errors/apt.log
-
+	
+	cd ${BAPSRC} || return
 	rm -rf varim
 	mkdir -p varim
 	cd varim || return
