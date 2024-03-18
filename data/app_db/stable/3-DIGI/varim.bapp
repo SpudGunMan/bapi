@@ -17,7 +17,7 @@ INSTALL(){
 	VPKG=$(curl --max-time 20 -s https://www.whitemesa.net/varim/varim.html | grep -m 1 "armv7l.tar.gz" | awk -F '-' '{print $2}')
 
 	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/varim-$VPKG.tar.gz
-	tar -xzvf $VPKG
+	tar -xzvf varim-$VPKG.tar.gz
     rm *.gz
 	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
 	cd ${DIRR} || return
