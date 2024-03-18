@@ -13,14 +13,17 @@ INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
 	sudo apt-get install -y libfltk1.1-dev  >> errors/apt.log
 	sudo apt-get install -y libfltk1.3-dev  >> errors/apt.log
+
+	rm -rf varim
+	mkdir -p varim
+	cd varim || return
     
 	VPKG=$(curl --max-time 20 -s https://www.whitemesa.net/varim/varim.html | grep -m 1 "armv7l.tar.gz" | awk -F '-' '{print $2}')
 
 	wget --tries 2 --connect-timeout=60 https://www.whitemesa.net/varim/src/varim-$VPKG.tar.gz
 	tar -xzvf varim-$VPKG.tar.gz
     rm *.gz
-	DIRR=$(echo $VPKG | sed 's/.tar.gz//')
-	cd ${DIRR} || return
+	cd varim-$VPKG
 	./configure
 	make -j$BAPCORE
 	sudo make install
