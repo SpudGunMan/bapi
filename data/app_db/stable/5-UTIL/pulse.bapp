@@ -12,6 +12,7 @@ INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get -y install pulseaudio >> errors/apt.log
     sudo apt-get -y install pavucontrol >> errors/apt.log
+    sudo apt-get -y install paprefs >> errors/apt.log
 
     echo -e "INFORMATIONAL: pulseaudio building virtual audio synk"
     pacmd load-module module-null-sink sink_name=Virtual_Sink sink_properties=device.description=Virtual_Sink
