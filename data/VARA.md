@@ -2,7 +2,8 @@
 Box enables x86 binary to run on arm, wine enables windows to run in linux
 
 ## Pi4 or 5 tip for stability March2023
-wine64-wow64 isnt helpfull for vara.exe, a 32bit app
+- wine64-wow64 isnt helpfull for vara.exe, a 32bit app
+- recomend using X11 not wayland [its easy](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland)
 
 RECOMMEND: use a 32bit OS image to get up and running quickly with these tips.
 

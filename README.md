@@ -2,12 +2,14 @@
 
 **PLEASE NOTE**
 March2024
-- raspian bookworm (pi5) and wayland are possible problems for WSJT, Xastir, Conky, GridTracker
+- raspian bookworm (pi5/pi4) and wayland are possible problems for WSJT, Xastir, Conky, GridTracker
   - switch back to [X11](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland) or revert to buster
   - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
   - conky needs review of the following in .conkyrc `out_to_wayland = true,`
   - ubuntu on Pi5 is an option (offical pi-image tool, other general purpose OS menu option)
-- VARA and winlink varac RMS etc, install [manually](data/VARA.md) the [Wheezy/WineLink](https://github.com/WheezyE/Winelink/issues/72) is offline at the moment
+- VARA and winlink varac RMS etc, install [manually](data/VARA.md)
+  - wine works better with X11 still
+  - the [Wheezy/WineLink](https://github.com/WheezyE/Winelink/issues/72) is offline at the moment
 
 Reminder
 - no .desktop files yet for most things (no menu icons)
