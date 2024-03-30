@@ -15,8 +15,10 @@ INSTALL(){
     sudo apt-get -y install qt6-declarative-dev >> errors/apt.log
     sudo apt-get -y install libgl1-mesa-dev >> errors/apt.log
     sudo apt-get -y install qt6-serialport-dev >> errors/apt.log
+    sudo apt-get -y install qt6serialport6-dev >> errors/apt.log
     sudo apt-get -y install qt6-positioning-dev >> errors/apt.log
     sudo apt-get -y install qt6-charts-dev >> errors/apt.log
+    sudo apt-get -y install qt6charts6-dev >> errors/apt.log
     sudo apt-get -y install qt6-l10n-tools >> errors/apt.log
 
     #sudo apt-get -y install qt5-qmake >> errors/apt.log
