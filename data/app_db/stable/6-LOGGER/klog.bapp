@@ -49,8 +49,9 @@ INSTALL(){
     cd ${BAPSRC} || return
     sudo rm -rf klog
     git clone https://github.com/ea4k/klog
-    cd klog
-    qmake QT_SELECT=qt5 PREFIX=/usr/local KLog.pro
+    cd klog/src
+    qmake6 PREFIX=/usr/local src.pro
+    #qmake QT_SELECT=qt5 PREFIX=/usr/local KLog.pro
     make -j$BAPCORE
     sudo make install
 
