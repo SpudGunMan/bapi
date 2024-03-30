@@ -104,19 +104,28 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install pkg-config
     sudo apt-get -y install libboost-all-dev
 
-    #qt suite
-    sudo apt-get -y install qtchooser 
-    sudo apt-get -y install qtbase5-dev-tools 
+    #qt5 suite
     sudo apt-get -y install qt5-qmake
     sudo apt-get -y install libqt5core5a
+    sudo apt-get -y install qtchooser 
+    sudo apt-get -y install qtbase5-dev-tools
     sudo apt-get -y install qtbase5-dev
+    sudo apt-get -y install libqt5xml5
+    sudo apt-get -y install qttools5-dev
+
     sudo apt-get -y install libqt5serialport5 
     sudo apt-get -y install libqt5serialport5-dev
     sudo apt-get -y install libqt5multimedia5
     sudo apt-get -y install libqt5multimedia5-plugins
-    sudo apt-get -y install libqt5xml5
     sudo apt-get -y install qtmultimedia5-dev
-    sudo apt-get -y install qttools5-dev
+
+    #qt6 suite
+    #sudo apt-get -y install qmake6
+    #sudo apt-get -y install qt6-base-dev
+    #sudo apt-get -y install qt6-declarative-dev
+    #sudo apt-get -y install qt6-serialport-dev
+    #sudo apt-get -y install qt6serialport6-dev
+    
 
     #port audio and such
     sudo apt-get -y install libportaudio2 
