@@ -39,7 +39,7 @@ INSTALL(){
 	if [[ "$BAPCPU" == *"ar"* ]]; then
         wget --tries 2 --connect-timeout=60 $PiLink
         chmod +x piQtSoundModem
-        cp piQtSoundModem ~/QTSoundModem
+        cp piQtSoundModem ~/QtSoundModem
     else
         wget --tries 2 --connect-timeout=60 $dl
         if [ -f QtSMSource.zip ];then
@@ -48,7 +48,7 @@ INSTALL(){
             cd QtSoundModem
             qmake
             make
-            cp QtSoundModem ~/QTSoundModem
+            cp QtSoundModem ~/QtSoundModem
         fi
 
     fi
