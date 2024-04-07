@@ -18,7 +18,7 @@ INSTALL(){
 
     action=$(yad --center --title "Question" --image "dialog-question" \
         --button="Beta:0" --button="Stable:2" \
-        --text "Try using beta?")
+        --text "Try using beta? sometimes its the only one available" \)
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
@@ -28,7 +28,7 @@ INSTALL(){
 	else
         echo -e "INFORMATIONAL: Normal Branch"
 		PiLink="http://www.cantab.net/users/john.wiseman/Downloads/piQtSoundModem"
-		dl="https://www.cantab.net/users/john.wiseman/Downloads/QtSoundModem.zip"
+		dl="https://www.cantab.net/users/john.wiseman/Downloads/QtSMSource.zip"
 	fi
 
     cd ${BAPSRC} || return
@@ -46,15 +46,6 @@ INSTALL(){
             unzip QtSMSource.zip
             rm QtSMSource.zip
             cd QtSoundModem
-            qmake
-            make
-            cp QtSoundModem ~/QTSoundModem
-        fi
-
-        if [ -f QtSoundModem.zip ];then
-            unzip QtSoundModem.zip
-            rm QtSoundModem.zip
-            cd Release
             qmake
             make
             cp QtSoundModem ~/QTSoundModem
