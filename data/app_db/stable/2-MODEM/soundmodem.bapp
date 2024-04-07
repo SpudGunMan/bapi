@@ -18,7 +18,7 @@ INSTALL(){
 
     action=$(yad --center --title "Question" --image "dialog-question" \
         --button="Beta:0" --button="Stable:2" \
-        --text "Try using beta? sometimes its the only one available" \)
+        --text "Try using beta? sometimes its the only one available")
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
