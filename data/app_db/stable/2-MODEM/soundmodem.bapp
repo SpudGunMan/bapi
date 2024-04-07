@@ -37,21 +37,14 @@ INSTALL(){
     cd qtmodem
 	
 	if [[ "$BAPCPU" == *"ar"* ]]; then
-        arm=$(wget --tries 2 --connect-timeout=60  )
+        wget --tries 2 --connect-timeout=60 $PiLink
     else
-        x86=$(wget --tries 2 --connect-timeout=60  $PiLink)
-    fi
-
-    src=$(wget --tries 2 --connect-timeout=60  $dl)
-    unzip QtSMSource.zip
-    rm QtSMSource.zip
-
-    qmake
-    make
-
-    cd ..
-    if [ -f qtmodem/QtSoundModem ]; then
-        cp -r qtmodem ${HOME}
+        wget --tries 2 --connect-timeout=60 $dl
+        unzip QtSMSource.zip
+        rm QtSMSource.zip
+        cd Qt*
+        qmake
+        make
     fi
     
 }
