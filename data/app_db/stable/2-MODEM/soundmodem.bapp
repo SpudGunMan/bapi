@@ -51,7 +51,7 @@ INSTALL(){
             cp QtSoundModem ~/QTSoundModem
         fi
 
-        if [ -f QtSoundModem.zip];then
+        if [ -f QtSoundModem.zip ];then
             unzip QtSoundModem.zip
             rm QtSoundModem.zip
             cd Release
