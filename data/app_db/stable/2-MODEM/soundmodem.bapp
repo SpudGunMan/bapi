@@ -65,7 +65,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [ -f ${HOME}/qtmodem/QtSoundModem ];then
+    if [ -f ${HOME}/QtSoundModem ];then
         CURRENT=0-web
     else
         CURRENT=NONE
