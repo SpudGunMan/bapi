@@ -36,6 +36,8 @@ INSTALL(){
 		if [ `getconf LONG_BIT` = '64' ]; then
 			sudo dpkg --add-architecture armhf
 			sudo apt install -y libqt5widgets5:armhf libqt5serialport5:armhf libasound2:armhf libasound2-plugins:armhf libqt5multimedia5:armhf
+		else
+			sudo apt install -y libqt5widgets5 libqt5serialport5 libasound2 libasound2-plugins libqt5multimedia5
 		fi
 		wget --tries 2 --connect-timeout=60 $PiLink
 		sudo chmod +x piQtTermTCP
