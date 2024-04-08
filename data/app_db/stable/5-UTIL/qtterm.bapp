@@ -9,8 +9,7 @@ Author='spud'
 NOTE=''
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install libqt5serialport5:i386 >> errors/apt.log
-	sudo apt-get -y install libqt5widgets5:i386 >> errors/apt.log
+    
 
     cd ${BAPSRC} || return
 	rm -rf qtterm
@@ -42,6 +41,8 @@ INSTALL(){
 		sudo chmod +x piQtTermTCP
 		sudo mv piQtTermTCP /usr/local/bin/QtTermTCP
 	else
+		sudo apt-get -y install libqt5serialport5:i386 >> errors/apt.log
+		sudo apt-get -y install libqt5widgets5:i386 >> errors/apt.log
 		wget $dl
 		chmod +x QtTermTCP
 		sudo mv QtTermTCP /usr/local/bin/
