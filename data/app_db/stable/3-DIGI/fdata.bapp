@@ -74,9 +74,11 @@ INSTALL(){
     if [ -d FreeDATA ];then
         cd FreeDATA
         git pull
+        pip install --upgrade -r requirements.txt
     else
         git clone https://github.com/DJ2LS/FreeDATA -o FreeDATA
         cd FreeDATA
+        pip install --upgrade -r requirements.txt
         cd gui
         npm i --force
 
