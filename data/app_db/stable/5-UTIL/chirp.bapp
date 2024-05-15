@@ -10,33 +10,23 @@ NOTE='this will also delay menu load because chirp -version is slow'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install libfuse2 >> errors/apt.log
-    sudo apt-get -y install fuse >> errors/apt.log
-    
+    sudo apt-get -y install python3-pip >> errors/apt.log
+
     cd ${BAPSRC}
     CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
     #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
 
-    # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
-        #determine if ARM 32/64 bit and set download link accordingly.
-        if [ `getconf LONG_BIT` = '32' ]; then
-            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-armhf.AppImage"
-        else
-            LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-aarch64.AppImage"
-            #https://github.com/goldstar611/chirp-appimage/releases/download/20221215/Chirp-daily-20221215-aarch64.AppImage
-            #that copy isnt on the next mess
-        fi
-    else
-        # danplanet LINK=https://trac.chirp.danplanet.com/chirp_daily/LATEST/$LATEST
-        LINK="https://github.com/goldstar611/chirp-appimage/releases/download/$CHIRPDATE/Chirp-next-$CHIRPDATE-x86_64.AppImage"
-    fi
+    LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/chirp-${CHIRPDATE}-py3-none-any.whl
+    echo -e "Downloading Chirp"
     wget --tries 2 --connect-timeout=60 $LINK
+    if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
+        echo -e "Installing Chirp"
+        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl >> errors/apt.log
+        rm chirp-${CHIRPDATE}-py3-none-any.whl
+    else
+        echo -e "ERROR: Chirp failed to download"
+    fi
 
-	CHIRP=$(ls | grep Chirp-next)
-  
-	sudo mv $CHIRP /usr/local/bin/chirp
-	sudo chmod +x /usr/local/bin/chirp
 }
 
 VERSION(){
