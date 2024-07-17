@@ -91,9 +91,21 @@ INSTALL(){
         chmod +x run_freedata.sh
         sudo ln -s run_freedata.sh /usr/local/bin/freedata
 
+        # patch library into project
+        cd freedata_server/lib/codec2
+        if [[ -f libcodec2.so ]];then
+            rm libcodec2.so
+            ln -s /usr/local/lib/libcodec2.so libcodec2.so
+            echo "libcodec2.so linked to /usr/local/lib"
+        else
+            echo "ERROR: libcodec2.so not found"
+        fi
+
+        cd ${HOME}/FreeDATA
+
         #set config.ini 
-        cp ${HOME}/FreeDATA/modem/config.ini.example ${HOME}/FreeDATA/modem/config.ini
-        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/modem/config.ini"
+        cp ${HOME}/FreeDATA/freedata_server/config.ini.example ${HOME}/FreeDATA/freedata_server/config.ini
+        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/freedata_server/config.ini"
     fi
 
 }
