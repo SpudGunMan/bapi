@@ -15,7 +15,7 @@ INSTALL(){
         echo -e "INFORMATIONAL: found nodejs npx on system"
     else
         #script needs updated https://github.com/nodesource/distributions
-        curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
+        curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
         sudo apt-get -y install nodejs >> errors/apt.log
         sudo npm install -g n >> errors/apt.log
         sudo n stable >> errors/apt.log
@@ -80,14 +80,13 @@ INSTALL(){
         cd FreeDATA
         pip install --upgrade -r requirements.txt
         cd freedata_gui
-        npm i --force
+        npm i --force && npm run build
 
         cd ..
         echo -e "#!/bin/bash" > run_freedata.sh
         echo -e "cd $HOME/FreeDATA" >> run_freedata.sh
         echo -e "x-terminal-emulator -e tools/run-server.sh" >> run_freedata.sh
-        echo -e "cd freedata_gui/" >> run_freedata.sh
-        echo -e "npm start" >> run_freedata.sh
+        #echo -e "xdg-open http://localhost:5000/gui" >> run_freedata.sh
         chmod +x run_freedata.sh
         sudo ln -s run_freedata.sh /usr/local/bin/freedata
 
