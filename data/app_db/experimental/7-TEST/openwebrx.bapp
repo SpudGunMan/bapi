@@ -1,0 +1,34 @@
+BAPP=4
+ID=OPENWEBRX
+Name=OPENWEBRX
+Comment='OpenWebRX'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/luarvique/ppa'
+Author='spud'
+NOTE=''
+
+#reference:
+
+
+INSTALL(){
+	echo -e "INFORMATIONAL: apt-get required packages"
+
+	cd ${BAPSRC}
+	
+
+}
+
+VERSION(){
+    if [[ $(whereis openwebrx | grep bin) ]];then
+        CURRENT=FIX-ME
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-git
+}
+
+DEPENDS(){
+    NEEDED='AX25'
+    #apt-gets will be checked on app-check
+}
