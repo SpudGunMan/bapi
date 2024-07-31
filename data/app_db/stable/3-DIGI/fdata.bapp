@@ -86,7 +86,8 @@ INSTALL(){
         echo -e "#!/bin/bash" > run_freedata.sh
         echo -e "cd $HOME/FreeDATA" >> run_freedata.sh
         echo -e "x-terminal-emulator -e tools/run-server.sh" >> run_freedata.sh
-        #echo -e "xdg-open http://localhost:5000/gui" >> run_freedata.sh
+        echo -e "sleep 7" >> run_freedata.sh
+        echo -e "xdg-open http://localhost:5000/gui" >> run_freedata.sh
         chmod +x run_freedata.sh
         sudo ln -s run_freedata.sh /usr/local/bin/freedata
 
