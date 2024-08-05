@@ -11,6 +11,7 @@ NOTE='this will also delay menu load because chirp -version is slow'
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get -y install python3-pip >> errors/apt.log
+    sudo apt-get -y install python-wxtools 2>&1 >> errors/apt.log
 
     cd ${BAPSRC}
     mkdir chirp
