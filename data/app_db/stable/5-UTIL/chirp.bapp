@@ -24,7 +24,7 @@ INSTALL(){
     wget --tries 2 --connect-timeout=60 $LINK
     if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
         echo -e "Installing Chirp"
-        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl 
+        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl --break-system-packages
         rm chirp-${CHIRPDATE}-py3-none-any.whl
     else
         echo -e "ERROR: Chirp failed to download"
