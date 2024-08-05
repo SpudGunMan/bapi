@@ -13,6 +13,9 @@ INSTALL(){
     sudo apt-get -y install python3-pip >> errors/apt.log
 
     cd ${BAPSRC}
+    mkdir chirp
+    cd chirp
+    
     CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
     #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
 
@@ -21,7 +24,7 @@ INSTALL(){
     wget --tries 2 --connect-timeout=60 $LINK
     if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
         echo -e "Installing Chirp"
-        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl >> errors/apt.log
+        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl 
         rm chirp-${CHIRPDATE}-py3-none-any.whl
     else
         echo -e "ERROR: Chirp failed to download"
