@@ -63,11 +63,11 @@ INSTALL(){
     sudo make install
     cd ..
 
-    #cd build_linux
-    #sudo make install
-    #cd ..
+    cd build_linux
+    sudo make install
+    cd ..
 
-    #sudo ldconfig
+    sudo ldconfig
     sudo cp ${BAPSRC}/freedv-gui/build_linux/src/freedv /usr/local/bin/
 }
 
