@@ -30,7 +30,7 @@ INSTALL(){
 
         pip3 install maidenhead --break-system-packages
     else
-        pip3 install maidenhead
+        pip3 install maidenhead --break-system-packages
     fi
 
     # extra junk
