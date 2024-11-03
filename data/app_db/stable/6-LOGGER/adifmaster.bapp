@@ -18,7 +18,7 @@ INSTALL(){
 
         wget --tries 2 --connect-timeout=60 http://www.dxshell.com/downloads/ADIFMasterSetup.zip
 
-        upzip ADIFMasterSetup.zip && rm ADIFMasterSetup.zip
+        unzip ADIFMasterSetup.zip && rm ADIFMasterSetup.zip
     fi
 
     env WINEDEBUG=-all wine ~/.wine/drive_c/ADIFMaster/Setup.exe
