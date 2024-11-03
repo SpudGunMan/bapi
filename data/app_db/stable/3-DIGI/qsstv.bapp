@@ -26,7 +26,9 @@ INSTALL(){
     
     cd ${BAPSRC} || return
     sudo rm -rf QSSTV
-    git clone https://github.com/ON4QZ/QSSTV
+    #git clone https://github.com/ON4QZ/QSSTV
+    # patched for newest hamlib
+    git clone https://github.com/SpudGunMan/QSSTV
     cd QSSTV
     
     mkdir src/build
