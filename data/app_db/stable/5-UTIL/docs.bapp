@@ -14,7 +14,7 @@ INSTALL(){
     #link on desktop
     ln -s ${HOME}/Documents/Reference ${HOME}/Desktop/Reference
  	cd Reference
-	touch .bap_ver1
+	touch .bap_ver11
  	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-BandPlan-Update-1-2020.pdf
  	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/US-Grid-Square-Map-03-05-2019.pdf
  	wget --tries 2 --connect-timeout=60 https://icomamerica.com/en/amateur/amateurtools/2013_ITU_CQ_WorldMaps.pdf
@@ -27,8 +27,8 @@ INSTALL(){
 }
 
 VERSION(){
-	if [ -f ${HOME}/Documents/Reference/.bap_ver1 ];then
-    	CURRENT=1.0
+	if [ -f ${HOME}/Documents/Reference/.bap_ver11 ];then
+    	CURRENT=1.1
 	else
 		CURRENT=NONE
 	fi
