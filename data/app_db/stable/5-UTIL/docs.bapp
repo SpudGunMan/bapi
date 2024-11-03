@@ -32,7 +32,7 @@ VERSION(){
 	else
 		CURRENT=NONE
 	fi
-    NEWVER=1.0
+    NEWVER=1.1
 }
 
 DEPENDS(){
