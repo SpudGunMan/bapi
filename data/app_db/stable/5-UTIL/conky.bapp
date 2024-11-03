@@ -10,7 +10,7 @@ NOTE='Conky Telemetry Display'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install conky >> errors/apt.log
+    sudo apt-get -y install conky-all >> errors/apt.log
 	cd ${BAPSRC}
 
 	touch ${HOME}/Documents/mylog.txt
