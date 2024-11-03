@@ -9,6 +9,7 @@ Author='spud'
 NOTE='http://www.dxshell.com/adif-master.html'
 
 INSTALL(){
+    sudo apt-get -y install unzip >> errors/apt.log
     cd ${BAPSRC} || return
 
     if [ -d ${HOME}/.wine/drive_c ];then
