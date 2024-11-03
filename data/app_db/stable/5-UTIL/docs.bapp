@@ -23,7 +23,7 @@ INSTALL(){
  	wget --tries 2 --connect-timeout=60 http://www.arrl.org/files/file/Regulatory/Band%20Chart/Band%20Chart%20-%2011X17%20Color.pdf
  	wget --tries 2 --connect-timeout=60 http://www.arrl.org/files/file/Get%20on%20the%20Air/Comm%20w%20Other%20Hams-Q%20Signals.pdf
  	wget --tries 2 --connect-timeout=60 https://www.arrl.org/files/file/Get%20Licensed/Quickstart%20Guide%20EBOOK.pdf
-	wget --tries 2 --connect-timeout=60 https://w5gad.org/wp-content/uploads/2016/04/Reference-Codes.pdf
+	wget --tries 2 --connect-timeout=60 https://www.qsl.net/sv1grb/downloads/HamCodeGuide.pdf
 }
 
 VERSION(){
