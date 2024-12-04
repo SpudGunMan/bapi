@@ -32,7 +32,7 @@ INSTALL(){
 
     cd ${BAPSRC}
 	sudo rm -rf urh
-	mkdir uhr
+	mkdir urh
 	cd urh
 
     mv ${HOME}/urh ./urh.bak
