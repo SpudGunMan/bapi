@@ -45,7 +45,7 @@ INSTALL(){
     unzip $WSJTZPKG
     rm $WSJTZPKG
 
-    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//')
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//' | sed 's^[[:space:]]^^g')
     echo $VER > ${HOME}/.bap.wsjtzed.txt
 
     mv wsjtx src
