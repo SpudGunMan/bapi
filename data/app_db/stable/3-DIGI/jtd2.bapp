@@ -36,7 +36,7 @@ INSTALL(){
     mkdir jtdx2
     cd jtdx2
 
-    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//' | sed 's^[[:space:]]^^g')
     echo $VER > ${HOME}/.bap.jtdx2.txt
 
     wget -O jtdx2.zip https://sourceforge.net/projects/jtdx-improved/files/jtdx_$VER/Source%20code/jtdx_$VER\_improved_with_JTDX_GUI_source.zip/download
