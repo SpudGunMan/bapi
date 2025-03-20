@@ -36,7 +36,7 @@ INSTALL(){
     mkdir jtdx
     cd jtdx
 
-    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx/files/ | grep -m 1 jtdx_ | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx/files/ | grep -m 1 jtdx_ | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//' | sed 's^[[:space:]]^^g')
     echo $VER > ${HOME}/.bap.jtdx.txt
 
     #alternate hamlib code idea ## it should use the default hamlib
