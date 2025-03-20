@@ -74,7 +74,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//')
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//' | sed 's^[[:space:]]^^g' | head -1)
 }
 
 DEPENDS(){

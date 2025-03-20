@@ -82,7 +82,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//')
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//' | sed 's^[[:space:]]^^g')
 }
 
 DEPENDS(){
