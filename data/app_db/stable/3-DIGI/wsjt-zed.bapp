@@ -39,7 +39,7 @@ INSTALL(){
     mkdir wsjtz
     cd wsjtz
 
-    WSJTZPKG=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title=\"//' | cut -f1 -d"\"")
+    WSJTZPKG=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title=\"//' | cut -f1 -d"\"" | sed 's^[[:space:]]^^g')
 
     wget --tries 2 --connect-timeout=60  https://sourceforge.net/projects/wsjt-z/files/Source/$WSJTZPKG
     unzip $WSJTZPKG
