@@ -1,7 +1,10 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE**
-March2024
+October2025
+Trixie Release for OS Testing and patches now!
+
+2024 Notes
 - raspian bookworm (pi5/pi4) and wayland are possible problems for WSJT, Xastir, Conky, GridTracker
   - switch back to [X11](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland) or revert to buster
   - yad errors can be ignored `(yad:12189): Gdk-CRITICAL`
