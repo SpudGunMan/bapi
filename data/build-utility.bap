@@ -132,7 +132,7 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install libportaudiocpp0
     sudo apt-get -y install portaudio19-dev
     sudo apt-get -y install librtaudio-dev 
-    sudo apt-get -y install librtaudio6
+    #sudo apt-get -y install librtaudio6
     sudo apt-get -y install libpulse-dev
     sudo apt-get -y install libasound2-dev
 
