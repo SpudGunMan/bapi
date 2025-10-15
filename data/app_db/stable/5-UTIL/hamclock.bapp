@@ -51,9 +51,10 @@ Terminal=false
 Type=Application
 Categories=HamRadio;
 EOF
-
-	sudo mv ${HOME}/Downloads/hamclock.desktop /usr/share/applications/
 }
+sudo mv ${HOME}/Downloads/hamclock.desktop /usr/share/applications/
+
+# cp /usr/share/applications/hamclock.desktop ~/.config/autostart/
 
 VERSION(){
     if [[ $(whereis Artemis | grep bin) ]];then
