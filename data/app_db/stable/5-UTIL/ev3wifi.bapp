@@ -39,32 +39,14 @@ INSTALL(){
 }
 
 VERSION(){
-    # Check which driver is installed
-    if [[ -d "${BAPSRC}/rtl8723du/.git" ]]; then
-        CURRENT_DRIVER="rtl8723du"
-        cd "${BAPSRC}/rtl8723du"
-        CURRENT_COMMIT=$(git rev-parse HEAD 2>/dev/null)
-        REMOTE_COMMIT=$(git ls-remote https://github.com/lwfinger/rtl8723du.git HEAD | awk '{print $1}')
-    elif [[ -d "${BAPSRC}/rtw88/.git" ]]; then
-        CURRENT_DRIVER="rtw88"
-        cd "${BAPSRC}/rtw88"
-        CURRENT_COMMIT=$(git rev-parse HEAD 2>/dev/null)
-        REMOTE_COMMIT=$(git ls-remote https://github.com/lwfinger/rtw88.git HEAD | awk '{print $1}')
+    if [[ -d "${BAPSRC}/rtl8723du" ]];then
+        CURRENT=0-git
+    elif [[ -d "${BAPSRC}/rtw88" ]];then
+        CURRENT=0-git
     else
-        CURRENT_DRIVER="none"
-        CURRENT_COMMIT="none"
-        REMOTE_COMMIT="none"
+        CURRENT=NONE
     fi
-
-    if [[ "$CURRENT_COMMIT" != "none" && "$REMOTE_COMMIT" != "none" ]]; then
-        if [[ "$CURRENT_COMMIT" == "$REMOTE_COMMIT" ]]; then
-            NEWVER="$CURRENT_DRIVER: up-to-date ($CURRENT_COMMIT)"
-        else
-            NEWVER="$CURRENT_DRIVER: update available! Local: $CURRENT_COMMIT, Remote: $REMOTE_COMMIT"
-        fi
-    else
-        NEWVER="N/A"
-    fi
+    NEWVER=0-git
 }
 
 DEPENDS(){
