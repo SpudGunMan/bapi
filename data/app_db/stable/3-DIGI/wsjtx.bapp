@@ -78,7 +78,7 @@ INSTALL(){
     elif [ "$return_code" -eq 1 ] && [ -n "$DEV_URL" ]; then
         # Dev Candidate
         mkdir "$DEV_DIR"
-        cd "$STABLE_DIR" || return
+        cd "$DEV_DIR" || return
         wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$DEV_URL" -O "$DEV_PKG"
         tar -xvf "$DEV_PKG"
         cd "$DEV_DIR"
