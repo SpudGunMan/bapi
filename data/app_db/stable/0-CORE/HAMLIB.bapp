@@ -65,10 +65,10 @@ INSTALL(){
         pyver=$(python3 -V | sed 's/Python //' | cut -d "." -f1,2)
         export PYTHON=$pypath
         export PYTHONPATH=/usr/local/lib/python$pyver/site-packages/
-        ./configure --with-xml-support --with-python-binding PYTHON_VERSION=$pyver
+        ./configure --disable-rotator --with-xml-support --with-python-binding PYTHON_VERSION=$pyver 
 
     else
-        ./configure --with-xml-support
+        ./configure --disable-rotator --with-xml-support
     fi
 
     make -j$BAPCORE
