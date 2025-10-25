@@ -131,7 +131,17 @@ VERSION(){
 
     WSJTX_HTML=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html)
     STABLE_VER=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-2\.7[^"]*\.tgz' | head -1 | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
-    DEV_VER=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx_3[^"]*\.tgz' | head -1 | sed 's/.*wsjtx_//' | sed 's/\.tgz//')
-    NEWVER="Stable: $STABLE_VER, DEV: $DEV_VER"
+    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx_3[^"]*\.tgz' | head -1)
+    if [ -n "$DEV_URL" ]; then
+        DEV_VER=$(echo "$DEV_URL" | sed 's/.*wsjtx_//' | sed 's/\.tgz//')
+        NEWVER="Stable: $STABLE_VER, DEV: $DEV_VER"
+    else
+        NEWVER="Stable: $STABLE_VER, No dev candidate source available"
+    fi
 }
 
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}

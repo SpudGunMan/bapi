@@ -130,8 +130,13 @@ VERSION(){
 
     WSJTZ_HTML=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/)
     STABLE_VER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-2\.[^"]*\.zip' | head -1 | sed 's/.*wsjtz-//' | sed 's/\.zip//')
-    DEV_VER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1 | sed 's/.*wsjtz-//' | sed 's/\.zip//')
-    NEWVER="Stable: $STABLE_VER, Candidate: $DEV_VER"
+    DEV_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1)
+    if [ -n "$DEV_URL" ]; then
+        DEV_VER=$(basename "$DEV_URL" .zip | sed 's/wsjtz-//')
+        NEWVER="Stable: $STABLE_VER, Candidate: $DEV_VER"
+    else
+        NEWVER="Stable: $STABLE_VER, No dev candidate source available"
+    fi
 }
 
 DEPENDS(){
