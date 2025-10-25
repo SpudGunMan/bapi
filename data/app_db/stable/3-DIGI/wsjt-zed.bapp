@@ -135,7 +135,7 @@ VERSION(){
         DEV_VER=$(basename "$DEV_URL" .zip | sed 's/wsjtz-//')
         NEWVER="Stable: $STABLE_VER, Candidate: $DEV_VER"
     else
-        NEWVER="Stable: $STABLE_VER, No dev candidate source available"
+        NEWVER="Stable: $STABLE_VER, No3x"
     fi
 }
 
