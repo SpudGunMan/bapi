@@ -59,10 +59,11 @@ INSTALL(){
         TEXT="Use stable ($STABLE_VER). No dev candidate source available."
     fi
     
-    BUTTONS="--button=\"Stable:0\""
-    if [ -n "$DEV_URL" ]; then
-        BUTTONS+=" --button=\"Dev Dev:1\""
+    BUTTONS="--button=Stable:0 --button=Dev:1"
+    if [ -z "$DEV_URL" ]; then
+        BUTTONS="--button=Stable:0"
     fi
+
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code=$?
     
