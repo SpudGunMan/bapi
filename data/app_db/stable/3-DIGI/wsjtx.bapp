@@ -40,19 +40,19 @@ INSTALL(){
 
     # Find stable (2.7*) and dev candidate (3*) releases
     WSJTX_HTML=$(curl -s https://wsjt.sourceforge.io/wsjtx.html)
-
+    
     # Stable: wsjtx-2.7*
     STABLE_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-2\.7[^"]*\.tgz' | head -1)
     STABLE_PKG=$(basename "$STABLE_URL")
     STABLE_DIR=$(basename "$STABLE_URL" .tgz)
     STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtx-//')
-
-    # Dev: wsjtx_3* (source .tgz, but not present as of 3.0.0-rc1)
-    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx_3[^"]*\.tgz' | head -1)
+    
+    # Dev: wsjtx-3* (source .tgz, dash not underscore)
+    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
     if [ -n "$DEV_URL" ]; then
         DEV_PKG=$(basename "$DEV_URL")
         DEV_DIR=$(basename "$DEV_URL" .tgz)
-        DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx_//')
+        DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
         BUTTONS="--button=\"Stable:0\" --button=\"Candidate $DEV_VER:2\""
         TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
     else
@@ -131,12 +131,12 @@ VERSION(){
 
     WSJTX_HTML=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html)
     STABLE_VER=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-2\.7[^"]*\.tgz' | head -1 | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
-    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx_3[^"]*\.tgz' | head -1)
+    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
     if [ -n "$DEV_URL" ]; then
-        DEV_VER=$(echo "$DEV_URL" | sed 's/.*wsjtx_//' | sed 's/\.tgz//')
+        DEV_VER=$(echo "$DEV_URL" | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
         NEWVER="Stable: $STABLE_VER, DEV: $DEV_VER"
     else
-        NEWVER="Stable: $STABLE_VER, No dev candidate source available"
+        NEWVER="Stable: $STABLE_VER, No3x"
     fi
 }
 
