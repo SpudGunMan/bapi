@@ -52,14 +52,12 @@ INSTALL(){
     DEV_PKG=$(basename "$DEV_URL")
     DEV_DIR=$(basename "$DEV_URL" .tgz)
     DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
+
     TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
-
-    
     BUTTONS="--button=Stable:0 --button=Dev:1"
-
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code="${?:-'2'}"
-    echo "Return code: $return_code"
+
     if [ "$return_code" -eq 0 ]; then
         # StableR"
         wget --tries 2 --connect-timeout=20 $STABLE_URL" -O "$STABLE_PKG"
