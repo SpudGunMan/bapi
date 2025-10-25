@@ -40,7 +40,7 @@ INSTALL(){
 	fi
 
 
-	cat >${HOME}/Downloads/hamclock.desktop <<EOF
+	cat >${HOME}/Desktop/hamclock.desktop <<EOF
 [Desktop Entry]
 Name=HamClock
 GenericName=Ham Clock
@@ -52,9 +52,8 @@ Type=Application
 Categories=HamRadio;
 EOF
 }
-sudo mv ${HOME}/Downloads/hamclock.desktop /usr/share/applications/
-
-# cp /usr/share/applications/hamclock.desktop ~/.config/autostart/
+#sudo cp ${HOME}/Desktop/hamclock.desktop /usr/share/applications/
+#cp /usr/share/applications/hamclock.desktop ~/.config/autostart/
 
 VERSION(){
     if [[ $(whereis Artemis | grep bin) ]];then
