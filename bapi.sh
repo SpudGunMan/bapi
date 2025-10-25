@@ -149,8 +149,6 @@ if [ ! -d $BAPDIR/apps/stable ]; then
     mkdir -p $BAPDIR/apps
     cp -r $BAPDIR/data/app_db/* ./apps/
 else
-    echo -e "INFORMATIONAL: Checking if any updates to bapp files, please review!"
-
     # Use a temp dir for atomic update
     TMP_APPS_DIR=$(mktemp -d)
     cp -r $BAPDIR/data/app_db/* "$TMP_APPS_DIR/"
