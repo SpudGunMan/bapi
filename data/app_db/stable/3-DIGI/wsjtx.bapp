@@ -60,10 +60,10 @@ INSTALL(){
         BUTTONS="--button=Stable $STABLE_VER:0"
         TEXT="Use stable ($STABLE_VER). No dev candidate source available."
     fi
-
+    
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code=$?
-
+    
     if [ "$return_code" -eq 0 ]; then
         # Stable
         wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$STABLE_URL" -O "$STABLE_PKG"
@@ -81,25 +81,6 @@ INSTALL(){
     else
         echo "No valid candidate selected or candidate not available."
         return 1
-    fi
-
-    action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
-    return_code="${?:-'2'}"
-
-    if [ "$return_code" -eq 0 ]; then
-        # Stable
-        wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$STABLE_URL" -O "$STABLE_PKG"
-        tar -xvf "$STABLE_PKG"
-        rm "$STABLE_PKG"
-        cd "$STABLE_DIR"
-        echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    else
-        # Dev Candidate
-        wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$DEV_URL" -O "$DEV_PKG"
-        tar -xvf "$DEV_PKG"
-        rm "$DEV_PKG"
-        cd "$DEV_DIR"
-        echo "$DEV_VER" > "${HOME}/.bap.wsjt.txt"
     fi
     
     cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
