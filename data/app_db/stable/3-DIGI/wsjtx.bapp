@@ -72,7 +72,7 @@ INSTALL(){
         tar -xvf "$STABLE_PKG"
         cd "$STABLE_DIR"
         echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    elif [ -n "$DEV_URL" ]; then
+    elif  [ "$return_code" -eq 1 ]; then
         # Dev Candidate
         mkdir "$DEV_DIR"
         cd "$DEV_DIR" || return
