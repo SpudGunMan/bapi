@@ -1,8 +1,6 @@
 # Codename bAPi mark 2
 
 **PLEASE NOTE**
-October2025
-Trixie Release for OS Testing and patches now!
 
 2025 Notes
 - Fixed the database bug! (anyone there?)
