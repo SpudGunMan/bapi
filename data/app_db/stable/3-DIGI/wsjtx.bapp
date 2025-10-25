@@ -5,7 +5,7 @@ Comment='FST4, FST4W, FT4, FT8, JT4, JT9, JT65, Q65, MSK144, and WSPR'
 VerLocal=0
 VerRemote=0
 W3='https://wsjt.sourceforge.io/wsjtx.html'
-Author='spud'
+Author='bapi installer spud2025'
 NOTE='installed to /usr/local/bin \n to get better performance note .. renice -n -19 -u wsjtx'
 
 INSTALL(){
