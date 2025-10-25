@@ -147,22 +147,26 @@ fi
 
 # app check
 if [ ! -d $BAPDIR/apps/stable ]; then
-    #cp -ur data/app_db/stable apps/stable
     mkdir -p $BAPDIR/apps
     cp -ur $BAPDIR/data/app_db/* ./apps/
 else
-    #sortin legos for no reason, problem is git updates..
-    # dont like it for now edit the data/app_db and thats the master db
     echo -e "INFORMATIONAL: Checking if any updates to bapp files, please review!"
-    echo -e "WARNING: If asking to copy new bapp files at this stage and the menu gets trashed"
-    echo -e "WARNING: there is a bug. for now  $  rm -rf apps/ cache/      to rebuild db"
-    return= $(cp -iur $BAPDIR/data/app_db/* ./apps/)
-    if [ ! -z $return ]; then
-        echo -e "INFORMATIONAL: changes to app files detected. checking SWR.." 
-        #we can assume something changed cp had file diff scan for it
+
+    # Use a temp dir for atomic update
+    TMP_APPS_DIR=$(mktemp -d)
+    cp -ur $BAPDIR/data/app_db/* "$TMP_APPS_DIR/"
+    if [ $? -eq 0 ]; then
+        # Optionally backup old apps
+        # mv ./apps ./apps_backup_$(date +%s)
+        cp -ur "$TMP_APPS_DIR/"* ./apps/
+        echo -e "INFORMATIONAL: changes to app files detected. checking SWR.."
         ./bin/app-check.sh
+    else
+        echo -e "ERROR: Failed to copy app_db to temp dir. Aborting update. try: rm -rf apps/ cache/" | tee -a $BAP_ERROR_LOG
     fi
+    rm -rf "$TMP_APPS_DIR"
 fi
+
 
 #run enviroment setup scripts for first run
 if [ ! -f "$BAP_SYS_INFO_FILE" ]; then
