@@ -65,16 +65,28 @@ INSTALL(){
 }
 
 VERSION(){
-    if [ -d ${HOME}/jtdx2 ];then
-		if [ -f ${HOME}/.bap.jtdx2.txt ]; then
-			CURRENT=$(cat ${HOME}/.bap.jtdx2.txt)
-		else
-        	CURRENT=UNKNOWN
-		fi
+    if [ -d "${HOME}/jtdx2" ]; then
+        if [ -f "${HOME}/.bap.jtdx2.txt" ]; then
+            CURRENT=$(cat "${HOME}/.bap.jtdx2.txt")
+        else
+            CURRENT=UNKNOWN
+        fi
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ | grep '<tr title="jtdx_' | sed 's/<tr title="jtdx_//' | sed 's/" class="folder ">//' | sed 's^[[:space:]]^^g' | head -1)
+
+    # Get all version folders, sort, and pick the latest
+    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/jtdx-improved/files/ \
+        | grep -o 'tr title="jtdx_[^"]*"' \
+        | sed 's/tr title="//;s/"$//' \
+        | sort -V | tail -1)
+
+    # Validate version format (should be like jtdx_2.2.159)
+    if [[ "$NEWVER" =~ ^jtdx_[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        :
+    else
+        NEWVER="UNKNOWN"
+    fi
 }
 
 DEPENDS(){
