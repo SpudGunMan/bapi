@@ -46,7 +46,7 @@ INSTALL(){
     STABLE_PKG=$(basename "$STABLE_URL")
     STABLE_DIR=$(basename "$STABLE_URL" .tgz)
     STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtx-//')
-    
+
     # Dev: wsjtx-3* (source .tgz, dash not underscore)
     DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
     if [ -n "$DEV_URL" ]; then
