@@ -59,8 +59,8 @@ INSTALL(){
     return_code="${?:-'2'}"
 
     BASE_URL="https://wsjt.sourceforge.io/"
-    FULL_STABLE_URL="${BASE_URL}${STABLE_URL}"
-    FULL_DEV_URL="${BASE_URL}${DEV_URL}"
+    FULL_STABLE_URL="${STABLE_URL}"
+    FULL_DEV_URL="${DEV_URL}"
     
     if [ "$return_code" -eq 0 ]; then
         # Stable
