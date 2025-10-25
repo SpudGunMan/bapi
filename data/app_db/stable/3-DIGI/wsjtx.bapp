@@ -136,7 +136,7 @@ VERSION(){
         DEV_VER=$(echo "$DEV_URL" | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
         NEWVER="Stable: $STABLE_VER, DEV: $DEV_VER"
     else
-        NEWVER="Stable: $STABLE_VER, DEV: N/A"
+        NEWVER="Stable: $STABLE_VER"
     fi
 }
 
