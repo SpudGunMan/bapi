@@ -65,24 +65,17 @@ INSTALL(){
     return_code="${?:-'2'}"
     echo "Return code: $return_code"
     if [ "$return_code" -eq 0 ]; then
-        # Stable
-        mkdir "$STABLE_DIR"
-        cd "$STABLE_DIR" || return
+        # StableR"
         wget --tries 2 --connect-timeout=20 $STABLE_URL" -O "$STABLE_PKG"
         tar -xvf "$STABLE_PKG"
         cd "$STABLE_DIR"
         echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    elif  [ "$return_code" -eq 1 ]; then
+    else
         # Dev Candidate
-        mkdir "$DEV_DIR"
-        cd "$DEV_DIR" || return
         wget --tries 2 --connect-timeout=20 $DEV_URL" -O "$DEV_PKG"
         tar -xvf "$DEV_PKG"
         cd "$DEV_DIR"
         echo "$DEV_VER" > "${HOME}/.bap.wsjt.txt"
-    else
-        echo "No valid candidate selected or candidate not available."
-        return 1
     fi
     
     cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
