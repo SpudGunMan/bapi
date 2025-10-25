@@ -61,7 +61,7 @@ INSTALL(){
     
     BUTTONS="--button=\"Stable:0\""
     if [ -n "$DEV_URL" ]; then
-        BUTTONS+=" --button=\"Dev Dev:2\""
+        BUTTONS+=" --button=\"Dev Dev:1\""
     fi
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code=$?
@@ -73,7 +73,7 @@ INSTALL(){
         rm "$STABLE_PKG"
         cd "$STABLE_DIR"
         echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    elif [ "$return_code" -eq 2 ] && [ -n "$DEV_URL" ]; then
+    elif [ "$return_code" -eq 1 ] && [ -n "$DEV_URL" ]; then
         # Dev Candidate
         wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$DEV_URL" -O "$DEV_PKG"
         tar -xvf "$DEV_PKG"
