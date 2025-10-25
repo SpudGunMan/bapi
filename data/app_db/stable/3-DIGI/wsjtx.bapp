@@ -70,7 +70,7 @@ INSTALL(){
     if [ "$return_code" -eq 0 ]; then
         # Stable
         mkdir "$STABLE_DIR"
-        cd "$BAPSRC/wsjtx/$STABLE_DIR" || return
+        cd "$STABLE_DIR" || return
         wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$STABLE_URL" -O "$STABLE_PKG"
         tar -xvf "$STABLE_PKG"
         cd "$STABLE_DIR"
@@ -78,7 +78,7 @@ INSTALL(){
     elif [ "$return_code" -eq 1 ] && [ -n "$DEV_URL" ]; then
         # Dev Candidate
         mkdir "$DEV_DIR"
-        cd "$BAPSRC/wsjtx/$DEV_DIR" || return
+        cd "$STABLE_DIR" || return
         wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$DEV_URL" -O "$DEV_PKG"
         tar -xvf "$DEV_PKG"
         cd "$DEV_DIR"
