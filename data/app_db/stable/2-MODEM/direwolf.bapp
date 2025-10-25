@@ -52,8 +52,18 @@ VERSION(){
         CURRENT=NONE
     fi
 
-    wget -P /tmp/ https://raw.githubusercontent.com/wb2osz/direwolf/master/CHANGES.md >/dev/null 2>&1
-    NEWVER=$(cat /tmp/CHANGES.md | head -5 | tail -1 | awk '{ print $3 }')
+    # Get latest stable release tag from GitHub
+    STABLE_VER=$(curl --max-time 20 -s https://api.github.com/repos/wb2osz/direwolf/releases/latest | grep '"tag_name":' | sed 's/.*"tag_name": *"//;s/".*//')
+
+    # Get latest dev (beta) version from CHANGES.md (top entry)
+    wget -q -O /tmp/CHANGES.md https://raw.githubusercontent.com/wb2osz/direwolf/dev/CHANGES.md
+    BETA_VER=$(grep -m1 -E '^Dire Wolf' /tmp/CHANGES.md | awk '{print $3}')
+
+    if [ -n "$BETA_VER" ]; then
+        NEWVER="Stable: $STABLE_VER, Beta: $BETA_VER"
+    else
+        NEWVER="Stable: $STABLE_VER, Beta: none"
+    fi
 }
 
 DEPENDS(){

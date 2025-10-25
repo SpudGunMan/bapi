@@ -75,18 +75,22 @@ INSTALL(){
     sudo make install
     sudo ldconfig
 }
-
 VERSION(){
     if [[ $(whereis rigctld | grep bin) ]];then
         CURRENT=$(rigctl --version 2>/dev/null | sed 's/rigctl Hamlib //' | cut -d " " -f1)
-        #CURRENT=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest| jq -r '.tag_name')
     else
         CURRENT=NONE
     fi
 
-    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
+    # Get latest SourceForge version
+    SF_VER=$(curl --max-time 20 -s https://sourceforge.net/projects/hamlib/files/latest/download |
         grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
         head -n 1 | awk -F "/" '{print $7}')
+
+    # Get latest GitHub release tag
+    GH_VER=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest | grep '"tag_name":' | sed 's/.*"tag_name": *"//;s/".*//')
+
+    NEWVER="SF: $SF_VER, GH: $GH_VER"
 }
 
 DEPENDS(){

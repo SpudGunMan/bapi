@@ -61,7 +61,17 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=0-web
+
+    # Get latest Stable version (by file name)
+    STABLE_VER=$(curl --max-time 20 -s https://www.cantab.net/users/john.wiseman/Downloads/ | grep -o 'QtSMSource.zip' | head -1)
+    # Get latest Beta version (by file name)
+    BETA_VER=$(curl --max-time 20 -s https://www.cantab.net/users/john.wiseman/Downloads/Beta/ | grep -o 'QtSMSource.zip' | head -1)
+
+    if [ -n "$BETA_VER" ]; then
+        NEWVER="Stable: $STABLE_VER, Beta: $BETA_VER"
+    else
+        NEWVER="Stable: $STABLE_VER"
+    fi
 }
 
 DEPENDS(){

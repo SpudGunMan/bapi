@@ -104,7 +104,17 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=0-web
+
+    # Get latest Stable version (by file date/name)
+    STABLE_VER=$(curl --max-time 20 -s http://www.cantab.net/users/john.wiseman/Downloads/ | grep -o 'linbpq[^"]*' | grep -v Beta | head -1)
+    # Get latest Beta version (by file date/name)
+    BETA_VER=$(curl --max-time 20 -s http://www.cantab.net/users/john.wiseman/Downloads/Beta/ | grep -o 'linbpq[^"]*' | head -1)
+
+    if [ -n "$BETA_VER" ]; then
+        NEWVER="Stable: $STABLE_VER, Beta: $BETA_VER"
+    else
+        NEWVER="Stable: $STABLE_VER"
+    fi
 }
 
 DEPENDS(){

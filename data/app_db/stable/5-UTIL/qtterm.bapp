@@ -58,7 +58,16 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=0-web
+
+    # Check for Stable and Beta (dev) versions by file presence
+    STABLE_VER=$(curl --max-time 20 -s http://www.cantab.net/users/john.wiseman/Downloads/ | grep -o 'QtTermTCP' | head -1)
+    DEV_VER=$(curl --max-time 20 -s http://www.cantab.net/users/john.wiseman/Downloads/Beta/ | grep -o 'QtTermTCP' | head -1)
+
+    if [ -n "$DEV_VER" ]; then
+        NEWVER="Stable: $STABLE_VER, Dev: $DEV_VER"
+    else
+        NEWVER="Stable: $STABLE_VER"
+    fi
 }
 
 DEPENDS(){
