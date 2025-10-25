@@ -49,15 +49,11 @@ INSTALL(){
 
     # Dev: wsjtx-3* (source .tgz, dash not underscore)
     DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
-    if [ -n "$DEV_URL" ]; then
-        DEV_PKG=$(basename "$DEV_URL")
-        DEV_DIR=$(basename "$DEV_URL" .tgz)
-        DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
-        TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
-    else
-        DEV_VER=""
-        TEXT="Use stable ($STABLE_VER). No dev candidate source available."
-    fi
+    DEV_PKG=$(basename "$DEV_URL")
+    DEV_DIR=$(basename "$DEV_URL" .tgz)
+    DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
+    TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
+
     
     BUTTONS="--button=Stable:0 --button=Dev:1"
 
