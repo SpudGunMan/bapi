@@ -48,9 +48,40 @@ INSTALL(){
 
     # Dev: wsjtz-3.*
     DEV_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1)
-    DEV_PKG=$(basename "$DEV_URL")
-    DEV_DIR=$(basename "$DEV_URL" .zip)
-    DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtz-//')
+    if [ -n "$DEV_URL" ]; then
+        DEV_PKG=$(basename "$DEV_URL")
+        DEV_DIR=$(basename "$DEV_URL" .zip)
+        DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtz-//')
+        BUTTONS="--button=\"Stable:0\" --button=\"Candidate $DEV_VER:2\""
+        TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
+    else
+        DEV_VER=""
+        BUTTONS="--button=\"Stable:0\""
+        TEXT="Use stable ($STABLE_VER). No dev candidate source available."
+    fi
+
+    action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+        # Stable
+        wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/wsjt-z/files/Source/$STABLE_URL" -O "$STABLE_PKG"
+        unzip "$STABLE_PKG"
+        rm "$STABLE_PKG"
+        cd "$STABLE_DIR"
+        echo "$STABLE_VER" > "${HOME}/.bap.wsjtzed.txt"
+    elif [ "$return_code" -eq 2 ] && [ -n "$DEV_URL" ]; then
+        # Dev Candidate
+        wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/wsjt-z/files/Source/$DEV_URL" -O "$DEV_PKG"
+        unzip "$DEV_PKG"
+        rm "$DEV_PKG"
+        cd "$DEV_DIR"
+        echo "$DEV_VER" > "${HOME}/.bap.wsjtzed.txt"
+    else
+        echo "No valid candidate selected or candidate not available."
+        return 1
+    fi
+
 
     action=$(yad --center --title "Question which release" --image "dialog-question" --button="Stable:0" --button="Candidate $DEV_VER:2" --text "Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)")
     return_code="${?:-'2'}"
