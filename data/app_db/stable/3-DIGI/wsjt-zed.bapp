@@ -9,7 +9,7 @@ Author='spud'
 NOTE='binary is put into ~/wsjtz/bin'
 
 INSTALL(){
-	echo -e "INFORMATIONAL: apt-get required packages"
+    echo -e "INFORMATIONAL: apt-get required packages"
     sudo apt-get -y install gfortran >> errors/apt.log
     sudo apt-get -y install fftw3-dev >> errors/apt.log
     sudo apt-get -y install libqt5sql5-sqlite >> errors/apt.log
@@ -22,67 +22,85 @@ INSTALL(){
 
     # Detect cortex chip (ARM's)
     if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
-		FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
-		#increase swap file if less than 3G memory
-		if [ ${FREEMEM} -lt 3000 ]; then
-			echo "Increasing Swap size for build"
-			#increase swap size
-			sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
-			sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
-			sudo /etc/init.d/dphys-swapfile restart
-			sleep 10
-		fi
-	fi
+        FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
+        if [ ${FREEMEM} -lt 3000 ]; then
+            echo "Increasing Swap size for build"
+            sudo sed -i 's/#CONF_SWAPFILE=\/var\/swap/CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+            sudo sed -i 's/CONF_SWAPSIZE=100/CONF_SWAPSIZE=1024/' /etc/dphys-swapfile
+            sudo /etc/init.d/dphys-swapfile restart
+            sleep 10
+        fi
+    fi
 
     cd ${BAPSRC}
     sudo rm -rf wsjtz
     mkdir wsjtz
     cd wsjtz
 
-    WSJTZPKG=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title=\"//' | cut -f1 -d"\"" | sed 's^[[:space:]]^^g')
+    # Find stable (2.*) and dev (3.*) releases
+    WSJTZ_HTML=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/)
 
-    wget --tries 2 --connect-timeout=60  https://sourceforge.net/projects/wsjt-z/files/Source/$WSJTZPKG
-    unzip $WSJTZPKG
-    rm $WSJTZPKG
+    # Stable: wsjtz-2.*
+    STABLE_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-2\.[^"]*\.zip' | head -1)
+    STABLE_PKG=$(basename "$STABLE_URL")
+    STABLE_DIR=$(basename "$STABLE_URL" .zip)
+    STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtz-//')
 
-    VER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//' | sed 's^[[:space:]]^^g')
-    echo $VER > ${HOME}/.bap.wsjtzed.txt
+    # Dev: wsjtz-3.*
+    DEV_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1)
+    DEV_PKG=$(basename "$DEV_URL")
+    DEV_DIR=$(basename "$DEV_URL" .zip)
+    DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtz-//')
 
-    mv wsjtx src
-    cd src
+    action=$(yad --center --title "Question which release" --image "dialog-question" --button="Stable:0" --button="Candidate $DEV_VER:2" --text "Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)")
+    return_code="${?:-'2'}"
+
+    if [ "$return_code" -eq 0 ]; then
+        # Stable
+        wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/wsjt-z/files/Source/$STABLE_URL" -O "$STABLE_PKG"
+        unzip "$STABLE_PKG"
+        rm "$STABLE_PKG"
+        cd "$STABLE_DIR"
+        echo "$STABLE_VER" > "${HOME}/.bap.wsjtzed.txt"
+    else
+        # Dev Candidate
+        wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/wsjt-z/files/Source/$DEV_URL" -O "$DEV_PKG"
+        unzip "$DEV_PKG"
+        rm "$DEV_PKG"
+        cd "$DEV_DIR"
+        echo "$DEV_VER" > "${HOME}/.bap.wsjtzed.txt"
+    fi
 
     cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
-	sudo cmake --build . --target install -j$BAPCORE
-
-	#sudo mv release/bin/* /usr/local/bin/
-	#sudo cp release/share/applications/wsjtx.desktop /usr/share/applications/
-	#sudo cp release/share/pixmaps/wsjtx_icon.png /usr/share/pixmaps/
+    sudo cmake --build . --target install -j$BAPCORE
 
     # Detect cortex chip (ARM's)
     if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
-		#reset swap size to default
-		if [ ${FREEMEM} -lt 3000 ]; then
-			echo "Resetting swap size to default"
-			#increase swap size
-			sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
-			sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
-			sudo /etc/init.d/dphys-swapfile restart
-			sleep 10
-		fi
-	fi
+        if [ ${FREEMEM} -lt 3000 ]; then
+            echo "Resetting swap size to default"
+            sudo sed -i 's/CONF_SWAPFILE=\/var\/swap/#CONF_SWAPFILE=\/var\/swap/' /etc/dphys-swapfile
+            sudo sed -i 's/CONF_SWAPSIZE=1024/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+            sudo /etc/init.d/dphys-swapfile restart
+            sleep 10
+        fi
+    fi
 }
 
 VERSION(){
     if [ -d ${HOME}/wsjtz ];then
-		if [ -f ${HOME}/.bap.wsjtzed.txt ]; then
-			CURRENT=$(cat ${HOME}/.bap.wsjtzed.txt)
-		else
-        	CURRENT=UNKNOWN
-		fi
+        if [ -f ${HOME}/.bap.wsjtzed.txt ]; then
+            CURRENT=$(cat ${HOME}/.bap.wsjtzed.txt)
+        else
+            CURRENT=UNKNOWN
+        fi
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/ | grep -m 1 .zip | sed 's/<tr title="wsjtz-//' | sed 's/.zip" class="file ">//' | sed 's^[[:space:]]^^g')
+
+    WSJTZ_HTML=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/)
+    STABLE_VER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-2\.[^"]*\.zip' | head -1 | sed 's/.*wsjtz-//' | sed 's/\.zip//')
+    DEV_VER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1 | sed 's/.*wsjtz-//' | sed 's/\.zip//')
+    NEWVER="Stable: $STABLE_VER, Candidate: $DEV_VER"
 }
 
 DEPENDS(){
