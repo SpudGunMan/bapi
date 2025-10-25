@@ -114,8 +114,18 @@ VERSION(){
         CURRENT=NONE
     fi
 
-	NEWVER=$(curl --max-time 20 -s https://sourceforge.net/projects/fldigi/files/flrig/ | grep .tar.gz | head -1 | awk -F "-" '{print $2}' | awk -F ".tar.gz" '{print $1}')
-    
+    # Get latest Release version
+    RELEASE_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
+    RELEASE_VER=$(echo "$RELEASE_TAR" | sed 's/flrig-//;s/.tar.gz//')
+
+    # Get latest Alpha version
+    ALPHA_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
+    if [ -n "$ALPHA_TAR" ]; then
+        ALPHA_VER=$(echo "$ALPHA_TAR" | sed 's/flrig-//;s/.tar.gz//')
+        NEWVER="Release: $RELEASE_VER, Alpha: $ALPHA_VER"
+    else
+        NEWVER="Release: $RELEASE_VER"
+    fi
 }
 
 DEPENDS(){
