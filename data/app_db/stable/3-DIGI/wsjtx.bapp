@@ -58,18 +58,33 @@ INSTALL(){
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code="${?:-'2'}"
 
+    BASE_URL="https://wsjt.sourceforge.io/"
+    FULL_STABLE_URL="${BASE_URL}${STABLE_URL}"
+    FULL_DEV_URL="${BASE_URL}${DEV_URL}"
+    
     if [ "$return_code" -eq 0 ]; then
-        # StableR"
-        wget --tries 2 --connect-timeout=20 $STABLE_URL" -O "$STABLE_PKG"
+        # Stable
+        wget --tries 2 --connect-timeout=20 "$FULL_STABLE_URL" -O "$STABLE_PKG"
+        if [ ! -f "$STABLE_PKG" ]; then
+            echo "Failed to download $FULL_STABLE_URL"
+            return 1
+        fi
         tar -xvf "$STABLE_PKG"
-        cd "$STABLE_DIR"
+        cd "$STABLE_DIR" || return
         echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    else
+    elif [ -n "$DEV_URL" ]; then
         # Dev Candidate
-        wget --tries 2 --connect-timeout=20 $DEV_URL" -O "$DEV_PKG"
+        wget --tries 2 --connect-timeout=20 "$FULL_DEV_URL" -O "$DEV_PKG"
+        if [ ! -f "$DEV_PKG" ]; then
+            echo "Failed to download $FULL_DEV_URL"
+            return 1
+        fi
         tar -xvf "$DEV_PKG"
-        cd "$DEV_DIR"
+        cd "$DEV_DIR" || return
         echo "$DEV_VER" > "${HOME}/.bap.wsjt.txt"
+    else
+        echo "No valid candidate selected or candidate not available."
+        return 1
     fi
     
     cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
