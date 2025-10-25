@@ -62,8 +62,8 @@ INSTALL(){
     BUTTONS="--button=Stable:0 --button=Dev:1"
 
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
-    return_code=$?
-    
+    return_code="${?:-'2'}"
+
     if [ "$return_code" -eq 0 ]; then
         # Stable
         mkdir "$STABLE_DIR"
