@@ -53,14 +53,16 @@ INSTALL(){
         DEV_PKG=$(basename "$DEV_URL")
         DEV_DIR=$(basename "$DEV_URL" .tgz)
         DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
-        BUTTONS="--button=Stable $STABLE_VER:0 --button=Candidate $DEV_VER:2"
         TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
     else
         DEV_VER=""
-        BUTTONS="--button=Stable $STABLE_VER:0"
         TEXT="Use stable ($STABLE_VER). No dev candidate source available."
     fi
     
+    BUTTONS="--button=\"Stable:0\""
+    if [ -n "$DEV_URL" ]; then
+        BUTTONS+=" --button=\"Dev Dev:2\""
+    fi
     action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
     return_code=$?
     
