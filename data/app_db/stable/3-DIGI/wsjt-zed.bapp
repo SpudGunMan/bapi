@@ -133,7 +133,7 @@ VERSION(){
     DEV_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1)
     if [ -n "$DEV_URL" ]; then
         DEV_VER=$(basename "$DEV_URL" .zip | sed 's/wsjtz-//')
-        NEWVER="Stable: $STABLE_VER, Candidate: $DEV_VER"
+        NEWVER="Stable: $STABLE_VER, Dev: $DEV_VER"
     else
         NEWVER="Stable: $STABLE_VER, No3x"
     fi

@@ -145,20 +145,19 @@ if [ $BAPDIR != $( cat $BAPINSTALL_FILE) ]; then
      echo -e "\nWARNING: Possible enviroment directory change" | tee -a $BAP_ERROR_LOG
 fi
 
-# app check
 if [ ! -d $BAPDIR/apps/stable ]; then
     mkdir -p $BAPDIR/apps
-    cp -ur $BAPDIR/data/app_db/* ./apps/
+    cp -r $BAPDIR/data/app_db/* ./apps/
 else
     echo -e "INFORMATIONAL: Checking if any updates to bapp files, please review!"
 
     # Use a temp dir for atomic update
     TMP_APPS_DIR=$(mktemp -d)
-    cp -ur $BAPDIR/data/app_db/* "$TMP_APPS_DIR/"
+    cp -r $BAPDIR/data/app_db/* "$TMP_APPS_DIR/"
     if [ $? -eq 0 ]; then
         # Optionally backup old apps
         # mv ./apps ./apps_backup_$(date +%s)
-        cp -ur "$TMP_APPS_DIR/"* ./apps/
+        cp -r "$TMP_APPS_DIR/"* ./apps/
         echo -e "INFORMATIONAL: changes to app files detected. checking SWR.."
         ./bin/app-check.sh
     else
