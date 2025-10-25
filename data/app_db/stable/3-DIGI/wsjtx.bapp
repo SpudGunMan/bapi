@@ -71,7 +71,7 @@ INSTALL(){
         # Stable
         mkdir "$STABLE_DIR"
         cd "$STABLE_DIR" || return
-        wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$STABLE_URL" -O "$STABLE_PKG"
+        wget --tries 2 --connect-timeout=20 $STABLE_URL" -O "$STABLE_PKG"
         tar -xvf "$STABLE_PKG"
         cd "$STABLE_DIR"
         echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
@@ -79,7 +79,7 @@ INSTALL(){
         # Dev Candidate
         mkdir "$DEV_DIR"
         cd "$DEV_DIR" || return
-        wget --tries 2 --connect-timeout=20 "https://wsjt.sourceforge.io/$DEV_URL" -O "$DEV_PKG"
+        wget --tries 2 --connect-timeout=20 $DEV_URL" -O "$DEV_PKG"
         tar -xvf "$DEV_PKG"
         cd "$DEV_DIR"
         echo "$DEV_VER" > "${HOME}/.bap.wsjt.txt"
