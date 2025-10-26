@@ -65,7 +65,6 @@ INSTALL(){
         pyver=$(python3 -V | sed 's/Python //' | cut -d "." -f1,2)
         export PYTHON=$pypath
         export PYTHONPATH=/usr/local/lib/python$pyver/site-packages/
-        ./configure --disable-rotator
         ./configure --with-xml-support
         ./configure --with-python-binding PYTHON_VERSION=$pyver
 
