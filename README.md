@@ -5,7 +5,8 @@
 2025 Notes
 - Fixed the database bug! (anyone there?)
 - WSJT-X 3.0 Dev release install options
-- Havent really testes Trixie its new still
+- Trixi Testing
+
 2024 Notes
 - raspian bookworm (pi5/pi4) and wayland are possible problems for WSJT, Xastir, Conky, GridTracker
   - switch back to [X11](https://www.raspberrypi.com/documentation/computers/configuration.html#wayland) or revert to buster
