@@ -9,35 +9,35 @@ Author='spud'
 NOTE='you can choose to use dev or main branch'
 
 INSTALL(){
-    echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install avahi-daemon >> errors/apt.log
+    echo -e "INFORMATIONAL: Installing required packages"
+    sudo apt-get -y install avahi-daemon gpsd gpsd-clients libgps-dev libasound2-dev libudev-dev cmake g++ make >> errors/apt.log
 
-	cd ${BAPSRC}
+    cd "${BAPSRC}"
     rm -rf direwolf
 
     git clone https://www.github.com/wb2osz/direwolf
     cd direwolf
 
-    action=$(yad --center --title "Question which github branch" --image "dialog-question" --button="dev:0" --button="stable:2" --text "Use direwolf git, dev branch? (recomend: stable)")
+    action=$(yad --center --title "Which github branch?" --image "dialog-question" --button="dev:0" --button="stable:2" --text "Use direwolf git, dev branch? (recommend: stable)")
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
-        git branch -r
         git checkout dev
         git pull
     fi
 
+    rm -rf build
     mkdir build
     cd build
 
-    cmake ..
-    make -j 4
+    cmake -DGPSD=ON -DCMAKE_BUILD_TYPE=Release ..
+    make -j"$(nproc)"
     sudo make install
     make install-conf
 
     sed -i "s/N0CALL/${BAPCALL}/" "${HOME}/direwolf.conf"
-    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' ${HOME}/direwolf.conf
-    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS -DTR/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 4 localhost:12345' ${HOME}/direwolf.conf
+    sed -i 's/# ADEVICE  plughw:1,0/ADEVICE  plughw:3,0/' "${HOME}/direwolf.conf"
+    sed -i '/#PTT\ \/dev\/ttyUSB0\ RTS -DTR/a #Uncomment line below for PTT with CAT through FLRIG\n#PTT RIG 4 localhost:12345' "${HOME}/direwolf.conf"
 }
 
 VERSION(){
