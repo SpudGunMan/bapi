@@ -29,33 +29,35 @@ for Job in $JOBLIST; do
 			CURRENTLY_REQ=$(grep -ie $MISSING_BASE $APP_ID_FILE) || echo ''
 			ADD_DEP_LIST=$(grep -ie $MISSING_BASE $BAPAPPS_LIST_FILE) || echo ''
 
-			if [ -f $FOUND_APPS_FILE ];then FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || echo '' ; fi
-
-			if [ ! -z "$DEP_BASE_ISSUES" ];then
-				echo -e "\nWARNING: missing dependency $MISSING_BASE needs resolved!" | tee -a $BAP_ERROR_LOG
-
+			if [ -f $FOUND_APPS_FILE ]; then
+				FOUND_APP=$(grep -ie $MISSING_BASE $FOUND_APPS_FILE) || FOUND_APP=''
+			fi
+			
+			if [ ! -z "$DEP_BASE_ISSUES" ]; then
 				# is this 64
-				if [ "$MISSING_BASE" == "64BIT" ];then
+				if [ "$MISSING_BASE" == "64BIT" ]; then
 					echo -e "INFORMATIONAL: Detected: $BAPARCH bit" | tee -a $BAP_ERROR_LOG
 					echo -e "\nCRITICAL: missing required hardware 64b-ARCH" | tee -a $BAP_ERROR_LOG
 					echo -e "INFORMATIONAL: removing $MISSING_BASE and $Job"
-					#remove from jobs
-					#sed -r "s:$Job::" $JOB_FILE | sed '/^$/d' > $JOB_FILE
 					continue 
 				fi
-
-				#did we find it installed ignore it
-				if [ ! -z "$FOUND_APP" ];then
+			
+				# did we find it installed? say so and skip
+				if [ ! -z "$FOUND_APP" ]; then
+					echo -e "INFORMATIONAL: found $MISSING_BASE is installed"
 					continue
 				fi
-				#are we installing it now? ignore it
-				if [ ! -z "$CURRENTLY_REQ" ];then
+			
+				echo -e "\nWARNING: missing dependency $MISSING_BASE needs resolved!" | tee -a $BAP_ERROR_LOG
+			
+				# are we installing it now? ignore it
+				if [ ! -z "$CURRENTLY_REQ" ]; then
 					echo -e "INFORMATIONAL: adjusting plate current.."
 					sed -i "1s:^:$ADD_DEP_LIST\n:" $JOB_FILE
 					continue
 				fi
-				#find the path for the missing known file and add to the top of the job list
-				if [ ! -z "$ADD_DEP_LIST" ];then
+				# find the path for the missing known file and add to the top of the job list
+				if [ ! -z "$ADD_DEP_LIST" ]; then
 					echo -e "INFORMATIONAL: Resolving: $MISSING_BASE Job:$Job"
 					echo -e "INFORMATIONAL: adjusting grid current.."
 					sed -i "1s:^:$ADD_DEP_LIST\n:" $JOB_FILE
@@ -63,7 +65,6 @@ for Job in $JOBLIST; do
 					echo -e "\nCRITICAL: further issues remain with $MISSING_BASE and $Job" | tee -a $BAP_ERROR_LOG
 					YADWARNING=$(yad --center --title "Warning" --image "dialog-warning" --button="gtk-ok" --text "Warning that $MISSING_BASE should be handled first.")
 				fi
-
 			fi
 		done
 		echo -e "INFORMATIONAL: finished processing jobs, new joblist:\n$(cat $JOB_FILE)\n"
