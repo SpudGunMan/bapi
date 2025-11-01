@@ -60,13 +60,10 @@ INSTALL(){
         cd hamlib-${NEWRIG} || return
     fi
 
-    if [[ $(whereis python3 | grep bin) ]];then
-        pypath=$(which python3)
-        pyver=$(python3 -V | sed 's/Python //' | cut -d "." -f1,2)
-        export PYTHON=$pypath
-        export PYTHONPATH=/usr/local/lib/python$pyver/site-packages/
-        ./configure --with-python-binding PYTHON_VERSION=$pyver --with-xml-support
-
+    if command -v python3 >/dev/null 2>&1; then
+        pypath="$(command -v python3)"
+        export PYTHON="$pypath"
+        ./configure --with-python-binding=python3 --with-xml-support
     else
         ./configure --with-xml-support
     fi
