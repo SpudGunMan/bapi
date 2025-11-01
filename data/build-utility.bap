@@ -118,6 +118,7 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     sudo apt-get -y install libqt5multimedia5
     sudo apt-get -y install libqt5multimedia5-plugins
     sudo apt-get -y install qtmultimedia5-dev
+    sudo apt-get install libqt5websockets5-dev
 
     #qt6 suite
     #sudo apt-get -y install qmake6
