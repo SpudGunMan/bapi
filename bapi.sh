@@ -7,7 +7,7 @@ echo "###################################"
 
 #set working directory
 BAPDIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd $BAPDIR
+cd "$BAPDIR"
 
 #ENVAR
 mkdir -p cache
@@ -29,7 +29,7 @@ if [ ! -f errors/apt.log ];then install -Dv /dev/null errors/apt.log ;fi
 BAPAPPS_FILES_LOC="apps/stable/*.bapp apps/stable/**/*.bapp apps/experimental/*.bapp apps/experimental/**/*.bapp"
 BAPPVER="4" #.bapp file version #also update template-maker.sh
 BAPWHOAMI=$(whoami)
-mkdir -p $BAPSRC
+mkdir -p "$BAPSRC"
 
 #####################################
 #	DEV DEBUG
@@ -51,6 +51,7 @@ export DEBUG
 if [ $DEBUG -eq 1 ];then echo -e "DEBUG: ON: additional tools:   touch .skip-dev-apt && touch .force-run"; fi
 
 YAD_INFO_F(){
+    local msg_txt=${1:-'dialog box'}
     msg_txt=${1:-'dialog box'}
     yad 2> /dev/null --title="bAPi" --center --button="OK" --text="$msg_txt"
 }
