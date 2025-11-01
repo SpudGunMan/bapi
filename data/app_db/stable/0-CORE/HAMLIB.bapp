@@ -15,12 +15,12 @@ INSTALL(){
     sudo apt-mark hold python3-hamlib
     sudo apt-get -y remove libhamlib*
     
-    echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install swig >> errors/apt.log
-    sudo apt-get -y install ibnova-dev 2>&1 >> errors/apt.log
-    sudo apt-get -y install ibgd-dev 2>&1 >> errors/apt.log
-    sudo apt-get -y install libindi-dev 2>&1 >> errors/apt.log
-    sudo apt-get -y install libxml2-dev 2>&1 >> errors/apt.log
+    #echo -e "INFORMATIONAL: apt-get required packages"
+    #sudo apt-get -y install swig >> errors/apt.log
+    #sudo apt-get -y install ibnova-dev 2>&1 >> errors/apt.log
+    #sudo apt-get -y install ibgd-dev 2>&1 >> errors/apt.log
+    #sudo apt-get -y install libindi-dev 2>&1 >> errors/apt.log
+    #sudo apt-get -y install libxml2-dev 2>&1 >> errors/apt.log
 
     cd ${BAPSRC}
 
@@ -65,11 +65,9 @@ INSTALL(){
         pyver=$(python3 -V | sed 's/Python //' | cut -d "." -f1,2)
         export PYTHON=$pypath
         export PYTHONPATH=/usr/local/lib/python$pyver/site-packages/
-        ./configure --with-xml-support
-        ./configure --with-python-binding PYTHON_VERSION=$pyver
+        ./configure --with-python-binding PYTHON_VERSION=$pyver --with-xml-support
 
     else
-        ./configure --disable-rotator
         ./configure --with-xml-support
     fi
 
