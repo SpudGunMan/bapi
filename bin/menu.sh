@@ -17,14 +17,16 @@ export -f BAP_CONFIG_MENU
 
 #loops files for data to put into yad table with checkboxes. BAPP column is lost to checkbox.
 for bappfile in $BAPAPPS_FILES_LOC; do
-    if [ -f $bappfile ];then
-        grep -m 1 -e '^[[:blank:]]*BAPP' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*ID' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*Name' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*Comment' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*VerRemote' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*VerLocal' $bappfile | cut -d = -f 2
-        grep -m 1 -e '^[[:blank:]]*LOC' $bappfile | cut -d = -f 2
+    if [ -f "$bappfile" ]; then
+        BAPP=$(grep -m 1 -e '^[[:blank:]]*BAPP' "$bappfile" | cut -d = -f 2)
+        ID=$(grep -m 1 -e '^[[:blank:]]*ID' "$bappfile" | cut -d = -f 2)
+        NAME=$(grep -m 1 -e '^[[:blank:]]*Name' "$bappfile" | cut -d = -f 2)
+        COMMENT=$(grep -m 1 -e '^[[:blank:]]*Comment' "$bappfile" | cut -d = -f 2)
+        VERREMOTE=$(grep -m 1 -e '^[[:blank:]]*VerRemote' "$bappfile" | cut -d = -f 2)
+        VERLOCAL=$(grep -m 1 -e '^[[:blank:]]*VerLocal' "$bappfile" | cut -d = -f 2)
+        LOC=$(grep -m 1 -e '^[[:blank:]]*LOC' "$bappfile" | cut -d = -f 2)
+        # Output all fields, even if empty
+        echo "$BAPP|$ID|$NAME|$COMMENT|$VERREMOTE|$VERLOCAL|$LOC"
     fi
 done | yad 2> /dev/null --width=1150 --height=650 --title="Build-A-Pi mark II - The leading edge Ham Radio Software Package Manager - $BAPCALL" --image="gtk-execute" \
             --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"' \
