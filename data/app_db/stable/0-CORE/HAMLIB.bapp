@@ -26,7 +26,7 @@ INSTALL(){
 
     action=$(yad --center --title "Question" --image "dialog-question"\
         --button="GitHub:0" --button="SourceForge:2" \
-        --text "Use github source or sourceforge (recomend: github, newer)")
+        --text "HamLib Use github source or sourceforge (recomend: github, newer)")
     return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
