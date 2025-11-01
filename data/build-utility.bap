@@ -126,7 +126,13 @@ COMMON_DEVELOPER_TOOLS_INSTALL(){
     #sudo apt-get -y install qt6-declarative-dev
     #sudo apt-get -y install qt6-serialport-dev
     #sudo apt-get -y install qt6serialport6-dev
-    
+    #sudo apt-get -y install qt6-multimedia-dev
+    #sudo apt-get -y install qt6websockets-dev
+    #sudo apt-get -y install qt6tools-dev
+    #sudo apt-get -y install qt6tools-dev-tools
+    #sudo apt-get -y install libqt6multimedia6
+    #sudo apt-get -y install libqt6serialport6
+    #sudo apt-get -y install libqt6websockets6
 
     #port audio and such
     sudo apt-get -y install libportaudio2 
