@@ -61,17 +61,15 @@ INSTALL(){
             sudo apt-get update
             sudo apt-get install -y python3-pip
         fi
-    
-        # Post-install meshtastic python tools
-        if command -v python3 >/dev/null 2>&1; then
-            python3 -m pip install --upgrade meshtastic
-            cd "${HOME}" || return
-            if [ -d "meshing-around/.git" ]; then
-                cd meshing-around && git pull
-            fi
-        else
-            echo "WARNING: python3 not found, skipping meshtastic python tools installation."
+
+        python3 -m pip install --upgrade meshtastic
+        cd "${HOME}" || return
+        if [ -d "meshing-around/.git" ]; then
+            cd meshing-around && git pull
         fi
+    else
+        echo "WARNING: python3 not found, skipping meshtastic python tools installation."
+    fi
 }
 
 VERSION(){
