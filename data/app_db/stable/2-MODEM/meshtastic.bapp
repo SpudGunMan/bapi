@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3=''
 Author='spud'
-NOTE='''
+NOTE=''
 
 INSTALL(){
     cd "${BAPSRC}" || return
