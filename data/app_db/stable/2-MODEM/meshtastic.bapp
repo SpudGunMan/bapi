@@ -23,10 +23,7 @@ INSTALL(){
         sudo apt-get update
         sudo apt-get -y install meshtasticd
         return 0
-    elif [[ "$NAME" == Raspbian* ]]; then
-        yad --center --title "Meshtastic" --text="ERROR: Raspbian detected, but not 32-bit. Please use the appropriate repository for your architecture." --button="OK"
-        return 1
-    elif [[ "$NAME" == "Debian GNU/Linux" ]]; then
+    elif [[ "$ID_LIKE" == *debian* || "$ID_LIKE" == *ubuntu* ]]; then
         # Default to Debian 12 (bookworm)
         MESHT_REPO_VER="Debian_12"
         if [[ "$VERSION_CODENAME" == "trixie" ]]; then
@@ -53,14 +50,13 @@ INSTALL(){
             rm -f meshtastic-linux-amd64.deb
         fi
     else
-        yad --center --title "Meshtastic" --text="ERROR: Unsupported OS. Please use Debian or Raspbian." --button="OK"
+        yad --center --title "Meshtastic" --text="ERROR: Unsupported OS. Please use Debian, Ubuntu, or Raspbian." --button="OK"
         return 1
     fi
 
     # Post-install meshtastic python tools
     if command -v python3 >/dev/null 2>&1; then
         python3 -m pip install --upgrade meshtastic
-        # clone meshing-around to the users home directory
         cd "${HOME}" || return
         git clone https://github.com/spudgunman/meshing-around
     else
