@@ -1,0 +1,83 @@
+BAPP=4
+ID=MESHD
+Name=MeshtasticDaemon
+Comment='Meshtastic linux-native daemon and tools'
+VerLocal=0
+VerRemote=0
+W3=''
+Author='spud'
+NOTE='''
+
+INSTALL(){
+    cd "${BAPSRC}" || return
+
+    . /etc/os-release
+    ARCH=$(uname -m)
+
+    if [[ "$NAME" == Raspbian* && "$ARCH" == "armv7l" ]]; then
+        # Raspbian 32-bit
+        echo "deb http://download.opensuse.org/repositories/network:/Meshtastic:/beta/Raspbian_12/ /" | \
+            sudo tee /etc/apt/sources.list.d/network:Meshtastic:beta.list
+        curl -fsSL https://download.opensuse.org/repositories/network:Meshtastic:beta/Raspbian_12/Release.key | \
+            gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/network_Meshtastic_beta.gpg > /dev/null
+        sudo apt-get update
+        sudo apt-get -y install meshtasticd
+        return 0
+    elif [[ "$NAME" == Raspbian* ]]; then
+        yad --center --title "Meshtastic" --text="ERROR: Raspbian detected, but not 32-bit. Please use the appropriate repository for your architecture." --button="OK"
+        return 1
+    elif [[ "$NAME" == "Debian GNU/Linux" ]]; then
+        # Default to Debian 12 (bookworm)
+        MESHT_REPO_VER="Debian_12"
+        if [[ "$VERSION_CODENAME" == "trixie" ]]; then
+            MESHT_REPO_VER="Debian_13"
+        fi
+        echo "deb http://download.opensuse.org/repositories/network:/Meshtastic:/beta/${MESHT_REPO_VER}/ /" | \
+            sudo tee /etc/apt/sources.list.d/network:Meshtastic:beta.list
+        curl -fsSL "https://download.opensuse.org/repositories/network:Meshtastic:beta/${MESHT_REPO_VER}/Release.key" | \
+            gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/network_Meshtastic_beta.gpg > /dev/null
+        sudo apt-get update
+
+        # Prompt user for version
+        action=$(yad --center --title "Meshtastic Version" --image "dialog-question" \
+            --button="Latest Release:0" --button="Nightly:2" \
+            --text "Which Meshtastic version do you want to install?\n\nLatest Release: Stable, recommended\nNightly: Newest features, may be unstable")
+        return_code="${?:-'2'}"
+
+        if [ "$return_code" -eq 0 ]; then
+            sudo apt-get -y install meshtasticd
+        else
+            MESHT_DEB_URL="https://github.com/meshtastic/Meshtastic-device/releases/download/nightly/meshtastic-linux-amd64.deb"
+            wget -O meshtastic-linux-amd64.deb "$MESHT_DEB_URL"
+            sudo apt-get -y install ./meshtastic-linux-amd64.deb
+            rm -f meshtastic-linux-amd64.deb
+        fi
+    else
+        yad --center --title "Meshtastic" --text="ERROR: Unsupported OS. Please use Debian or Raspbian." --button="OK"
+        return 1
+    fi
+
+    # Post-install meshtastic python tools
+    if command -v python3 >/dev/null 2>&1; then
+        python3 -m pip install --upgrade meshtastic
+        # clone meshing-around to the users home directory
+        cd "${HOME}" || return
+        git clone https://github.com/spudgunman/meshing-around
+    else
+        echo "WARNING: python3 not found, skipping meshtastic python tools installation."
+    fi
+}
+
+VERSION(){
+    if [ -d ${HOME}/.wine/drive_c/agwpe ];then
+        CURRENT=0-web
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}
