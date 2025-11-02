@@ -24,10 +24,10 @@ INSTALL(){
         sudo apt-get -y install meshtasticd
         return 0
     elif [[ "$ID_LIKE" == *debian* || "$ID_LIKE" == *ubuntu* ]]; then
-        # Default to Debian 12 (bookworm)
-        MESHT_REPO_VER="Debian_12"
-        if [[ "$VERSION_CODENAME" == "trixie" ]]; then
-            MESHT_REPO_VER="Debian_13"
+        # Default to Debian 13 (trixie)
+        MESHT_REPO_VER="Debian_13"
+        if [[ "$VERSION_CODENAME" == "bookworm" ]]; then
+            MESHT_REPO_VER="Debian_12"
         fi
         echo "deb http://download.opensuse.org/repositories/network:/Meshtastic:/beta/${MESHT_REPO_VER}/ /" | \
             sudo tee /etc/apt/sources.list.d/network:Meshtastic:beta.list
