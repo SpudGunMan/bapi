@@ -6,108 +6,34 @@ VerLocal=0
 VerRemote=0
 W3='https://wiki.freedata.app/en'
 Author='spud'
-NOTE='installs to HOME and there is a launcher script \n this also installs npm and nodejs'
+NOTE='uses https://wiki.freedata.app/en/installation/linux-install-script'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
 
-    if [[ $(whereis npx | grep bin) ]];then
-        echo -e "INFORMATIONAL: found nodejs npx on system"
-    else
-        #script needs updated https://github.com/nodesource/distributions
-        curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-        sudo apt-get -y install nodejs >> errors/apt.log
-        sudo npm install -g n >> errors/apt.log
-        sudo n stable >> errors/apt.log
-        sudo npm install -g npm >> errors/apt.log
-    fi
-   
-    sudo apt-get -y install python3 >> errors/apt.log
-    sudo apt-get -y install python3-pip >> errors/apt.log
-    sudo apt-get -y install portaudio19-dev >> errors/apt.log
-    sudo apt-get -y install python3-pyaudio >> errors/apt.log
-    sudo apt-get -y install python3-colorama >> errors/apt.log
+    cd "${HOME}"
+    mkdir -p ~/freedata
+    cd ~/freedata
+    wget -N https://raw.githubusercontent.com/DJ2LS/FreeDATA/develop/tools/Linux/install-freedata-linux.sh
+    wget -N https://raw.githubusercontent.com/DJ2LS/FreeDATA/develop/tools/Linux/run-freedata-linux.sh
+    chmod +x install-freedata-linux.sh
+    chmod +x run-freedata-linux.sh
 
-    sudo apt-get -y install python3-psutil >> errors/apt.log
-    sudo apt-get -y install python3-crcengine >> errors/apt.log
-    sudo apt-get -y install python3-ujson >> errors/apt.log
-    sudo apt-get -y install python3-pyserial >> errors/apt.log
-    sudo apt-get -y install python3-numpy >> errors/apt.log
-    sudo apt-get -y install python3-structlog >> errors/apt.log
-    sudo apt-get -y install python3-sounddevice >> errors/apt.log
-    sudo apt-get -y install python3-websocket >> errors/apt.log
-    sudo apt-get -y install python3-flask >> errors/apt.log
-    sudo apt-get -y install python3-flask-cors >> errors/apt.log
-    sudo apt-get -y install python3-sqlalchemy >> errors/apt.log
-    sudo apt-get -y install python3-flask_socketio >> errors/apt.log
+    # User choice: default or dev install
+    action=$(yad --center --title "FreeDATA Install" --image "dialog-question" \
+        --button="Default:0" --button="Dev:2" \
+        --text "Choose FreeDATA install type:\n\nDefault: Stable\nDev: Development branch (latest features, may be unstable)")
+    return_code="${?:-'2'}"
 
-    if [[ "$BAPCPU" == *"ar"* ]]; then
-        pip3 install psutil --break-system-packages
-        pip3 install crcengine --break-system-packages
-        pip3 install ujson --break-system-packages
-        pip3 install pyserial --break-system-packages
-        pip3 install numpy --break-system-packages
-        pip3 install structlog --break-system-packages
-        pip3 install sounddevice --break-system-packages
-        pip3 install websocket-client --break-system-packages
-        pip3 install flask --break-system-packages
-        pip3 install flask_cors --break-system-packages
-        pip3 install sqlalchemy --break-system-packages
-        pip3 install flask_sock --break-system-packages
+    if [ "$return_code" -eq 0 ]; then
+        ./install-freedata-linux.sh
     else
-        pip3 install psutil 
-        pip3 install crcengine 
-        pip3 install ujson 
-        pip3 install pyserial 
-        pip3 install numpy 
-        pip3 install structlog 
-        pip3 install sounddevice
-        pip3 install websocket-client
-        pip3 install flask_sock
-        pip3 install flask
-        pip3 install flask_cors
-        pip3 install sqlalchemy
+        ./install-freedata-linux.sh develop
     fi
 
-    cd ${HOME}
-
-    if [ -d FreeDATA ];then
-        cd FreeDATA
-        git pull
-        pip install --upgrade -r requirements.txt
-    else
-        git clone https://github.com/DJ2LS/FreeDATA -o FreeDATA
-        cd FreeDATA
-        pip install --upgrade -r requirements.txt
-        cd freedata_gui
-        npm i --force && npm run build
-
-        cd ..
-        echo -e "#!/bin/bash" > run_freedata.sh
-        echo -e "cd $HOME/FreeDATA" >> run_freedata.sh
-        echo -e "x-terminal-emulator -e tools/run-server.sh" >> run_freedata.sh
-        echo -e "sleep 7" >> run_freedata.sh
-        echo -e "xdg-open http://localhost:5000/gui" >> run_freedata.sh
-        chmod +x run_freedata.sh
-        sudo ln -s run_freedata.sh /usr/local/bin/freedata
-
-        # patch library into project
-        cd freedata_server/lib/codec2
-        if [[ -f libcodec2.so ]];then
-            rm libcodec2.so
-            ln -s /usr/local/lib/libcodec2.so libcodec2.so
-            echo "libcodec2.so linked to /usr/local/lib"
-        else
-            echo "ERROR: libcodec2.so not found"
-        fi
-
-        cd ${HOME}/FreeDATA
-
-        #set config.ini 
-        cp ${HOME}/FreeDATA/freedata_server/config.ini.example ${HOME}/FreeDATA/freedata_server/config.ini
-        sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/FreeDATA/freedata_server/config.ini"
-    fi
-
+    # set config.ini
+    cp "${HOME}/freedata/freedata_server/config.ini.example" "${HOME}/freedata/freedata_server/config.ini"
+    sed -i "s/AA1AAA/${BAPCALL}/" "${HOME}/freedata/freedata_server/config.ini"
 }
 
 VERSION(){
