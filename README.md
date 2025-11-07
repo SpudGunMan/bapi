@@ -19,7 +19,7 @@
 
 Reminder
 - no .desktop files yet for most things (no menu icons)
-- upgrade your OS first. This script is not upgrading the OS/reboot before using tool.
+- **upgrade your OS first.** This script is not upgrading the OS/reboot before using tool.
 
 ## Description
 ![screenshot](data/screenshot.jpg)
