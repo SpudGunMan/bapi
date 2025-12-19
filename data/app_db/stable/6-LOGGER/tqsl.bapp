@@ -14,7 +14,7 @@ INSTALL(){
 	sudo apt-get -y install libssl-dev >> errors/apt.log
 	sudo apt-get -y install libdb++-dev >> errors/apt.log
 	sudo apt-get -y install libcurl4-openssl-dev >> errors/apt.log
-	sudo apt-get -y install libwxgtk3.2-gtk3-dev >> errors/apt.log
+	sudo apt-get -y install libwxgtk3.2-dev >> errors/apt.log
 	sudo apt-get -y install libsqlite3-dev >> errors/apt.log
 
 	
