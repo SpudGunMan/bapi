@@ -4,7 +4,7 @@ Name=flamp
 Comment='Multicast Protocol - file transfer program'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE='the source had issues, need to double check not bapi fault'
 
@@ -42,10 +42,10 @@ INSTALL(){
     if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
 		echo -e "INFORMATIONAL: installing FLXMLRPC"
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -58,12 +58,12 @@ INSTALL(){
 
 
 	#determine latest FLAMP
-	AMPTAR=$(curl -s http://www.w1hkj.com/files/flamp/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/">.*$//')
+	AMPTAR=$(curl -s http://www.w1hkj.org/files/flamp/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/">.*$//')
 	AMPPKG=$(echo ${AMPTAR} | sed 's/.tar.gz//')
 
 	#download FLAMP
 	cd ${BUILDDIR} || return
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flamp/$AMPTAR
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flamp/$AMPTAR
 	tar -zxvf ${AMPTAR}
 
 	#build FLAMP

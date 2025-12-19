@@ -4,7 +4,7 @@ Name=fldigi
 Comment='multi-mode soundcard modem'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE=''
 
@@ -41,10 +41,10 @@ INSTALL(){
     if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
 		echo -e "INFORMATIONAL: installing FLXMLRPC"
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 		rm ${FLXM}
 
@@ -65,17 +65,17 @@ INSTALL(){
     if [ "$return_code" -eq 0 ]; then
 		#alpha of FLRIG
 		echo -e "INFORMATIONAL: installing Alpha of FLDIGI"
-		FLTAR=$(curl -s http://www.w1hkj.com/alpha/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+		FLTAR=$(curl -s http://www.w1hkj.org/alpha/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 		FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 		#Download latest FLDIGI tar file
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/alpha/fldigi/${FLTAR}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/alpha/fldigi/${FLTAR}
 
 	else
 		#Determine latest FLDIGI
-		FLTAR=$(curl -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
+		FLTAR=$(curl -s http://www.w1hkj.org/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 		FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 		#Download latest FLDIGI tar file
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/fldigi/${FLTAR}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/fldigi/${FLTAR}
 	fi
 	
 	tar -zxvf ${FLTAR}
@@ -109,9 +109,9 @@ VERSION(){
     fi
 
     # Get latest Release version
-    RELEASE_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/files/fldigi/ | grep .tar.gz | tail -1 | sed 's/.*fldigi-//;s/.tar.gz.*//')
+    RELEASE_TAR=$(curl --max-time 20 -s http://www.w1hkj.org/files/fldigi/ | grep .tar.gz | tail -1 | sed 's/.*fldigi-//;s/.tar.gz.*//')
     # Get latest Alpha version
-    ALPHA_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/alpha/fldigi/ | grep .tar.gz | tail -1 | sed 's/.*fldigi-//;s/.tar.gz.*//')
+    ALPHA_TAR=$(curl --max-time 20 -s http://www.w1hkj.org/alpha/fldigi/ | grep .tar.gz | tail -1 | sed 's/.*fldigi-//;s/.tar.gz.*//')
 
     if [ -n "$ALPHA_TAR" ]; then
         NEWVER="Release: $RELEASE_TAR, Alpha: $ALPHA_TAR"

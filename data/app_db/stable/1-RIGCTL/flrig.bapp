@@ -4,7 +4,7 @@ Name=flrig
 Comment='flrig Rig Control'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE='pulling directly from the dev home page'
 
@@ -47,10 +47,10 @@ INSTALL(){
     if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
 		echo -e "INFORMATIONAL: installing FLXMLRPC"
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 		rm ${FLXM}
 
@@ -71,13 +71,13 @@ INSTALL(){
     if [ "$return_code" -eq 0 ]; then
 		#alpha of FLRIG
 		echo -e "INFORMATIONAL: installing FLRIG Alpha"
-		RIGTAR=$(curl -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/".*$//')
-		FLink=http://www.w1hkj.com/alpha/flrig/${RIGTAR}
+		RIGTAR=$(curl -s http://www.w1hkj.org/alpha/flrig/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/".*$//')
+		FLink=http://www.w1hkj.org/alpha/flrig/${RIGTAR}
 	else
 		#release of FLRIG
 		echo -e "INFORMATIONAL: installing FLRIG Release"
-		RIGTAR=$(curl -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
-		FLink=http://www.w1hkj.com/files/flrig/${RIGTAR}
+		RIGTAR=$(curl -s http://www.w1hkj.org/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+		FLink=http://www.w1hkj.org/files/flrig/${RIGTAR}
 	fi
 
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
@@ -115,11 +115,11 @@ VERSION(){
     fi
 
     # Get latest Release version
-    RELEASE_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
+    RELEASE_TAR=$(curl --max-time 20 -s http://www.w1hkj.org/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
     RELEASE_VER=$(echo "$RELEASE_TAR" | sed 's/flrig-//;s/.tar.gz//')
 
     # Get latest Alpha version
-    ALPHA_TAR=$(curl --max-time 20 -s http://www.w1hkj.com/alpha/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
+    ALPHA_TAR=$(curl --max-time 20 -s http://www.w1hkj.org/alpha/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//' | tail -1)
     if [ -n "$ALPHA_TAR" ]; then
         ALPHA_VER=$(echo "$ALPHA_TAR" | sed 's/flrig-//;s/.tar.gz//')
         NEWVER="Release: $RELEASE_VER, Alpha: $ALPHA_VER"

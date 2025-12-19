@@ -4,7 +4,7 @@ Name=flmsg
 Comment='NBEMS messaging system'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE=''
 
@@ -42,10 +42,10 @@ INSTALL(){
     if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
 		echo -e "INFORMATIONAL: installing FLXMLRPC"
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -59,11 +59,11 @@ INSTALL(){
 
 
 	#Determine latest FLMSG
-	MSGTAR=$(curl -s http://www.w1hkj.com/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+	MSGTAR=$(curl -s http://www.w1hkj.org/files/flmsg/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	MSGPKG=$(echo ${MSGTAR} | sed 's/.tar.gz//')
 
 	#download FLMSG
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flmsg/${MSGTAR}
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flmsg/${MSGTAR}
 	tar -zxvf ${MSGTAR}
 
 	#Build FLMSG

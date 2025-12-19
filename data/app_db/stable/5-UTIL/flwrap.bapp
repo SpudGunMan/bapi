@@ -4,7 +4,7 @@ Name=flwrap
 Comment='file encapsulation / compression'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE='had issues with compile could be code related'
 
@@ -21,12 +21,12 @@ INSTALL(){
 	cd ${BAPSRC} || return
 
 	#Determine latest FLWRAP
-	WRAPTAR=$(curl -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
+	WRAPTAR=$(curl -s http://www.w1hkj.org/files/flwrap/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
 	WRAPPKG=$(echo ${WRAPTAR} | sed 's/.tar.gz//')
 
 	#Download latest FLWRAP
 	cd ${BUILDDIR} || return
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flwrap/${WRAPTAR}
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flwrap/${WRAPTAR}
 	tar -zxvf ${WRAPTAR}
 
 	cd ${WRAPPKG} || return
@@ -43,7 +43,7 @@ VERSION(){
         CURRENT=NONE
     fi
 
-    NEWVER=$(curl --max-time 20 -s http://www.w1hkj.com/files/flwrap/ | grep .tar.gz | sed 's/.*flwrap-//' | head -c5)
+    NEWVER=$(curl --max-time 20 -s http://www.w1hkj.org/files/flwrap/ | grep .tar.gz | sed 's/.*flwrap-//' | head -c5)
 }
 
 DEPENDS(){

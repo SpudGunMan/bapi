@@ -4,7 +4,7 @@ Name=flnet
 Comment='voice net controller database'
 VerLocal=0
 VerRemote=0
-W3='http://www.w1hkj.com'
+W3='http://www.w1hkj.org'
 Author='spud'
 NOTE=''
 
@@ -44,10 +44,10 @@ INSTALL(){
     if [ ! -f /usr/local/lib/libflxmlrpc.so.1 ]; then
 		echo -e "INFORMATIONAL: installing FLXMLRPC"
 		#determine latest FLXMLRPC & download
-		FLXM=$(curl -s http://www.w1hkj.com/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLXM=$(curl -s http://www.w1hkj.org/files/flxmlrpc/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 		XMPKG=$(echo ${FLXM} | sed 's/.tar.gz//')
 
-		wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flxmlrpc/${FLXM}
+		wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flxmlrpc/${FLXM}
 		tar -zxvf ${FLXM}
 
 		#build FLXMLRPC
@@ -61,11 +61,11 @@ INSTALL(){
 
 
 	#determine lastest FLNET
-	NETTAR=$(curl -s http://www.w1hkj.com/files/flnet/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+	NETTAR=$(curl -s http://www.w1hkj.org/files/flnet/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
 	NETPKG=$(echo ${NETTAR} | sed 's/.tar.gz//')
 
 	#download FLNET
-	wget --tries 2 --connect-timeout=60 http://www.w1hkj.com/files/flnet/$NETTAR
+	wget --tries 2 --connect-timeout=60 http://www.w1hkj.org/files/flnet/$NETTAR
 	tar -zxvf ${NETTAR}
 
 	#build FLNET
