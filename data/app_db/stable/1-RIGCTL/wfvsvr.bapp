@@ -42,7 +42,9 @@ INSTALL(){
 
 VERSION(){
     if [[ $(whereis wfserver | grep bin) ]];then
-        CURRENT=$(wfserver -v 2>/dev/null | sed 's/wfserver version: //' | head -c5)
+        #CURRENT=$(wfserver -v 2>/dev/null | sed 's/wfserver version: //' | head -c5)
+        # There is a hang in wfserver -v so we just report its installed
+        CURRENT="installed"
     else
         CURRENT=NONE
     fi
