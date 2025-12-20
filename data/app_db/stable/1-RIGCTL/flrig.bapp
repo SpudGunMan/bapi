@@ -76,8 +76,8 @@ INSTALL(){
 	else
 		#release of FLRIG
 		echo -e "INFORMATIONAL: installing FLRIG Release"
-		RIGTAR=$(curl -s https://www.w1hkj.org/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
-		FLink="https://www.w1hkj.org/flrig/${RIGTAR}"
+		RIGTAR=$(curl -s https://www.w1hkj.org/files/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLink="https://www.w1hkj.org/files/flrig/${RIGTAR}"
 	fi
 
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
