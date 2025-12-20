@@ -45,7 +45,7 @@ INSTALL(){
     STABLE_DIR=$(basename "$STABLE_URL" .zip)
     STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtz-//')
 
-    wget --tries 2 --connect-timeout=60 "https://sourceforge.net/projects/wsjt-z/files/Source/$STABLE_URL" -O "$STABLE_PKG"
+    wget --tries 2 --connect-timeout=60 "$STABLE_URL" -O "$STABLE_PKG"
     unzip "$STABLE_PKG"
     rm "$STABLE_PKG"
     cd "$STABLE_DIR"
