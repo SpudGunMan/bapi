@@ -68,16 +68,16 @@ INSTALL(){
         --text "Use Alpha or Normal Release (recomend: Release)")
     return_code="${?:-'2'}"
 
-    if [ "$return_code" -eq 0 ]; then
+	if [ "$return_code" -eq 0 ]; then
 		#alpha of FLRIG
 		echo -e "INFORMATIONAL: installing FLRIG Alpha"
-		RIGTAR=$(curl -s href="https://www.w1hkj.org/alpha/flrig/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/".*$//')
-		FLink=href="https://www.w1hkj.org/alpha/flrig/${RIGTAR}
+		RIGTAR=$(curl -s https://www.w1hkj.org/alpha/flrig/ | grep .tar.gz | tail -1 | sed 's/.*ref="//;s/">.*$//')
+		FLink="https://www.w1hkj.org/alpha/flrig/${RIGTAR}"
 	else
 		#release of FLRIG
 		echo -e "INFORMATIONAL: installing FLRIG Release"
-		RIGTAR=$(curl -s href="https://www.w1hkj.org/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/".*$//')
-		FLink=href="https://www.w1hkj.org/flrig/${RIGTAR}
+		RIGTAR=$(curl -s https://www.w1hkj.org/flrig/ | grep .tar.gz | sed 's/.*ref="//;s/">.*$//')
+		FLink="https://www.w1hkj.org/flrig/${RIGTAR}"
 	fi
 
 	RIGPKG=$(echo ${RIGTAR} | sed 's/.tar.gz//')
