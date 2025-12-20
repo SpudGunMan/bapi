@@ -38,9 +38,12 @@ INSTALL(){
     JS8VERSION=$(echo $JS8PKG | sed 's/js8call-//;s/.tgz.*$//')
     JS8DIR=$(echo $JS8PKG | sed 's/.tgz//')
 
-    wget --tries 2 --connect-timeout=60 http://files.js8call.com/$JS8VERSION/$JS8PKG
-    tar -xvf $JS8PKG
-    rm -f $JS8PKG
+    #wget --tries 2 --connect-timeout=60 http://files.js8call.com/$JS8VERSION/$JS8PKG
+    wget --tries 2 --connect-timeout=60 https://github.com/JS8Call-improved/JS8Call-improved/releases/download/release%2F2.4.0/Debian_INSTALL.tar.gz
+    #tar -xvf $JS8PKG
+    tar -xvf Debian_INSTALL.tar.gz
+    #rm -f $JS8PKG
+    rm -f Debian_INSTALL.tar.gz
     cd js8call
 
     cmake -D CMAKE_INSTALL_PREFIX=${HOME}/js8call -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF
