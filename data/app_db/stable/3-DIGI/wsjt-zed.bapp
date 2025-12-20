@@ -48,7 +48,7 @@ INSTALL(){
     wget --tries 2 --connect-timeout=60 "$STABLE_URL" -O "$STABLE_PKG"
     unzip "$STABLE_PKG"
     rm "$STABLE_PKG"
-    cd "$STABLE_DIR"
+    cd wsjtx
     echo "$STABLE_VER" > "${HOME}/.bap.wsjtzed.txt"
 
     cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
