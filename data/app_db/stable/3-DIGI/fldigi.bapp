@@ -74,7 +74,7 @@ INSTALL(){
 		FLTAR=$(curl -s https://www.w1hkj.org/files/fldigi/ | grep .tar.gz | sed 's/.*fldigi/fldigi/;s/.gz.*$/.gz/')
 		FLPKG=$(echo ${FLTAR} | sed 's/.tar.gz//')
 		#Download latest FLDIGI tar file
-		wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/flrig/${FLTAR}
+		wget --tries 2 --connect-timeout=60 https://www.w1hkj.org/files/fldigi/${FLTAR}
 	fi
 	
 	tar -zxvf ${FLTAR}
