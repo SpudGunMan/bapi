@@ -14,6 +14,7 @@ INSTALL(){
     mkdir winelink
     cd winelink
 
+    sudo apt install cabextract
     #winetricks
     echo -e "INFORMATIONAL: installing winetricks"
     wget  https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
