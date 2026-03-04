@@ -9,56 +9,62 @@ Author='spud'
 NOTE="Allows install of github or sourceforge code \n typically github is newer. \n Will detect and install python libs as well"
 
 INSTALL(){
-    #stop the default from installing and yeeet it out of here
+    # stop the default packages and remove system-provided hamlib
     echo -e "INFORMATIONAL: apt-get hold and remove all existing"
     sudo apt-mark hold libhamlib*
     sudo apt-mark hold python3-hamlib
     sudo apt-get -y remove libhamlib*
-    
-    #echo -e "INFORMATIONAL: apt-get required packages"
-    #sudo apt-get -y install swig >> errors/apt.log
-    #sudo apt-get -y install ibnova-dev 2>&1 >> errors/apt.log
-    #sudo apt-get -y install ibgd-dev 2>&1 >> errors/apt.log
-    #sudo apt-get -y install libindi-dev 2>&1 >> errors/apt.log
-    #sudo apt-get -y install libxml2-dev 2>&1 >> errors/apt.log
 
     cd ${BAPSRC}
 
-    action=$(yad --center --title "Question" --image "dialog-question"\
-        --button="GitHub:0" --button="SourceForge:2" \
-        --text "HamLib Use github source or sourceforge (recomend: github, newer)")
-    return_code="${?:-'2'}"
+    # Determine latest GitHub release tag and tarball URL
+    GH_API="https://api.github.com/repos/Hamlib/Hamlib/releases/latest"
+    GH_TAG=$(curl --max-time 20 -s "$GH_API" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    GH_TARBALL=$(curl --max-time 20 -s "$GH_API" | grep '"tarball_url":' | sed -E 's/.*"tarball_url": *"([^"]+)".*/\1/')
 
-    if [ "$return_code" -eq 0 ]; then
-        dl_source="github"
-        echo -e "INFORMATIONAL: github"
+    # Build a user-friendly label for the release option
+    if [[ -z "$GH_TAG" ]]; then
+        RELEASE_LABEL="Latest Release (unknown)"
     else
-        dl_source="sf"
-        echo -e "INFORMATIONAL: sourceforge"
+        RELEASE_LABEL="Latest Release ($GH_TAG)"
     fi
 
-    if [ "$dl_source" == "github" ]; then
-        rm -rf Hamlib
-        git clone https://github.com/Hamlib/Hamlib
-        cd Hamlib
-        ./bootstrap
+    # Ask the user which source to build: main branch or latest release
+    CHOICE=""
+    if command -v yad >/dev/null 2>&1; then
+        CHOICE=$(yad --title="Hamlib source" --list --radiolist --column="Sel" --column="Choice" TRUE "Main (git clone https://github.com/Hamlib/Hamlib)" FALSE "$RELEASE_LABEL" --print-column=2 --center --width=600 --height=200 2>/dev/null)
     else
-        rm -rf hamlib-*
-        # URL detectionis common how to clean up? switch to soapy?
-        NEWRIG=$(curl -s https://sourceforge.net/projects/hamlib/files/latest/download |
-            grep -o https://downloads.sourceforge.net/project/hamlib/hamlib/[0-9].[0-9] |
-            head -n 1 | awk -F "/" '{print $7}')
-
-        # download source to standard?
-        HAMLIBLINK=https://sourceforge.net/projects/hamlib/files/hamlib/${NEWRIG}/hamlib-${NEWRIG}.tar.gz
-
-        # function? with retry timeout and setting it to the sources directory?
-        wget --tries 2 --connect-timeout=60 ${HAMLIBLINK}
-
-        tar -xzf hamlib-${NEWRIG}.tar.gz
-        rm hamlib-${NEWRIG}.tar.gz
-        cd hamlib-${NEWRIG} || return
+        echo "yad not found; falling back to terminal prompt"
+        echo "Choose source to build:"
+        echo "1 Main (git clone https://github.com/Hamlib/Hamlib)"
+        echo "2 $RELEASE_LABEL"
+        read -p "Enter 1 or 2: " selection
+        if [[ "$selection" == "2" ]]; then
+            CHOICE="$RELEASE_LABEL"
+        else
+            CHOICE="Main (git clone https://github.com/Hamlib/Hamlib)"
+        fi
     fi
+
+    rm -rf Hamlib
+    if [[ "$CHOICE" == "$RELEASE_LABEL" && -n "$GH_TAG" ]]; then
+        # Clone the repository at the release tag (shallow) if possible
+        echo "INFORMATIONAL: cloning Hamlib at tag $GH_TAG"
+        git clone --depth 1 --branch "$GH_TAG" https://github.com/Hamlib/Hamlib Hamlib || {
+            # Fall back to downloading tarball if clone by tag fails
+            echo "INFO: git clone by tag failed, downloading tarball"
+            mkdir -p Hamlib
+            curl -L "$GH_TARBALL" -o hamlib-release.tar.gz
+            tar -xzf hamlib-release.tar.gz --strip-components=1 -C Hamlib
+            rm -f hamlib-release.tar.gz
+        }
+    else
+        echo "INFORMATIONAL: cloning Hamlib main branch"
+        git clone https://github.com/Hamlib/Hamlib Hamlib
+    fi
+
+    cd Hamlib || return 1
+    ./bootstrap
 
     if command -v python3 >/dev/null 2>&1; then
         pypath="$(command -v python3)"
