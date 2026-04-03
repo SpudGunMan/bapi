@@ -37,22 +37,23 @@ INSTALL(){
     fi
 
     # Ask the user which source to build: main branch or latest release
-    CHOICE="main"
+    CHOICE=""
     if command -v yad >/dev/null 2>&1; then
-        CHOICE=$(yad --title="Hamlib source" --list --radiolist --column="Sel" --column="Key" --column="Choice" TRUE "main" "Main (git clone https://github.com/Hamlib/Hamlib)" FALSE "release" "$RELEASE_LABEL" --print-column=2 --hide-column=2 --center --width=600 --height=200 2>/dev/null)
-        CHOICE=$(echo "$CHOICE" | tr -d '\r' | sed 's/[[:space:]]*$//')
-        [[ -z "$CHOICE" ]] && CHOICE="main"
-    else
-        echo "yad not found; falling back to terminal prompt"
-        echo "Choose source to build:"
-        echo "1 Main (git clone https://github.com/Hamlib/Hamlib)"
-        echo "2 $RELEASE_LABEL"
-        read -p "Enter 1 or 2: " selection
-        if [[ "$selection" == "2" ]]; then
-            CHOICE="release"
-        else
-            CHOICE="main"
-        fi
+        CHOICE_RAW=$(yad --title="Hamlib source" --list --radiolist --column="Sel" --column="Key" --column="Choice" TRUE "main" "Main (git clone https://github.com/Hamlib/Hamlib)" FALSE "release" "$RELEASE_LABEL" --print-column=2 --hide-column=2 --center --width=600 --height=200 2>/dev/null)
+        CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//' | tr '[:upper:]' '[:lower:]')
+
+        # Older/newer yad variants may return a label instead of the key; normalize both forms.
+        case "$CHOICE" in
+            main|release) ;;
+            *release*) CHOICE="release" ;;
+            *main*) CHOICE="main" ;;
+            *) CHOICE="" ;;
+        esac
+    fi
+
+    if [[ -z "$CHOICE" ]]; then
+        echo "ERROR: could not determine source selection from YAD output"
+        return 1
     fi
 
     rm -rf Hamlib
