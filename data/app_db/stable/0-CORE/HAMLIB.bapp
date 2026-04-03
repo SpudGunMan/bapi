@@ -17,10 +17,17 @@ INSTALL(){
 
     cd ${BAPSRC}
 
-    # Determine latest GitHub release tag and tarball URL
+    # Determine latest GitHub release tag and release asset URL
     GH_API="https://api.github.com/repos/Hamlib/Hamlib/releases/latest"
-    GH_TAG=$(curl --max-time 20 -s "$GH_API" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
-    GH_TARBALL=$(curl --max-time 20 -s "$GH_API" | grep '"tarball_url":' | sed -E 's/.*"tarball_url": *"([^"]+)".*/\1/')
+    GH_JSON=$(curl --max-time 20 -s "$GH_API")
+    GH_TAG=$(echo "$GH_JSON" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    GH_ASSET=$(echo "$GH_JSON" | grep -Eo '"browser_download_url": *"[^"]*hamlib-[^"]*\.tar\.gz"' | head -n 1 | sed -E 's/.*"browser_download_url": *"([^"]+)"/\1/')
+
+    # If API parsing misses assets, build the standard release asset URL from the tag
+    if [[ -z "$GH_ASSET" && -n "$GH_TAG" ]]; then
+        GH_TAG_STRIPPED="${GH_TAG#v}"
+        GH_ASSET="https://github.com/Hamlib/Hamlib/releases/download/${GH_TAG}/hamlib-${GH_TAG_STRIPPED}.tar.gz"
+    fi
 
     # Build a user-friendly label for the release option
     if [[ -z "$GH_TAG" ]]; then
@@ -48,16 +55,23 @@ INSTALL(){
 
     rm -rf Hamlib
     if [[ "$CHOICE" == "$RELEASE_LABEL" && -n "$GH_TAG" ]]; then
-        # Clone the repository at the release tag (shallow) if possible
-        echo "INFORMATIONAL: cloning Hamlib at tag $GH_TAG"
-        git clone --depth 1 --branch "$GH_TAG" https://github.com/Hamlib/Hamlib Hamlib || {
-            # Fall back to downloading tarball if clone by tag fails
-            echo "INFO: git clone by tag failed, downloading tarball"
+        # Release option: prefer the GitHub release asset tarball (not API tarball_url)
+        echo "INFORMATIONAL: downloading Hamlib release asset for tag $GH_TAG"
+        if [[ -n "$GH_ASSET" ]]; then
             mkdir -p Hamlib
-            curl -L "$GH_TARBALL" -o hamlib-release.tar.gz
-            tar -xzf hamlib-release.tar.gz --strip-components=1 -C Hamlib
-            rm -f hamlib-release.tar.gz
-        }
+            if curl -fL "$GH_ASSET" -o hamlib-release.tar.gz; then
+                tar -xzf hamlib-release.tar.gz --strip-components=1 -C Hamlib
+                rm -f hamlib-release.tar.gz
+            else
+                echo "INFO: release asset download failed, falling back to clone by tag"
+                rm -f hamlib-release.tar.gz
+                rmdir Hamlib 2>/dev/null || true
+                git clone --depth 1 --branch "$GH_TAG" https://github.com/Hamlib/Hamlib Hamlib
+            fi
+        else
+            echo "INFO: release asset URL unavailable, falling back to clone by tag"
+            git clone --depth 1 --branch "$GH_TAG" https://github.com/Hamlib/Hamlib Hamlib
+        fi
     else
         echo "INFORMATIONAL: cloning Hamlib main branch"
         git clone https://github.com/Hamlib/Hamlib Hamlib
