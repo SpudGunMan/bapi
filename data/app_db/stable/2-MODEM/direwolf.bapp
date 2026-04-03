@@ -13,7 +13,7 @@ INSTALL(){
     sudo apt-get -y install avahi-daemon gpsd gpsd-clients libgps-dev libasound2-dev libudev-dev cmake g++ make libavahi-client-dev >> errors/apt.log
 
     cd "${BAPSRC}"
-    rm -rf direwolf
+    sudo rm -rf direwolf
 
     git clone https://www.github.com/wb2osz/direwolf
     cd direwolf
