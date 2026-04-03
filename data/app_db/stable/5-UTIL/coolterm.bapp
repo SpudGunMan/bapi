@@ -25,11 +25,13 @@ INSTALL(){
     else
         if [ $BAPARCH == 64]; then
             wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux64Bit.zip
+            unzip *.zip
+            mv CoolTermLinux64Bit ${HOME}/CoolTerm
         else
             wget --tries 2 --connect-timeout=60 https://freeware.the-meiers.org/CoolTermLinux32Bit.zip
+            unzip *.zip
+            mv CoolTermLinux32Bit ${HOME}/CoolTerm
         fi
-        unzip *.zip
-        mv CoolTerm ${HOME}/CoolTerm
     fi
 
     rm *.zip
