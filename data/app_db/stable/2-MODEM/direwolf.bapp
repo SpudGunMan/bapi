@@ -10,7 +10,7 @@ NOTE='you can choose to use dev or main branch'
 
 INSTALL(){
     echo -e "INFORMATIONAL: Installing required packages"
-    sudo apt-get -y install avahi-daemon gpsd gpsd-clients libgps-dev libasound2-dev libudev-dev cmake g++ make >> errors/apt.log
+    sudo apt-get -y install avahi-daemon gpsd gpsd-clients libgps-dev libasound2-dev libudev-dev cmake g++ make libavahi-client-dev >> errors/apt.log
 
     cd "${BAPSRC}"
     rm -rf direwolf
