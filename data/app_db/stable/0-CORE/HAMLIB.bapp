@@ -37,9 +37,11 @@ INSTALL(){
     fi
 
     # Ask the user which source to build: main branch or latest release
-    CHOICE=""
+    CHOICE="main"
     if command -v yad >/dev/null 2>&1; then
-        CHOICE=$(yad --title="Hamlib source" --list --radiolist --column="Sel" --column="Choice" TRUE "Main (git clone https://github.com/Hamlib/Hamlib)" FALSE "$RELEASE_LABEL" --print-column=2 --center --width=600 --height=200 2>/dev/null)
+        CHOICE=$(yad --title="Hamlib source" --list --radiolist --column="Sel" --column="Key" --column="Choice" TRUE "main" "Main (git clone https://github.com/Hamlib/Hamlib)" FALSE "release" "$RELEASE_LABEL" --print-column=2 --hide-column=2 --center --width=600 --height=200 2>/dev/null)
+        CHOICE=$(echo "$CHOICE" | tr -d '\r' | sed 's/[[:space:]]*$//')
+        [[ -z "$CHOICE" ]] && CHOICE="main"
     else
         echo "yad not found; falling back to terminal prompt"
         echo "Choose source to build:"
@@ -47,17 +49,24 @@ INSTALL(){
         echo "2 $RELEASE_LABEL"
         read -p "Enter 1 or 2: " selection
         if [[ "$selection" == "2" ]]; then
-            CHOICE="$RELEASE_LABEL"
+            CHOICE="release"
         else
-            CHOICE="Main (git clone https://github.com/Hamlib/Hamlib)"
+            CHOICE="main"
         fi
     fi
 
     rm -rf Hamlib
-    if [[ "$CHOICE" == "$RELEASE_LABEL" && -n "$GH_TAG" ]]; then
+    if [[ "$CHOICE" == "release" ]]; then
+        echo "INFORMATIONAL: source selection is release"
+        if [[ -z "$GH_TAG" ]]; then
+            echo "ERROR: release selected but could not determine latest release tag from GitHub API"
+            return 1
+        fi
+
         # Release option: prefer the GitHub release asset tarball (not API tarball_url)
         echo "INFORMATIONAL: downloading Hamlib release asset for tag $GH_TAG"
         if [[ -n "$GH_ASSET" ]]; then
+            echo "INFORMATIONAL: release asset URL $GH_ASSET"
             mkdir -p Hamlib
             if curl -fL "$GH_ASSET" -o hamlib-release.tar.gz; then
                 tar -xzf hamlib-release.tar.gz --strip-components=1 -C Hamlib
@@ -73,6 +82,7 @@ INSTALL(){
             git clone --depth 1 --branch "$GH_TAG" https://github.com/Hamlib/Hamlib Hamlib
         fi
     else
+        echo "INFORMATIONAL: source selection is main"
         echo "INFORMATIONAL: cloning Hamlib main branch"
         git clone https://github.com/Hamlib/Hamlib Hamlib
     fi
