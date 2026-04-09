@@ -52,7 +52,10 @@ INSTALL(){
     cd wsjtx
     echo "$STABLE_VER" > "${HOME}/.bap.wsjtzed.txt"
 
-    cmake -D CMAKE_INSTALL_PREFIX=${HOME}/wsjtz -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF . 
+    cmake -D CMAKE_INSTALL_PREFIX="${HOME}/wsjtz" \
+          -D WSJT_SKIP_MANPAGES=ON \
+          -D WSJT_GENERATE_DOCS=OFF \
+          -D CMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations" .
     sudo cmake --build . --target install -j$BAPCORE
 
     # Detect cortex chip (ARM's)
