@@ -4,7 +4,7 @@ Name=WSJT-X
 Comment='FST4, FST4W, FT4, FT8, JT4, JT9, JT65, Q65, MSK144, and WSPR'
 VerLocal=0
 VerRemote=0
-W3='https://wsjt.sourceforge.io/wsjtx.html'
+W3='https://github.com/WSJTX/wsjtx'
 Author='bapi installer spud2025'
 NOTE='installed to /usr/local/bin \n to get better performance note .. renice -n -19 -u wsjtx'
 
@@ -21,7 +21,7 @@ INSTALL(){
     sudo apt-get -y install ntp >> errors/apt.log
 
     # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
+    if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then
         FREEMEM=$(free -m | grep Mem: | awk '{ print $2 }')
         #increase swap file if less than 3G memory
         if [ ${FREEMEM} -lt 3000 ]; then
@@ -38,60 +38,55 @@ INSTALL(){
     mkdir wsjtx
     cd wsjtx
 
-    # Find stable (2.7*) and dev candidate (3*) releases
-    WSJTX_HTML=$(curl -s https://wsjt.sourceforge.io/wsjtx.html)
+    GH_REPO="https://github.com/WSJTX/wsjtx"
+    GH_RELEASES_API="https://api.github.com/repos/WSJTX/wsjtx/releases?per_page=20"
+    GH_RELEASE_JSON=$(curl --max-time 20 -s "$GH_RELEASES_API")
+    RELEASE_TAGS=$(echo "$GH_RELEASE_JSON" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/' | sed '/^$/d')
 
-    # Stable: wsjtx-2.7*
-    STABLE_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3.[^"]*\.tgz' | head -1)
-    STABLE_PKG=$(basename "$STABLE_URL")
-    STABLE_DIR=$(basename "$STABLE_URL" .tgz)
-    STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtx-//')
+    CHOICE="main"
+    if command -v yad >/dev/null 2>&1; then
+        YAD_ARGS=(
+            --title="WSJT-X source"
+            --list --radiolist
+            --column="Sel" --column="Key" --column="Choice"
+            TRUE "main" "Main branch (git clone $GH_REPO)"
+        )
 
-    # Dev: wsjtx-3* (source .tgz, dash not underscore)
-    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
-    DEV_PKG=$(basename "$DEV_URL")
-    DEV_DIR=$(basename "$DEV_URL" .tgz)
-    DEV_VER=$(echo "$DEV_DIR" | sed 's/wsjtx-//')
+        for TAG in $RELEASE_TAGS; do
+            YAD_ARGS+=(FALSE "release:$TAG" "Release tag $TAG")
+        done
 
-    TEXT="Use stable ($STABLE_VER), or dev candidate $DEV_VER branch? (recommend: stable)"
-    BUTTONS="--button=Stable:0 --button=Dev:1"
-    action=$(yad --center --title "Question which release" --image "dialog-question" $BUTTONS --text "$TEXT")
-    return_code="${?:-'2'}"
+        CHOICE_RAW=$(yad "${YAD_ARGS[@]}" --print-column=2 --hide-column=2 --center --width=700 --height=380 2>/dev/null)
+        CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//')
+    fi
 
-    BASE_URL="https://wsjt.sourceforge.io/"
-    FULL_STABLE_URL="${STABLE_URL}"
-    FULL_DEV_URL="${DEV_URL}"
-    
-    if [ "$return_code" -eq 0 ]; then
-        # Stable
-        wget --tries 2 --connect-timeout=20 "$FULL_STABLE_URL" -O "$STABLE_PKG"
-        if [ ! -f "$STABLE_PKG" ]; then
-            echo "Failed to download $FULL_STABLE_URL"
-            return 1
-        fi
-        tar -xvf "$STABLE_PKG"
-        cd "$STABLE_DIR" || return
-        echo "$STABLE_VER" > "${HOME}/.bap.wsjt.txt"
-    elif [ -n "$DEV_URL" ]; then
-        # Dev Candidate
-        wget --tries 2 --connect-timeout=20 "$FULL_DEV_URL" -O "$DEV_PKG"
-        if [ ! -f "$DEV_PKG" ]; then
-            echo "Failed to download $FULL_DEV_URL"
-            return 1
-        fi
-        tar -xvf "$DEV_PKG"
-        cd "$DEV_DIR" || return
-        echo "$DEV_VER" > "${HOME}/.bap.wsjt.txt"
-    else
-        echo "No valid candidate selected or candidate not available."
+    if [[ -z "$CHOICE" ]]; then
+        echo "ERROR: no source selection made"
         return 1
     fi
+
+    if [[ "$CHOICE" == release:* ]]; then
+        SELECTED_TAG="${CHOICE#release:}"
+        if [[ -z "$SELECTED_TAG" ]]; then
+            echo "ERROR: release selected but no tag was provided"
+            return 1
+        fi
+        echo "INFORMATIONAL: cloning WSJT-X release tag $SELECTED_TAG"
+        git clone --depth 1 --branch "$SELECTED_TAG" "$GH_REPO" wsjtx || return 1
+        echo "$SELECTED_TAG" > "${HOME}/.bap.wsjt.txt"
+    else
+        echo "INFORMATIONAL: cloning WSJT-X main branch"
+        git clone --depth 1 "$GH_REPO" wsjtx || return 1
+        echo "main-$(date +%Y%m%d)" > "${HOME}/.bap.wsjt.txt"
+    fi
+
+    cd wsjtx || return 1
     
     cmake -D WSJT_SKIP_MANPAGES=ON -D WSJT_GENERATE_DOCS=OFF .
     sudo cmake --build . --target install -j$BAPCORE
 
     # Detect cortex chip (ARM's)
-    if [[ "$BAPCPU" == *"ar"* ]]; then 
+    if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then
         #reset swap size to default
         if [ ${FREEMEM} -lt 3000 ]; then
             echo "Resetting swap size to default"
@@ -104,7 +99,7 @@ INSTALL(){
 }
 
 VERSION(){
-    if [[ $(whereis wsjtx | grep bin) ]]; then
+    if command -v wsjtx >/dev/null 2>&1; then
         if [ -f ${HOME}/.bap.wsjt.txt ]; then
             CURRENT=$(cat ${HOME}/.bap.wsjt.txt)
         else
@@ -114,15 +109,11 @@ VERSION(){
         CURRENT=NONE
     fi
 
-    WSJTX_HTML=$(curl --max-time 20 -s https://wsjt.sourceforge.io/wsjtx.html)
-    STABLE_VER=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3.[^"]*\.tgz' | head -1 | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
-    DEV_URL=$(echo "$WSJTX_HTML" | grep -oP 'href="\K[^"]*wsjtx-3[^"]*\.tgz' | head -1)
-    if [ -n "$DEV_URL" ]; then
-        DEV_VER=$(echo "$DEV_URL" | sed 's/.*wsjtx-//' | sed 's/\.tgz//')
-        NEWVER="Stable: $STABLE_VER, DEV: $DEV_VER"
-    else
-        NEWVER="Stable: $STABLE_VER"
+    GH_LATEST=$(curl --max-time 20 -s https://api.github.com/repos/WSJTX/wsjtx/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    if [ -z "$GH_LATEST" ]; then
+        GH_LATEST="UNKNOWN"
     fi
+    NEWVER="GH: $GH_LATEST"
 }
 
 DEPENDS(){
