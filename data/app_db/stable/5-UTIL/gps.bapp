@@ -85,6 +85,7 @@ INSTALL(){
         if [ -z "$CHRONYCHK" ]; then
             sudo cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
             echo "refclock SHM 0 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
+            echo "refclock SHM 1 offset 0.5 delay 0.2 refid NMEA" | sudo tee -a /etc/chrony/chrony.conf
         fi
     else
         echo "could not find chrony.conf"
