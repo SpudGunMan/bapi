@@ -10,7 +10,7 @@ NOTE='includes some extras'
 
 INSTALL(){
     echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install ntp >> errors/apt.log
+    sudo apt-get -y install chrony >> errors/apt.log
     sudo apt-get -y install gpsd >> errors/apt.log
     sudo apt-get -y install python3-gps >> errors/apt.log
     sudo apt-get -y install gpsd-tools >> errors/apt.log

@@ -214,15 +214,6 @@ function run_main()
 			#sudo apt-get install wget p7zip-full cabextract curl megatools zenity -y
 
 			#Make sure system time and certs are up to date (in case system is old or a virtual machine).
-			#Also, if NTP is not installed, install it.
-			ntpq --help &> /dev/null || NTPCHECK="no_ntp" # if an error returns from the command 'ntpq --help' then set NTPCHECK to "no_ntp"
-			if [ "$NTPCHECK" = "no_ntp" ]; then # If ntp time management package doesn't exist, install/configure it
-				sudo apt-get install ntp ntpdate -y
-				sudo sed -i 's$#server ntp.your-provider.example$server 10.1.1.1 prefer iburst$g' /etc/ntp.conf
-			fi
-			sudo systemctl stop ntp
-			sudo ntpd -gq
-			sudo systemctl start ntp
 			#sudo apt-get update && apt-get upgrade -y
 			sudo update-ca-certificates -v
 
@@ -271,9 +262,6 @@ function run_main()
 				run_checkdiskspace "1500" #min space required in MB
 
 				#Make sure system time and certs are up to date (in case system is old or a virtual machine)
-				sudo service ntp stop
-				sudo ntpd -gq
-				sudo service ntp start
 				sudo update-ca-certificates -v
 
 				#Install wine (note: In Ubuntu, packages are called "wine-stable", not "winehq-stable" like in the Wine wiki).

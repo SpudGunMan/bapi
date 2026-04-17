@@ -17,7 +17,6 @@ INSTALL(){
     sudo apt-get -y install libtool >> errors/apt.log
     sudo apt-get -y install texinfo >> errors/apt.log
     sudo apt-get -y install asciidoctor >> errors/apt.log
-    sudo apt-get -y install ntp >> errors/apt.log
 
     cd ${BAPSRC} || return
 

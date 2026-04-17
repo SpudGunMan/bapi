@@ -13,7 +13,6 @@ INSTALL(){
     sudo apt-get -y install libfftw3-dev >> errors/apt.log
     sudo apt-get -y install qtdeclarative5-dev >> errors/apt.log
     sudo apt-get -y install asciidoc >> errors/apt.log
-    sudo apt-get -y install ntp >> errors/apt.log
 
     # Detect cortex chip (ARM's)
     if [ -f /etc/init.d/dphys-swapfile ] && [[ "$BAPCPU" == *"ar"* ]]; then 
