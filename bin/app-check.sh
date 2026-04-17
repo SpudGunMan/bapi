@@ -16,10 +16,32 @@ if [[ -z $BAPAPPS_FILES_LOC ]];then
 	exit 1
 fi
 
-# Escape replacement strings used in sed s||| operations.
-sed_escape_replacement(){
-	# Escape sed replacement metacharacters and delimiter for s||| commands.
-	printf '%s' "$1" | sed 's/[\\&|]/\\&/g'
+# Safely upsert KEY=value lines in .bapp files without sed replacement parsing pitfalls.
+set_bapp_field(){
+	local file="$1"
+	local key="$2"
+	local value="$3"
+	local tmp
+	tmp="${file}.tmp.$$"
+
+	awk -v key="$key" -v value="$value" '
+		BEGIN { updated=0 }
+		$0 ~ "^" key "=" {
+			print key "=" value
+			updated=1
+			next
+		}
+		{ print }
+		END {
+			if (!updated) {
+				print key "=" value
+			}
+		}
+	' "$file" > "$tmp" && mv "$tmp" "$file"
+}
+
+shell_escape_value(){
+	printf '%q' "$1"
 }
 
 for Job in $BAPAPPS_FILES_LOC; do
@@ -32,10 +54,9 @@ for Job in $BAPAPPS_FILES_LOC; do
 
 		#Status Update newer version
 		if [[ $NEWVER != "NONE" ]]; then
-			NEWVER_SAFE=$(sed_escape_replacement "$NEWVER")
-			sed -i "s|^VerRemote=.*|VerRemote='$NEWVER_SAFE'|" "$Job"
+			set_bapp_field "$Job" "VerRemote" "$(shell_escape_value "$NEWVER")"
 		else
-			sed -i "s|^VerRemote=.*|VerRemote='NONE'|" "$Job"
+			set_bapp_field "$Job" "VerRemote" "NONE"
 		fi
 
 		#add found apps to list and metadata update
@@ -46,28 +67,23 @@ for Job in $BAPAPPS_FILES_LOC; do
 			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
 				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
 				#Status Update newer version
-				CURRENT_SAFE=$(sed_escape_replacement "$CURRENT")
-				sed -i "s|^VerLocal=.*|VerLocal='Update:$CURRENT_SAFE'|" "$Job"
+				set_bapp_field "$Job" "VerLocal" "$(shell_escape_value "Update:$CURRENT")"
 				
 			else
 				#Status Update current version
-				CURRENT_SAFE=$(sed_escape_replacement "$CURRENT")
-				sed -i "s|^VerLocal=.*|VerLocal='$CURRENT_SAFE'|" "$Job"
+				set_bapp_field "$Job" "VerLocal" "$(shell_escape_value "$CURRENT")"
 			fi
 		else
-			sed -i "s|^VerLocal=.*|VerLocal='NONE'|" "$Job"
+			set_bapp_field "$Job" "VerLocal" "NONE"
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
 		# removes all including the 0- infront of the folder path
 		BAPAPPTYP=$(echo $Job | sed 's/apps\///' | sed 's/\.bapp//' | sed 's/\/[0-9]-/-/' | sed 's/\/.*//')
 
-		if grep -Fxq "LOC=" $Job ;then
+		if grep -q "^LOC=" "$Job" ;then
 			#this is intensive needs oneline
-			BAPAPPTYP_SAFE=$(sed_escape_replacement "$BAPAPPTYP")
-			sed -i "s|^LOC=core$|LOC=$BAPAPPTYP_SAFE|" "$Job"
-			sed -i "s|^LOC=experimental$|LOC=$BAPAPPTYP_SAFE|" "$Job"
-			sed -i "s|^LOC=''$|LOC=$BAPAPPTYP_SAFE|" "$Job"
+			set_bapp_field "$Job" "LOC" "$BAPAPPTYP"
 		else
 			#echo -e "INFORMATIONAL: new folder location data."
 			echo -e "\nLOC=$BAPAPPTYP" >> $Job
