@@ -49,12 +49,18 @@ INSTALL(){
 VERSION(){
 
     if [[ $(whereis wfview | grep bin) ]];then
-        CURRENT=$(wfview -v 2>/dev/null | sed 's/wfview version: //' | head -c5)
+        CURRENT=$(wfview -v 2>/dev/null | tr -d '\r' | grep -Eo '[0-9]+([.][0-9]+)+' | head -n1)
+        if [ -z "$CURRENT" ]; then
+            CURRENT=NONE
+        fi
     else
         CURRENT=NONE
     fi
 
-   NEWVER=$(curl --max-time 20 -s https://gitlab.com/eliggett/wfview/-/raw/master/wfview.pro | grep VERSION= | sed 's/\\//g' | sed 's/DEFINES += WFVIEW_VERSION=//' | sed 's/"//g')
+    NEWVER=$(curl --max-time 20 -s https://gitlab.com/eliggett/wfview/-/raw/master/wfview.pro | tr -d '\r' | grep -E 'WFVIEW_VERSION=' | head -n1 | sed -E 's/.*WFVIEW_VERSION="?([^"[:space:]]+).*/\1/')
+    if [ -z "$NEWVER" ]; then
+        NEWVER=NONE
+    fi
 }
 
 DEPENDS(){
