@@ -18,7 +18,8 @@ fi
 
 # Escape replacement strings used in sed s||| operations.
 sed_escape_replacement(){
-	printf '%s' "$1" | sed 's/[&|]/\\&/g'
+	# Escape sed replacement metacharacters and delimiter for s||| commands.
+	printf '%s' "$1" | sed 's/[\\&|]/\\&/g'
 }
 
 for Job in $BAPAPPS_FILES_LOC; do
