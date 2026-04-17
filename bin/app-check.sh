@@ -16,6 +16,11 @@ if [[ -z $BAPAPPS_FILES_LOC ]];then
 	exit 1
 fi
 
+# Escape replacement strings used in sed s||| operations.
+sed_escape_replacement(){
+	printf '%s' "$1" | sed 's/[&|]/\\&/g'
+}
+
 for Job in $BAPAPPS_FILES_LOC; do
 	if [ -f $Job ];then
 		#get the version function ran to have access here
@@ -26,9 +31,10 @@ for Job in $BAPAPPS_FILES_LOC; do
 
 		#Status Update newer version
 		if [[ $NEWVER != "NONE" ]]; then
-			sed -i "s/VerRemote=.*/VerRemote='$NEWVER'/" $Job
+			NEWVER_SAFE=$(sed_escape_replacement "$NEWVER")
+			sed -i "s|^VerRemote=.*|VerRemote='$NEWVER_SAFE'|" "$Job"
 		else
-			sed -i "s/VerRemote=.*/VerRemote='NONE'/" $Job
+			sed -i "s|^VerRemote=.*|VerRemote='NONE'|" "$Job"
 		fi
 
 		#add found apps to list and metadata update
@@ -39,14 +45,16 @@ for Job in $BAPAPPS_FILES_LOC; do
 			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
 				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
 				#Status Update newer version
-				sed -i "s/VerLocal=.*/VerLocal='Update:$CURRENT'/" $Job
+				CURRENT_SAFE=$(sed_escape_replacement "$CURRENT")
+				sed -i "s|^VerLocal=.*|VerLocal='Update:$CURRENT_SAFE'|" "$Job"
 				
 			else
 				#Status Update current version
-				sed -i "s/VerLocal=.*/VerLocal='$CURRENT'/" $Job
+				CURRENT_SAFE=$(sed_escape_replacement "$CURRENT")
+				sed -i "s|^VerLocal=.*|VerLocal='$CURRENT_SAFE'|" "$Job"
 			fi
 		else
-			sed -i "s/VerLocal=.*/VerLocal='NONE'/" $Job
+			sed -i "s|^VerLocal=.*|VerLocal='NONE'|" "$Job"
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
@@ -55,9 +63,10 @@ for Job in $BAPAPPS_FILES_LOC; do
 
 		if grep -Fxq "LOC=" $Job ;then
 			#this is intensive needs oneline
-			sed -i "s/LOC=core/LOC=$BAPAPPTYP/" $Job
-			sed -i "s/LOC=experimental/LOC=$BAPAPPTYP/"
-			sed -i "s/LOC=''/LOC=$BAPAPPTYP/" $Job
+			BAPAPPTYP_SAFE=$(sed_escape_replacement "$BAPAPPTYP")
+			sed -i "s|^LOC=core$|LOC=$BAPAPPTYP_SAFE|" "$Job"
+			sed -i "s|^LOC=experimental$|LOC=$BAPAPPTYP_SAFE|" "$Job"
+			sed -i "s|^LOC=''$|LOC=$BAPAPPTYP_SAFE|" "$Job"
 		else
 			#echo -e "INFORMATIONAL: new folder location data."
 			echo -e "\nLOC=$BAPAPPTYP" >> $Job
