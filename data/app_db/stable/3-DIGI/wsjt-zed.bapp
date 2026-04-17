@@ -38,19 +38,33 @@ INSTALL(){
     mkdir wsjtz
     cd wsjtz
 
-    # Find stable (2.*) and dev (3.*) releases
+    # Find latest release (supports 2.x and 3.x naming)
     WSJTZ_HTML=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/)
 
-    STABLE_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-2\.[^"]*\.zip' | head -1)
-    STABLE_PKG=$(basename "$STABLE_URL")
-    STABLE_DIR=$(basename "$STABLE_URL" .zip)
-    STABLE_VER=$(echo "$STABLE_DIR" | sed 's/wsjtz-//')
+    LATEST_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-[0-9][^"]*\.zip' | sort -u | while read -r url; do
+        ver=$(basename "$url" .zip | sed 's/wsjtz-//')
+        printf '%s\t%s\n' "$ver" "$url"
+    done | sort -V | tail -1 | cut -f2)
 
-    wget --tries 2 --connect-timeout=60 "$STABLE_URL" -O "$STABLE_PKG"
-    unzip "$STABLE_PKG"
-    rm "$STABLE_PKG"
+    if [ -z "$LATEST_URL" ]; then
+        echo "ERROR: Could not find wsjt-z release archive URL"
+        return 1
+    fi
+
+    case "$LATEST_URL" in
+        http*) ;;
+        *) LATEST_URL="https://sourceforge.net${LATEST_URL}" ;;
+    esac
+
+    LATEST_PKG=$(basename "$LATEST_URL")
+    LATEST_DIR=$(basename "$LATEST_URL" .zip)
+    LATEST_VER=$(echo "$LATEST_DIR" | sed 's/wsjtz-//')
+
+    wget --tries 2 --connect-timeout=60 "$LATEST_URL" -O "$LATEST_PKG"
+    unzip "$LATEST_PKG"
+    rm "$LATEST_PKG"
     cd wsjtx
-    echo "$STABLE_VER" > "${HOME}/.bap.wsjtzed.txt"
+    echo "$LATEST_VER" > "${HOME}/.bap.wsjtzed.txt"
 
     cmake -D CMAKE_INSTALL_PREFIX="${HOME}/wsjtz" \
           -D WSJT_SKIP_MANPAGES=ON \
@@ -82,13 +96,12 @@ VERSION(){
     fi
 
     WSJTZ_HTML=$(curl --max-time 20 -s https://sourceforge.net/projects/wsjt-z/files/Source/)
-    STABLE_VER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-2\.[^"]*\.zip' | head -1 | sed 's/.*wsjtz-//' | sed 's/\.zip//')
-    DEV_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-3[^"]*\.zip' | head -1)
-    if [ -n "$DEV_URL" ]; then
-        DEV_VER=$(basename "$DEV_URL" .zip | sed 's/wsjtz-//')
-        NEWVER="Stable: $STABLE_VER, Dev: $DEV_VER"
-    else
-        NEWVER="Stable: $STABLE_VER"
+    NEWVER=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-[0-9][^"]*\.zip' | sort -u | while read -r url; do
+        basename "$url" .zip | sed 's/wsjtz-//'
+    done | sort -V | tail -1)
+
+    if [ -z "$NEWVER" ]; then
+        NEWVER="NONE"
     fi
 }
 
