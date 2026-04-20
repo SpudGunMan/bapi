@@ -34,41 +34,44 @@ INSTALL(){
 
     cd ${BAPSRC}
     sudo rm -rf wsjtz
-    mkdir wsjtz
-    cd wsjtz
+    # mkdir wsjtz
+    # cd wsjtz
 
-    # Find latest release (supports 2.x and 3.x naming)
-    WSJTZ_HTML=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/)
+    # # Find latest release (supports 2.x and 3.x naming)
+    # WSJTZ_HTML=$(curl -s https://sourceforge.net/projects/wsjt-z/files/Source/)
 
-    LATEST_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-[0-9][^"]*\.zip' | sort -u | while read -r url; do
-        ver=$(basename "$url" .zip | sed 's/wsjtz-//')
-        printf '%s\t%s\n' "$ver" "$url"
-    done | sort -V | tail -1 | cut -f2)
+    # LATEST_URL=$(echo "$WSJTZ_HTML" | grep -oP 'href="\K[^"]*wsjtz-[0-9][^"]*\.zip' | sort -u | while read -r url; do
+    #     ver=$(basename "$url" .zip | sed 's/wsjtz-//')
+    #     printf '%s\t%s\n' "$ver" "$url"
+    # done | sort -V | tail -1 | cut -f2)
 
-    if [ -z "$LATEST_URL" ]; then
-        echo "ERROR: Could not find wsjt-z release archive URL"
-        return 1
-    fi
+    # if [ -z "$LATEST_URL" ]; then
+    #     echo "ERROR: Could not find wsjt-z release archive URL"
+    #     return 1
+    # fi
 
-    case "$LATEST_URL" in
-        http*) ;;
-        *) LATEST_URL="https://sourceforge.net${LATEST_URL}" ;;
-    esac
+    # case "$LATEST_URL" in
+    #     http*) ;;
+    #     *) LATEST_URL="https://sourceforge.net${LATEST_URL}" ;;
+    # esac
 
-    LATEST_PKG=$(basename "$LATEST_URL")
-    LATEST_DIR=$(basename "$LATEST_URL" .zip)
-    LATEST_VER=$(echo "$LATEST_DIR" | sed 's/wsjtz-//')
+    # LATEST_PKG=$(basename "$LATEST_URL")
+    # LATEST_DIR=$(basename "$LATEST_URL" .zip)
+    # LATEST_VER=$(echo "$LATEST_DIR" | sed 's/wsjtz-//')
 
-    wget --tries 2 --connect-timeout=60 "$LATEST_URL" -O "$LATEST_PKG"
-    unzip "$LATEST_PKG"
-    rm "$LATEST_PKG"
-    cd wsjtx
-    echo "$LATEST_VER" > "${HOME}/.bap.wsjtzed.txt"
+    # wget --tries 2 --connect-timeout=60 "$LATEST_URL" -O "$LATEST_PKG"
+    # unzip "$LATEST_PKG"
+    # rm "$LATEST_PKG"
+    # cd wsjtx
+    # echo "$LATEST_VER" > "${HOME}/.bap.wsjtzed.txt"
 
+    # spud branch has some patches that are not yet merged, so we will use that for now
+    git clone --branch=spud-patches --depth=1 https://github.com/SpudGunMan/WSJT-Zed wsjtz
+    cd wsjtz || return
+    # -D CMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations" .
     cmake -D CMAKE_INSTALL_PREFIX="${HOME}/wsjtz" \
           -D WSJT_SKIP_MANPAGES=ON \
-          -D WSJT_GENERATE_DOCS=OFF \
-          -D CMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations" .
+          -D WSJT_GENERATE_DOCS=OFF .
     sudo cmake --build . --target install -j$BAPCORE
 
     # Detect cortex chip (ARM's)
