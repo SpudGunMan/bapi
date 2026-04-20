@@ -57,6 +57,17 @@ INSTALL(){
 
         CHOICE_RAW=$(yad "${YAD_ARGS[@]}" --print-column=2 --hide-column=2 --center --width=700 --height=380 2>/dev/null)
         CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//')
+
+        # YAD output format can vary by platform/options; normalize to just the key.
+        if [[ "$CHOICE" == *"|"* ]]; then
+            FIRST_FIELD=$(echo "$CHOICE" | cut -d'|' -f1)
+            SECOND_FIELD=$(echo "$CHOICE" | cut -d'|' -f2)
+            if [[ "$FIRST_FIELD" == "TRUE" || "$FIRST_FIELD" == "FALSE" ]]; then
+                CHOICE="$SECOND_FIELD"
+            else
+                CHOICE="$FIRST_FIELD"
+            fi
+        fi
     fi
 
     if [[ -z "$CHOICE" ]]; then
