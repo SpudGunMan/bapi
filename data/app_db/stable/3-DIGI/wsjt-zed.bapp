@@ -108,7 +108,7 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED=''
+    NEEDED='HAMLIB'
 
     #apt-gets will be checked on app-check
 }
