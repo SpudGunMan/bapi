@@ -66,7 +66,7 @@ INSTALL(){
     # echo "$LATEST_VER" > "${HOME}/.bap.wsjtzed.txt"
 
     # spud branch has some patches that are not yet merged, so we will use that for now
-    git clone --branch=spud-patches --depth=1 https://github.com/SpudGunMan/WSJT-Zed wsjtz
+    git clone https://github.com/sq9fve/wsjt-z wsjtz
     cd wsjtz || return
     # -D CMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations" .
     cmake -D CMAKE_INSTALL_PREFIX="${HOME}/wsjtz" \
