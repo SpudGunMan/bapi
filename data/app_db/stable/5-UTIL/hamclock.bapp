@@ -4,40 +4,22 @@ Name=HAMCLOCK
 Comment='ClearSky Ham CLock'
 VerLocal=0
 VerRemote=0
-W3='http://www.clearskyinstitute.com/ham/HamClock'
+W3='https://github.com/openhamclock/hamclock/releases'
 Author='spud'
 NOTE=''
 
 INSTALL(){
-	sudo apt-get -y install libx11-dev
+	sudo apt-get -y install curl
 
 	cd ${BAPSRC} || return
 	sudo rm -f HamClock
 	mkdir HamClock
-	cd HamClock
+	cd HamClock || return
 
-	curl -o ESPHamClock.zip http://www.clearskyinstitute.com/ham/HamClock/ESPHamClock.zip
-	unzip ESPHamClock.zip
-	rm ESPHamClock.zip
-	cd ESPHamClock || return
-
-	action=$(yad --center --title "Question" --image "dialog-question"\
-        --button="Large:0" --button="Small:2" \
-        --text "Build Large 1600x960 or \n Small 800x480?") return_code="${?:-'2'}"
-
-    if [ "$return_code" -eq 0 ]; then
-		#make large
-		sudo make -j$BAPCORE hamclock-1600x960
-		sudo chmod +s hamclock-1600x960
-		sudo mv hamclock-1600x960 /usr/local/bin/hamclock
-		rm -rf "${DIR}/ESPHamClock"
-	else
-		#make small
-		sudo make -j$BAPCORE hamclock-800x480
-		sudo chmod +s hamclock-800x480
-		sudo mv hamclock-800x480 /usr/local/bin/hamclock
-		rm -rf "${DIR}/ESPHamClock"
-	fi
+	INSTALLER_URL='https://github.com/openhamclock/hamclock/releases/download/v4.24b01.0/install-hc-rpi'
+	curl -fsSL -o install-hc-rpi "$INSTALLER_URL" || return
+	chmod +x install-hc-rpi
+	./install-hc-rpi
 
 
 	cat >${HOME}/Desktop/hamclock.desktop <<EOF
@@ -56,12 +38,15 @@ EOF
 #cp /usr/share/applications/hamclock.desktop ~/.config/autostart/
 
 VERSION(){
-    if [[ $(whereis Artemis | grep bin) ]];then
-        CURRENT=fix
+	if command -v hamclock >/dev/null 2>&1; then
+		CURRENT=installed
     else
         CURRENT=NONE
     fi
-    NEWVER=0-git
+	NEWVER=$(curl --max-time 20 -s https://github.com/openhamclock/hamclock/releases/latest | grep -o 'tag/v[^"/]*' | head -1 | sed 's#tag/##')
+	if [[ -z "$NEWVER" ]]; then
+		NEWVER=0-web
+	fi
 }
 
 DEPENDS(){
