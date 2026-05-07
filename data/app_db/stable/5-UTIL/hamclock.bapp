@@ -19,7 +19,12 @@ INSTALL(){
 	INSTALLER_URL='https://github.com/openhamclock/hamclock/releases/download/v4.24b01.0/install-hc-rpi'
 	curl -fsSL -o install-hc-rpi "$INSTALLER_URL" || return
 	chmod +x install-hc-rpi
-	./install-hc-rpi
+	# HamClock installer is interactive; bind it to the controlling TTY.
+	if [ -e /dev/tty ]; then
+		./install-hc-rpi </dev/tty >/dev/tty 2>&1 || return
+	else
+		./install-hc-rpi || return
+	fi
 
 
 	cat >${HOME}/Desktop/hamclock.desktop <<EOF
