@@ -1,0 +1,68 @@
+BAPP=4
+ID=GRAYWOLF
+Name=Graywolf
+Comment='modern APRS digipeater/iGate with software modem and web UI'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/chrissnell/graywolf'
+Author='spud'
+NOTE='installs latest GitHub release package for Debian-based 64-bit systems'
+
+INSTALL(){
+    cd "${BAPSRC}" || return
+    rm -rf graywolf
+    mkdir graywolf
+    cd graywolf || return
+
+    # Graywolf publishes Linux .deb packages for amd64 and arm64.
+    if [[ "$BAPCPU" == *"aarch64"* || "$BAPCPU" == *"arm64"* ]]; then
+        PKG_ARCH="arm64"
+    elif [[ "$BAPCPU" == *"x86_64"* || "$BAPCPU" == *"amd64"* ]]; then
+        PKG_ARCH="amd64"
+    else
+        yad --center --title "Graywolf" --image "dialog-warning" --button="gtk-ok" \
+            --text "Graywolf package install currently supports only 64-bit ARM and 64-bit x86."
+        return 1
+    fi
+
+    TAG=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest | grep '"tag_name":' | sed 's/.*"tag_name": *"//;s/".*//')
+    if [ -z "$TAG" ]; then
+        echo -e "ERROR: unable to determine latest Graywolf release tag" | tee -a "$BAP_ERROR_LOG"
+        return 1
+    fi
+
+    VER=$(echo "$TAG" | sed 's/^v//')
+    DEB_FILE="graywolf_${VER}_linux_${PKG_ARCH}.deb"
+    DEB_URL="https://github.com/chrissnell/graywolf/releases/download/${TAG}/${DEB_FILE}"
+
+    wget --tries 2 --connect-timeout=60 "$DEB_URL" -O graywolf.deb
+    if [ ! -f graywolf.deb ]; then
+        echo -e "ERROR: failed to download Graywolf package" | tee -a "$BAP_ERROR_LOG"
+        return 1
+    fi
+
+    # Install local package, then resolve dependencies from repos.
+    sudo dpkg -i ./graywolf.deb 
+
+    if ! dpkg -s graywolf >/dev/null 2>&1; then
+        echo -e "ERROR: Graywolf package installation failed" | tee -a "$BAP_ERROR_LOG"
+        return 1
+    fi
+}
+
+VERSION(){
+    if dpkg -s graywolf >/dev/null 2>&1; then
+        CURRENT=$(dpkg-query -W -f='${Version}' graywolf 2>/dev/null)
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/chrissnell/graywolf/releases/latest | grep '"tag_name":' | sed 's/.*"tag_name": *"//;s/".*//' | sed 's/^v//')
+    if [ -z "$NEWVER" ]; then
+        NEWVER=NONE
+    fi
+}
+
+DEPENDS(){
+    NEEDED='64BIT'
+}
