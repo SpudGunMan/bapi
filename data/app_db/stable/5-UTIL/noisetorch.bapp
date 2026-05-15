@@ -1,0 +1,120 @@
+BAPP=4
+ID=NOISETORCH
+Name=NOISETORCH
+Comment='Noise suppression for PulseAudio/PipeWire microphones'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/noisetorch/NoiseTorch/releases'
+Author='spud'
+NOTE='Installs latest x64 release, with source-build fallback for ARM/other targets'
+
+INSTALL(){
+    echo -e "INFORMATIONAL: apt-get required packages"
+    sudo apt-get -y install curl >> errors/apt.log
+    sudo apt-get -y install libcap2-bin >> errors/apt.log
+
+    BUILD_FROM_SOURCE(){
+        echo "INFORMATIONAL: building NoiseTorch from source"
+        sudo apt-get -y install git >> errors/apt.log
+        sudo apt-get -y install make >> errors/apt.log
+        sudo apt-get -y install gcc >> errors/apt.log
+        sudo apt-get -y install g++ >> errors/apt.log
+        sudo apt-get -y install golang-go >> errors/apt.log
+
+        cd ${BAPSRC} || return 1
+        sudo rm -rf noisetorch-src
+        git clone https://github.com/noisetorch/NoiseTorch noisetorch-src || return 1
+        cd noisetorch-src || return 1
+        make || return 1
+
+        mkdir -p ${HOME}/.local/bin
+        mkdir -p ${HOME}/.local/share/applications
+        mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps
+        cp ./bin/noisetorch ${HOME}/.local/bin/ || return 1
+        cp ./assets/noisetorch.desktop ${HOME}/.local/share/applications/ || return 1
+        cp ./assets/icon/noisetorch.png ${HOME}/.local/share/icons/hicolor/256x256/apps/ || return 1
+        chmod +x ${HOME}/.local/bin/noisetorch
+        sudo setcap 'CAP_SYS_RESOURCE=+ep' ${HOME}/.local/bin/noisetorch || return 1
+
+        if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+            gtk-update-icon-cache ${HOME}/.local/share/icons/hicolor >/dev/null 2>&1 || true
+        fi
+        return 0
+    }
+
+    if [ "$(getconf LONG_BIT)" != "64" ]; then
+        echo "ERROR: NoiseTorch requires a 64-bit system"
+        return 1
+    fi
+
+    # NoiseTorch release assets are x64-only; use source build on ARM and similar CPUs.
+    if [[ "$BAPCPU" == *"ar"* ]]; then
+        BUILD_FROM_SOURCE
+        return $?
+    fi
+
+    cd ${BAPSRC} || return
+    sudo rm -rf noisetorch
+    mkdir noisetorch
+    cd noisetorch || return
+
+    GH_API="https://api.github.com/repos/noisetorch/NoiseTorch/releases/latest"
+    GH_JSON=$(curl --max-time 20 -s "$GH_API")
+    GH_TAG=$(echo "$GH_JSON" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    ASSET_URL=$(echo "$GH_JSON" | grep -Eo '"browser_download_url": *"[^"]*NoiseTorch_x64_[^"]*\.tgz"' | head -n 1 | sed -E 's/.*"browser_download_url": *"([^"]+)"/\1/')
+
+    if [[ -z "$ASSET_URL" && -n "$GH_TAG" ]]; then
+        ASSET_URL="https://github.com/noisetorch/NoiseTorch/releases/download/${GH_TAG}/NoiseTorch_x64_${GH_TAG}.tgz"
+    fi
+
+    if [[ -z "$ASSET_URL" ]]; then
+        echo "INFORMATIONAL: could not determine release asset URL, trying source build"
+        BUILD_FROM_SOURCE
+        return $?
+    fi
+
+    echo "INFORMATIONAL: downloading NoiseTorch from $ASSET_URL"
+    if ! curl -fL "$ASSET_URL" -o noisetorch.tgz; then
+        echo "INFORMATIONAL: release download failed, trying source build"
+        BUILD_FROM_SOURCE
+        return $?
+    fi
+
+    mkdir -p ${HOME}/.local/bin
+    mkdir -p ${HOME}/.local/share/applications
+    mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps
+    tar -C ${HOME} -h -xzf noisetorch.tgz || return 1
+
+    if [[ -x "${HOME}/.local/bin/noisetorch" ]]; then
+        sudo setcap 'CAP_SYS_RESOURCE=+ep' ${HOME}/.local/bin/noisetorch || return 1
+        chmod +x ${HOME}/.local/bin/noisetorch
+    else
+        echo "INFORMATIONAL: extracted release missing binary, trying source build"
+        BUILD_FROM_SOURCE
+        return $?
+    fi
+
+    if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+        gtk-update-icon-cache ${HOME}/.local/share/icons/hicolor >/dev/null 2>&1 || true
+    fi
+}
+
+VERSION(){
+    if command -v noisetorch >/dev/null 2>&1; then
+        CURRENT=$(noisetorch --version 2>/dev/null | grep -Eo 'v?[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+        if [[ -z "$CURRENT" ]]; then
+            CURRENT=installed
+        fi
+    else
+        CURRENT=NONE
+    fi
+
+    NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/noisetorch/NoiseTorch/releases/latest | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+    if [[ -z "$NEWVER" ]]; then
+        NEWVER=0-web
+    fi
+}
+
+DEPENDS(){
+    NEEDED=''
+}
