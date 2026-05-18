@@ -1,0 +1,37 @@
+BAPP=4
+ID=MERCURY
+Name=MERCURY
+Comment='Mercuryv2 OFDM modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/Rhizomatica/mercury'
+Author='spud'
+NOTE='Mercury v2 is a complete rewrite of the HERMES modem ARQ data link,'
+
+INSTALL(){
+	sudo apt-get update && sudo apt-get install  -y libasound2-dev libpulse-dev libhamlib-dev make git
+
+
+	cd ${BAPSRC} || return
+	rm -rf mercury
+	git clone https://github.com/Rhizomatica/mercury.git
+
+	cd mercury
+	make
+	sudo make install
+}
+
+VERSION(){
+    if [[ $(whereis mercury | grep bin) ]];then
+        CURRENT=$(mercury --help 2>/dev/null | grep Version | sed 's/MERCURYc Version //')
+	else
+		CURRENT=NONE
+    fi
+	NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}
