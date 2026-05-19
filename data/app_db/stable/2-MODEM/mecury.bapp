@@ -1,7 +1,7 @@
 BAPP=4
 ID=MERCURY
 Name=MERCURY
-Comment='Mercuryv2 OFDM modem'
+Comment='Mercuryv2 OFDM modem and qt-GUI in venv'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/Rhizomatica/mercury'
@@ -12,13 +12,20 @@ INSTALL(){
 	sudo apt-get update && sudo apt-get install  -y libasound2-dev libpulse-dev libhamlib-dev make git
 
 
-	cd ${BAPSRC} || return
+	cd ${HOME} || return
 	rm -rf mercury
 	git clone https://github.com/Rhizomatica/mercury.git
 
 	cd mercury
 	make
 	sudo make install
+
+	cd mercury/mercury-qt
+
+	python3 -m venv env
+	source env/bin/activate      # Windows: .\env\Scripts\activate
+
+	pip install -r requirements.txt   # Install pyside6 and numpy in virtual environment
 }
 
 VERSION(){
