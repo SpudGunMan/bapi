@@ -1,0 +1,46 @@
+BAPP=4
+ID=MERCURY
+Name=MERCURY
+Comment='Mercuryv2 OFDM modem and qt-GUI in venv'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/Rhizomatica/mercury'
+Author='spud'
+NOTE='Mercury v2 is a complete rewrite of the HERMES modem ARQ data link,'
+
+INSTALL(){
+	sudo apt-get update && sudo apt-get install  -y libasound2-dev libpulse-dev libhamlib-dev make git
+
+
+	cd ${BAPSRC} || return
+	rm -rf mercury
+	git clone https://github.com/Rhizomatica/mercury.git
+
+	cd mercury
+	make
+	sudo make install
+
+	cd ${HOME} || return
+	git clone https://github.com/Rhizomatica/mercury-qt
+	cd mercury/mercury-qt
+
+	python3 -m venv env
+	source env/bin/activate      # Windows: .\env\Scripts\activate
+
+	pip install -r requirements.txt   # Install pyside6 and numpy in virtual environment
+}
+
+VERSION(){
+    if [[ $(whereis mercury | grep bin) ]];then
+        CURRENT=$(mercury --help 2>/dev/null | grep Version | sed 's/MERCURYc Version //')
+	else
+		CURRENT=NONE
+    fi
+	NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}
