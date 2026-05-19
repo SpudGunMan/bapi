@@ -9,7 +9,7 @@ Author='spud'
 NOTE='Mercury v2 is a complete rewrite of the HERMES modem ARQ data link,'
 
 INSTALL(){
-	sudo apt-get update && sudo apt-get install  -y libasound2-dev libpulse-dev libhamlib-dev make git
+	sudo apt-get update && sudo apt-get install  -y libasound2-dev libpulse-dev libhamlib-dev make git libcb-cursor0
 
 
 	cd ${BAPSRC} || return
