@@ -1,7 +1,7 @@
 BAPP=4
 ID=MERCURY
 Name=MERCURY
-Comment='Mercuryv2 OFDM modem and qt-GUI in venv'
+Comment='Mercury v2 OFDM modem and qt-GUI in venv'
 VerLocal=0
 VerRemote=0
 W3='https://github.com/Rhizomatica/mercury'
@@ -23,6 +23,8 @@ INSTALL(){
 	cd ${HOME} || return
 	git clone https://github.com/Rhizomatica/mercury-qt
 	cd mercury-qt
+
+	cp /usr/share/doc/mercury/mercury.ini.example mercury.ini
 
 	python3 -m venv env
 	source env/bin/activate      # Windows: .\env\Scripts\activate
