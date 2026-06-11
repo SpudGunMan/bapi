@@ -4,7 +4,7 @@ Name=hamlib
 Comment='hamlib rig control'
 VerLocal=0
 VerRemote=0
-W3='https://sourceforge.net/projects/hamlib/support'
+W3='https://github.com/Hamlib/Hamlib/'
 Author='spud'
 NOTE="Allows install of github or sourceforge code \n typically github is newer. \n Will detect and install python libs as well"
 
