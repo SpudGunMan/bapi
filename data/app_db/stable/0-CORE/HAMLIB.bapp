@@ -23,6 +23,11 @@ INSTALL(){
     GH_TAG=$(echo "$GH_JSON" | grep '"tag_name":' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
     GH_ASSET=$(echo "$GH_JSON" | grep -Eo '"browser_download_url": *"[^"]*hamlib-[^"]*\.tar\.gz"' | head -n 1 | sed -E 's/.*"browser_download_url": *"([^"]+)"/\1/')
 
+    # Fall back to the latest GitHub tag if release metadata does not return a valid release.
+    if [[ -z "$GH_TAG" || "$GH_TAG" == "null" ]]; then
+        GH_TAG=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/tags?per_page=100 | grep '"name":' | sed -E 's/.*"name": *"([^"]+)".*/\1/' | sed 's/^v//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -n 1)
+    fi
+
     # If API parsing misses assets, build the standard release asset URL from the tag
     if [[ -z "$GH_ASSET" && -n "$GH_TAG" ]]; then
         GH_TAG_STRIPPED="${GH_TAG#v}"
@@ -117,6 +122,9 @@ VERSION(){
 
     # Get latest GitHub release tag
     GH_VER=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/releases/latest | grep '"tag_name":' | sed 's/.*"tag_name": *"//;s/".*//')
+    if [[ -z "$GH_VER" || "$GH_VER" == "null" ]]; then
+        GH_VER=$(curl --max-time 20 -s https://api.github.com/repos/Hamlib/Hamlib/tags?per_page=100 | grep '"name":' | sed -E 's/.*"name": *"([^"]+)".*/\1/' | sed 's/^v//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -n 1)
+    fi
 
     NEWVER="SF: $SF_VER, GH: $GH_VER"
 }
