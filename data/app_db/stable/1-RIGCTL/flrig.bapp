@@ -15,7 +15,7 @@ INSTALL(){
 	#stop the default from installing
     sudo apt-mark hold flrig
 
-    sudo apt-get install -y libfltk1.3-dev >> errors/apt.log
+    sudo apt-get install -y libfltk1.4-dev >> errors/apt.log
     sudo apt-get install -y libxft-dev >> errors/apt.log
     sudo apt-get install -y libxinerama-dev >> errors/apt.log
     sudo apt-get install -y libxcursor-dev >> errors/apt.log

@@ -10,7 +10,7 @@ NOTE=''
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get install -y libfltk1.3-dev >> errors/apt.log
+    sudo apt-get install -y libfltk1.4-dev >> errors/apt.log
     sudo apt-get install -y libxft-dev >> errors/apt.log
     sudo apt-get install -y libxinerama-dev >> errors/apt.log
     sudo apt-get install -y libxcursor-dev >> errors/apt.log
