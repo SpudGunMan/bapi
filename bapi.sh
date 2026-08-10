@@ -2,7 +2,7 @@
 #loader
 SH_VERSION=1.0.7a #set up git missing installer (huh?)
 echo "###################################"
-echo "#      Build-A-Pi mark II.30      #"
+echo "#      Build-A-Pi mark II.80      #"
 echo "###################################"
 
 #set working directory
@@ -36,13 +36,11 @@ mkdir -p "$BAPSRC"
 if test -f ".dev"; then
     DEBUG=1
     set -Eeoxu pipefail
-    trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR
+    trap 'echo >&2 "Error at line $LINENO"' ERR
 elif test -f ".debug"; then
     DEBUG=1
     set -Eeox
-    trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR
+    trap 'echo >&2 "Error at line $LINENO"' ERR
 else
     DEBUG=0
     set -Ee
@@ -74,14 +72,14 @@ export BAPWHOAMI
 export -f YAD_INFO_F
 
 SETUP(){
-    if [ $DEBUG -eq 1 ];then echo -e "DEBUG: bapi.sh SETUP function"; fi
+    if [ $DEBUG -eq 1 ];then echo "DEBUG: Starting system setup"; fi
     #Install YAD
-    echo -e "INFORMATIONAL: apt-get update.."
+    echo "Updating packages..."
     sudo apt-get -y update > errors/apt.log
     if [[ $(whereis yad | grep bin) ]];then
         echo "yad found" > /dev/null
     else
-        echo -e " WARNING: dependency yad, git, curl needed checking.."
+        echo "Installing required packages..."
         sudo apt-get -y install git >> errors/apt.log
         sudo apt-get -y install yad >> errors/apt.log
         sudo apt-get -y install curl >> errors/apt.log
@@ -89,20 +87,17 @@ SETUP(){
 
     # Detect if the script health and .git
     if [ ! -f "data/build-utility.bap" ]; then
-        echo -e "\n CRITICAL: critical enviroment issue, please see the below output"
-        #add script to check for cache and apps if not there copy from data folder
-        #this will prevent the pull from erasing also
+        echo "Error: Package integrity issue. Please reinstall."
         git pull
         exit 1
-        #add smarts to not overwrite a folder here when git pull is done copy from data new install and git
     fi
 
     # check if the bin package setup the enviroment
     if [ -f bin/set-enviroment.sh ]; then
-        echo -e "INFORMATIONAL: Detected New System for Install $(hostname -s)"
+        echo "Setting up new system"
         ./bin/set-enviroment.sh
     else
-        echo -e "\n ERROR: CRITICAL: check integrity of package. delete it all and start over!" | tee -a $BAP_ERROR_LOG
+        echo "Error: Package integrity issue." | tee -a $BAP_ERROR_LOG
         exit 1
     fi
     touch cache/.stage1
@@ -111,18 +106,15 @@ SETUP(){
     wait
 }
 
-#####################################
-#	Verify not run remote
-echo -e "INFORMATIONAL: checking local console TTY settings"
+echo "Checking system..."
 #   We need a terminal this isnt a background or full yad GUI
 if [ ! -t 0 ]; then
-    echo -e "\n CRITICAL: EXIT: This script requires 'run in terminal.'" | tee -a $BAP_ERROR_LOG
+    echo "Error: This script requires 'run in terminal." | tee -a $BAP_ERROR_LOG
     exit 1
 fi
 
-IS_GUI=$(printenv | grep DISPLAY)
-if [ -z "$IS_GUI" ]; then
-	echo -e "\n CRITICAL: EXIT: This script requires run local and yad GUI at this time." | tee -a $BAP_ERROR_LOG
+if ! printenv | grep -q DISPLAY; then
+	echo "Error: This script requires a graphical display." | tee -a $BAP_ERROR_LOG
     exit 1
 fi
 
@@ -130,11 +122,11 @@ fi
 #	Verify not run as root
 BAPWHOAMI=$(whoami)
 if [ "$BAPWHOAMI" = 'root' ]; then
-	echo -e "\n CRITICAL: EXIT:root user DETECTED restart the script without" | tee -a $BAP_ERROR_LOG
+	echo "Error: Do not run as root. Restart without sudo." | tee -a $BAP_ERROR_LOG
 	exit 1
 else
-    echo -e "INFORMATIONAL: Enter your password for sudo if prompted"
-    sudo cp LICENSE /dev/null || echo -e "License file missing..."
+    echo "Please enter your password if prompted for sudo..."
+    sudo cp LICENSE /dev/null 2>/dev/null || echo "License file missing"
 fi
 
 #####################################
@@ -142,7 +134,7 @@ fi
 
 #	change working directory
 if [ $BAPDIR != $( cat $BAPINSTALL_FILE) ]; then
-     echo -e "\nWARNING: Possible enviroment directory change" | tee -a $BAP_ERROR_LOG
+     echo "Warning: Working directory mismatch" | tee -a $BAP_ERROR_LOG
 fi
 
 if [ ! -d $BAPDIR/apps/stable ]; then
@@ -156,10 +148,10 @@ else
         # Optionally backup old apps
         # mv ./apps ./apps_backup_$(date +%s)
         cp -r "$TMP_APPS_DIR/"* ./apps/
-        echo -e "INFORMATIONAL: changes to app files detected. checking SWR.."
+        echo "Checking for app updates..."
         ./bin/app-check.sh
     else
-        echo -e "ERROR: Failed to copy app_db to temp dir. Aborting update. try: rm -rf apps/ cache/" | tee -a $BAP_ERROR_LOG
+        echo "Error: Failed to update apps. Try: rm -rf apps/ cache/" | tee -a $BAP_ERROR_LOG
     fi
     rm -rf "$TMP_APPS_DIR"
 fi
@@ -168,19 +160,19 @@ fi
 #run enviroment setup scripts for first run
 if [ ! -f "$BAP_SYS_INFO_FILE" ]; then
     # call setup function
-    echo -e "\nWARNING: missing enviroment launching set-enviroment" | tee -a $BAP_ERROR_LOG
+    echo "Setting up system..."
     SETUP
 fi
 
 #####################################
 #	check dev tools
 if [ -f '.skip-dev-apt' ]; then 
-    echo -e "INFORMATIONAL: Using custom dev kit" | tee -a $BAP_ERROR_LOG
+    echo "Using custom dev kit"
 fi
 
 if [ ! -f MYCALL.* ]; then
     # call setup function
-    echo -e "\nCRITICAL: missing MYCALL dev needs to debug?" | tee -a $BAP_ERROR_LOG
+    echo "Error: MYCALL not configured" | tee -a $BAP_ERROR_LOG
     exit 1
 else
     MYCALL=$(ls MYCALL.* | sed 's/MYCALL.//')
@@ -191,8 +183,8 @@ fi
 #	check app files
 if [ -f $JOB_FILE ]; then
     # check since last job run
-    echo -e "INFORMATIONAL: Scanning Changes since last Job-Run" | tee -a $BAP_ERROR_LOG
-    rm cache/run-list.bap | tee -a $BAP_ERROR_LOG
+    echo "Checking for changes..."
+    rm cache/run-list.bap 2>/dev/null
     ./bin/app-check.sh
 else
     # validate good .bapp files quickly no version updates we didnt cause a change to them
@@ -215,7 +207,7 @@ export BAPCALL
 export MYCALL
 
 if [ ! -f cache/.firstrun ]; then
-    echo -e "\n CRITICAL: data corruption first, try 'rm -rf apps/' directory \n more drastic:  ./bin/set-enviroment.sh reset" | tee -a $BAP_ERROR_LOG
+    echo "Error: System setup incomplete. Try: ./bin/set-enviroment.sh reset" | tee -a $BAP_ERROR_LOG
 else
     if [[ "$PKG_PROFILE" == *"PKG_DEF"* ]]; then
         #launch menu
@@ -226,7 +218,7 @@ else
     ./bin/bap-runner.sh
 
     #goodbye
-    echo -e "see you down the log \n .. 73\n"   
+    echo -e "Done. 73s."   
 fi
 
 exit 0

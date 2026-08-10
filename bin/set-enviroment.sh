@@ -4,8 +4,7 @@
 SH_VERSION=1.0.1
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: set-env.sh"; fi
-if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
+if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error at line $LINENO"' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
 
 #####################################
 #	argument handler
@@ -41,7 +40,7 @@ elif [ "$argz" == "clean" ]; then
     fi
 else
     echo "###################################"
-    echo -e "INFORMATIONAL: Setting up enviroment"
+    echo "Setting up environment"
     echo "###################################"
 fi
 
@@ -189,12 +188,12 @@ else
     BAPCALL=$TMPCALL
     touch MYCALL.$MYCALL
     touch cache/MYCALL.$MYCALL
-    echo -e "INFORMATIONAL: Registered $MYCALL to this host"
+    echo "Registered $MYCALL to this system"
 fi
 
 #set a config register for use by all apps first line is bits, second is core for make -j4
 echo -e "$CPU\n$cpu\n$arch\n$distribution\n$MYCALL\n$(hostname -s)" > $BAP_SYS_INFO_FILE
-echo -e "INFORMATIONAL: set enviroment $CPU $arch $distribution"
+echo "System: $CPU bits, $arch, Debian $distribution"
 BAPARCH=$CPU
 BAPCORE=$cpu
 BAPCPU=$arch
@@ -203,15 +202,11 @@ BAPDIST=$distribution
 # Show once dialog and profile selections
 list="Default-Chosen EM1COM APRS Skip-Installing-DEV-tools"
 until [ "$select" = "8" ]; do
-        action=$(yad 2> /dev/null --form --width=420 --height=200 --fixed --center --entry --title="Welcome!" \
+        action=$(yad 2> /dev/null --form --width=420 --height=180 --fixed --center --entry --title="Welcome!" \
         --image=data/ico/logo.png --image-on-top --text-align=fill --button="gtk-ok" \
-        --text="\n<b>$MYCALL DE K7MHI</b> \n
-        Welcome to the new and improved.. \n
-            <b>Build-A-Pi mark II</b> \n
-        Now with feature enhanced secret sauce! \n
-                -BAPI PRE-RELEASE - SEE README \n
-                -Double click app in menu for notes \n
-                -Press ESC now to exit!" \
+        --text="\n<b>$MYCALL</b> - Build-A-Pi mark II\n
+System: $CPU bits, $arch, Debian $distribution\n
+Choose installation profile:" \
         --entry-text $list)
         
         ret=$?
@@ -225,8 +220,8 @@ until [ "$select" = "8" ]; do
         esac
 done
 
-PKG_PROFILE=$(ls cache/PKG_* | sed 's/cache\///'g | sed 's/.bap//')
-echo -e "INFORMATIONAL: Install: $PKG_PROFILE"
+PKG_PROFILE=$(ls cache/PKG_* | sed 's/cache\///g' | sed 's/.bap//')
+echo "Profile: $PKG_PROFILE"
 
 #####################################
 #	extra build scripts can be called here or in the 
@@ -247,10 +242,10 @@ VNC_PERF
 # for now this is here till a better spot or idea
 # the problem really is front loading a lot of heavy stuff at home vs cell phone field or just over and over
 if [ ! -f '.skip-dev-apt' ] && [ ! -f '.ran-dev-apt' ];then
-    echo -e "INFORMATIONAL: Installing developer tools, this may take some time."
+    echo "Installing developer tools. This may take a few minutes..."
     COMMON_DEVELOPER_TOOLS_INSTALL >> errors/apt.log
 else
-    echo -e "INFORMATIONAL: developer tools NOT installed skipped"
+    echo "Developer tools installation skipped"
 fi
 
 export MYCALL

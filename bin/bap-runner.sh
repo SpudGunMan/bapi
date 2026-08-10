@@ -4,9 +4,8 @@
 # ------------------------------------------------------------------
 SH_VERSION=1.0.1
 #Error and DEBUG
-if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: bap-runner.sh"; fi
-if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
+if [ ${DEBUG:=0} -eq 1 ];then echo "DEBUG: bap-runner.sh"; fi
+if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error at line $LINENO"' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
 
 #Globals Dev doc. for use here or in .bapp
 # var-BAPCPU  (armv7l / aarch64 / x86_64)
@@ -40,18 +39,16 @@ execute_build_function() {
 
         #	check dev tools
         if [ ! -f '.ran-dev-apt' ]; then 
-            echo -e "WARNING: Using custom dev kit!" | tee -a $BAP_ERROR_LOG
+		    echo "Using custom dev kit" | tee -a $BAP_ERROR_LOG
         fi
-
+        
         #process 
         for Job in $JOBLIST; do  
             #source INSTAL
             cd $BAPDIR
             source "${Job}"
 
-            echo "###################################"
-            echo "bapi processing: $Job"
-            echo "###################################"
+            echo "Installing: $Job"
             if [[ $(type -t INSTALL) == function ]];then
                 if [ $DEBUG -eq 0 ];then set +Ee; fi # Disable Debug
                 INSTALL 2> >(tee -a $BAP_ERROR_LOG)

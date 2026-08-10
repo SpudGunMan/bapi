@@ -4,14 +4,11 @@
 # ------------------------------------------------------------------
 SH_VERSION=1.0.0
 # Error and debug controls.
-if [ "${DEBUG:=0}" -eq 1 ]; then
-    echo "DEBUG: menu.sh"
-fi
+if [ $DEBUG -eq 1 ];then echo "DEBUG: menu.sh"; fi
 
 if test -f ".dev"; then
     set -Eeoxu
-    trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR
+    trap 'echo >&2 "Error at line $LINENO"' ERR
 elif test -f ".debug"; then
     set -Eeox
 else
@@ -24,16 +21,32 @@ extract_bapp_field() {
     grep -m 1 -e "^[[:blank:]]*$field" "$file" | cut -d = -f 2
 }
 
+get_install_status() {
+    local verlocal="$1"
+    local available="$2"
+    
+    if [ "$verlocal" = "NONE" ]; then
+        echo "Not Installed"
+    elif [ "$available" = "true" ]; then
+        echo "Update Available"
+    else
+        echo "Installed"
+    fi
+}
+
 emit_bapp_row() {
     local bappfile="$1"
     [ -f "$bappfile" ] || return 0
+
+    local verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
+    local available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
+    local status=$(get_install_status "$verlocal" "$available")
 
     extract_bapp_field "BAPP" "$bappfile"
     extract_bapp_field "ID" "$bappfile"
     extract_bapp_field "Name" "$bappfile"
     extract_bapp_field "Comment" "$bappfile"
-    extract_bapp_field "VerRemote" "$bappfile"
-    extract_bapp_field "VerLocal" "$bappfile"
+    echo "$status"
     extract_bapp_field "LOC" "$bappfile"
 }
 
@@ -45,10 +58,10 @@ export -f BAP_CONFIG_MENU
 # loops files for data to put into yad table with checkboxes. BAPP column is lost to checkbox.
 for bappfile in $BAPAPPS_FILES_LOC; do
     emit_bapp_row "$bappfile"
-done | yad 2> /dev/null --width=1150 --height=650 --title="Build-A-Pi mark II - The leading edge Ham Radio Software Package Manager - $BAPCALL" --image="gtk-execute" \
+done | yad 2> /dev/null --width=1050 --height=650 --title="Build-A-Pi mark II - Ham Radio App Manager - $BAPCALL" --image="gtk-execute" \
             --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"' \
-            --column="" --column="ID" --column="App" --column="description" --column="available version" --column="installed version" --column="source"\
-            --text="Select package to install. you can sort, or search by typing. <b>Double click for package notes and support details.</b> Detected: $BAPARCH bit $BAPDIST" --button="Nope":1 --button="Lets Go!":2 | \
+            --column="" --column="ID" --column="App" --column="Description" --column="Status" --column="Category" \
+            --text="Select apps to install. You can sort or search by typing. Double-click for details." --button="Cancel":1 --button="Install":2 | \
            grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
 
 wait

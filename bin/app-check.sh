@@ -5,14 +5,13 @@
 SH_VERSION=1.0.5
 #Error and DEBUG
 if [ ${DEBUG:=0} -eq 1 ];then echo -e "DEBUG: app-check.sh"; fi
-if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
-         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
+if test -f ".dev"; then set -Eeoxu;trap 'echo >&2 "Error at line $LINENO"' ERR;elif test -f ".debug"; then set -Eeox;else set -Ee; fi
 
 echo "########################################"
-echo -e "INFORMATIONAL: Updating menu/app meta-data, warming the tubes.."
+echo "Updating app metadata, warming the tubes..."
 
 if [[ -z $BAPAPPS_FILES_LOC ]];then
-	echo -e "ERROR: script ran outside of menu.sh" | tee -a $BAP_ERROR_LOG
+	echo "Error: script must be run from menu.sh" | tee -a $BAP_ERROR_LOG
 	exit 1
 fi
 
@@ -61,20 +60,21 @@ for Job in $BAPAPPS_FILES_LOC; do
 
 		#add found apps to list and metadata update
 		if [ "$CURRENT" != "NONE" ]; then
-			echo -e "INFORMATIONAL: found $ID $CURRENT is installed" | tee -a $FOUND_APPS_FILE
+			echo "Found: $ID $CURRENT" | tee -a $FOUND_APPS_FILE
 
-			#check if update is available
+			#check if update is available and set status flag
 			if (($(echo "${NEWVER} ${CURRENT}" | awk '{print ($1 > $2)}'))); then
-				echo -e "INFORMATIONAL: $ID: $NEWVER is available for update!"
-				#Status Update newer version
-				set_bapp_field "$Job" "VerLocal" "$(shell_escape_value "Update:$CURRENT")"
-				
-			else
-				#Status Update current version
+				# Update available
 				set_bapp_field "$Job" "VerLocal" "$(shell_escape_value "$CURRENT")"
+				set_bapp_field "$Job" "UpdateAvailable" "true"
+			else
+				# Up to date
+				set_bapp_field "$Job" "VerLocal" "$(shell_escape_value "$CURRENT")"
+				set_bapp_field "$Job" "UpdateAvailable" "false"
 			fi
 		else
 			set_bapp_field "$Job" "VerLocal" "NONE"
+			set_bapp_field "$Job" "UpdateAvailable" "false"
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
@@ -99,7 +99,7 @@ awk '!seen[$0]++' $BAPAPPS_LIST_FILE > $BAPAPPS_LIST_FILE.tmp
 mv $BAPAPPS_LIST_FILE.tmp $BAPAPPS_LIST_FILE
 rm -f $BAPAPPS_LIST_FILE.tmp
 
-echo -e "INFORMATIONAL: Updated $(cat $BAPAPPS_LIST_FILE | grep .bapp | wc -l) apps meta-data fields."
+echo "Updated $(cat $BAPAPPS_LIST_FILE | grep .bapp | wc -l) apps."
 
 #first boot checking
 if [ -f cache/.stage1 ];then
