@@ -2,6 +2,9 @@
 
 **PLEASE NOTE**
 
+2026 Notes
+- Refresh of the UI and such no versions displayed anymore
+
 2025 Notes
 - Fixed the database bug! (anyone there?)
 - WSJT-X 3.0 Dev release install options
