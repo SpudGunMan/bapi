@@ -146,8 +146,6 @@ else
         # Optionally backup old apps
         # mv ./apps ./apps_backup_$(date +%s)
         cp -r "$TMP_APPS_DIR/"* ./apps/
-        echo "Checking for app updates..."
-        ./bin/app-check.sh
     else
         echo "Error: Failed to update apps. Try: rm -rf apps/ cache/" | tee -a $BAP_ERROR_LOG
     fi
