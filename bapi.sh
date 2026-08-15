@@ -101,9 +101,7 @@ SETUP(){
         exit 1
     fi
     touch cache/.stage1
-    #check for updates on new run
-    ./bin/app-check.sh
-    wait
+    # Note: app-check.sh will be called later in main flow
 }
 
 echo "Checking system..."
