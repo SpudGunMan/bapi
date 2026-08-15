@@ -14,14 +14,18 @@ INSTALL(){
     mkdir graywolf
     cd graywolf || return
 
-    # Graywolf publishes Linux .deb packages for amd64 and arm64.
+    # Graywolf publishes Linux .deb packages for multiple architectures.
     if [[ "$BAPCPU" == *"aarch64"* || "$BAPCPU" == *"arm64"* ]]; then
         PKG_ARCH="arm64"
     elif [[ "$BAPCPU" == *"x86_64"* || "$BAPCPU" == *"amd64"* ]]; then
         PKG_ARCH="amd64"
+    elif [[ "$BAPCPU" == *"armv7l"* ]]; then
+        PKG_ARCH="armv7l"
+    elif [[ "$BAPCPU" == *"armv6l"* ]]; then
+        PKG_ARCH="armhf"
     else
         yad --center --title "Graywolf" --image "dialog-warning" --button="gtk-ok" \
-            --text "Graywolf package install currently supports only 64-bit ARM and 64-bit x86."
+            --text "Graywolf package install currently supports 64-bit ARM, 64-bit x86, ARMv7, and ARM32."
         return 1
     fi
 
@@ -32,7 +36,7 @@ INSTALL(){
     fi
 
     VER=$(echo "$TAG" | sed 's/^v//')
-    DEB_FILE="graywolf_${VER}_linux_${PKG_ARCH}.deb"
+    DEB_FILE="graywolf_${VER}_${PKG_ARCH}.deb"
     DEB_URL="https://github.com/chrissnell/graywolf/releases/download/${TAG}/${DEB_FILE}"
 
     wget --tries 2 --connect-timeout=60 "$DEB_URL" -O graywolf.deb
