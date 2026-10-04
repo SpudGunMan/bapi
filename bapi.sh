@@ -187,6 +187,13 @@ else
     ./bin/template-maker.sh bapi
 fi
 
+# Fresh installs can land here without app-check creating the first-run marker.
+# Set the completion flag explicitly once setup has finished.
+if [ -f cache/.stage1 ]; then
+    touch cache/.firstrun
+    rm -f cache/.stage1
+fi
+
 #####################################
 #	Normal Runtime
 BAPARCH=$(echo $(sed '1q;d' $BAP_SYS_INFO_FILE))
