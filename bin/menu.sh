@@ -18,7 +18,21 @@ fi
 extract_bapp_field() {
     local field="$1"
     local file="$2"
-    grep -m 1 -e "^[[:blank:]]*$field" "$file" | cut -d = -f 2
+    local raw
+
+    raw=$(grep -m 1 -E "^[[:space:]]*${field}=" "$file" 2>/dev/null || true)
+    raw=${raw#*=}
+    raw=${raw%$'\r'}
+    raw="${raw#"${raw%%[![:space:]]*}"}"
+    raw="${raw%"${raw##*[![:space:]]}"}"
+
+    if [ "${raw:0:1}" = "'" ] && [ "${raw: -1}" = "'" ]; then
+        raw="${raw:1:${#raw}-2}"
+    elif [ "${raw:0:1}" = '"' ] && [ "${raw: -1}" = '"' ]; then
+        raw="${raw:1:${#raw}-2}"
+    fi
+
+    printf '%s' "$raw"
 }
 
 get_install_status() {
