@@ -20,15 +20,30 @@ INSTALL(){
     CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
     #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
 
-    LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/chirp-${CHIRPDATE}-py3-none-any.whl
-    echo -e "Downloading Chirp"
-    wget --tries 2 --connect-timeout=60 $LINK
-    if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
-        echo -e "Installing Chirp"
-        pip3 install chirp-${CHIRPDATE}-py3-none-any.whl --break-system-packages
-        rm chirp-${CHIRPDATE}-py3-none-any.whl
+    if [[ "$BAPCPU" == "x86_64" ]]; then
+        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/Chirp-next-${CHIRPDATE}-x86_64.AppImage
+        APPIMG=Chirp-next-${CHIRPDATE}-x86_64.AppImage
+        echo -e "Downloading Chirp AppImage"
+        wget --tries 2 --connect-timeout=60 "$LINK"
+        if [[ -f "$APPIMG" ]]; then
+            echo -e "Installing Chirp AppImage"
+            chmod +x "$APPIMG"
+            sudo mv "$APPIMG" /usr/local/bin/
+            sudo ln -fs "/usr/local/bin/$APPIMG" /usr/local/bin/chirp
+        else
+            echo -e "ERROR: Chirp AppImage failed to download"
+        fi
     else
-        echo -e "ERROR: Chirp failed to download"
+        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/chirp-${CHIRPDATE}-py3-none-any.whl
+        echo -e "Downloading Chirp wheel"
+        wget --tries 2 --connect-timeout=60 "$LINK"
+        if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
+            echo -e "Installing Chirp wheel"
+            pip3 install chirp-${CHIRPDATE}-py3-none-any.whl --break-system-packages
+            rm chirp-${CHIRPDATE}-py3-none-any.whl
+        else
+            echo -e "ERROR: Chirp wheel failed to download"
+        fi
     fi
 
 }
