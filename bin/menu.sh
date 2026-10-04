@@ -18,7 +18,21 @@ fi
 extract_bapp_field() {
     local field="$1"
     local file="$2"
-    grep -m 1 -e "^[[:blank:]]*$field" "$file" | cut -d = -f 2
+    local raw
+
+    raw=$(grep -m 1 -E "^[[:space:]]*${field}=" "$file" 2>/dev/null || true)
+    raw=${raw#*=}
+    raw=${raw%$'\r'}
+    raw="${raw#"${raw%%[![:space:]]*}"}"
+    raw="${raw%"${raw##*[![:space:]]}"}"
+
+    if [ "${raw:0:1}" = "'" ] && [ "${raw: -1}" = "'" ]; then
+        raw="${raw:1:${#raw}-2}"
+    elif [ "${raw:0:1}" = '"' ] && [ "${raw: -1}" = '"' ]; then
+        raw="${raw:1:${#raw}-2}"
+    fi
+
+    printf '%s' "$raw"
 }
 
 get_install_status() {
@@ -38,16 +52,23 @@ emit_bapp_row() {
     local bappfile="$1"
     [ -f "$bappfile" ] || return 0
 
-    local verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
-    local available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
-    local status=$(get_install_status "$verlocal" "$available")
+    local verlocal
+    local available
+    local status
+    local id
+    local name
+    local comment
+    local loc
 
-    extract_bapp_field "BAPP" "$bappfile"
-    extract_bapp_field "ID" "$bappfile"
-    extract_bapp_field "Name" "$bappfile"
-    extract_bapp_field "Comment" "$bappfile"
-    echo "$status"
-    extract_bapp_field "LOC" "$bappfile"
+    verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
+    available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
+    status=$(get_install_status "$verlocal" "$available")
+    id=$(extract_bapp_field "ID" "$bappfile")
+    name=$(extract_bapp_field "Name" "$bappfile")
+    comment=$(extract_bapp_field "Comment" "$bappfile")
+    loc=$(extract_bapp_field "LOC" "$bappfile")
+
+    printf '%s|%s|%s|%s|%s|%s\n' "" "$id" "$name" "$comment" "$status" "$loc"
 }
 
 BAP_CONFIG_MENU(){
