@@ -18,6 +18,7 @@ INSTALL(){
     cd chirp
     
     CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+    if [[ -z "$CHIRPDATE" ]]; then CHIRPDATE=20261002; fi
     #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
 
     if [[ "$BAPCPU" == "x86_64" ]]; then
@@ -56,6 +57,7 @@ VERSION(){
         CURRENT=NONE
     fi
     NEWVER=$(curl --max-time 20 -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+    if [[ -z "$NEWVER" ]]; then NEWVER=20261002; fi
 }
 
 DEPENDS(){
