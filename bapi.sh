@@ -26,7 +26,7 @@ JOB_FILE=cache/run-list.bap
 BAP_ERROR_LOG=$(echo $BAP_ERROR_DIR/general-alarm.log)
 INSTALL_HISTORY_FILE=cache/reqst-install-history.bap
 if [ ! -f errors/apt.log ];then install -Dv /dev/null errors/apt.log ;fi
-BAPAPPS_FILES_LOC="apps/stable/*.bapp apps/stable/**/*.bapp apps/experimental/*.bapp apps/experimental/**/*.bapp"
+BAPAPPS_FILES_LOC=$(find apps/stable apps/experimental -type f -name '*.bapp' 2>/dev/null | sort)
 BAPPVER="4" #.bapp file version #also update template-maker.sh
 BAPWHOAMI=$(whoami)
 mkdir -p "$BAPSRC"

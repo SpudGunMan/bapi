@@ -18,13 +18,29 @@ fi
 extract_bapp_field() {
     local field="$1"
     local file="$2"
-    grep -m 1 -e "^[[:blank:]]*$field" "$file" | cut -d = -f 2
+    local raw
+
+    raw=$(grep -m 1 -E "^[[:space:]]*${field}=" "$file" 2>/dev/null || true)
+    [ -n "$raw" ] || { printf '%s' ""; return 0; }
+
+    raw=${raw#*=}
+    raw=${raw%$'\r'}
+    raw="${raw#"${raw%%[![:space:]]*}"}"
+    raw="${raw%"${raw##*[![:space:]]}"}"
+
+    if [ "${raw:0:1}" = "'" ] && [ "${raw: -1}" = "'" ]; then
+        raw="${raw:1:${#raw}-2}"
+    elif [ "${raw:0:1}" = '"' ] && [ "${raw: -1}" = '"' ]; then
+        raw="${raw:1:${#raw}-2}"
+    fi
+
+    printf '%s' "$raw"
 }
 
 get_install_status() {
     local verlocal="$1"
     local available="$2"
-    
+
     if [ "$verlocal" = "NONE" ]; then
         echo "Not Installed"
     elif [ "$available" = "true" ]; then
@@ -38,16 +54,23 @@ emit_bapp_row() {
     local bappfile="$1"
     [ -f "$bappfile" ] || return 0
 
-    local verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
-    local available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
-    local status=$(get_install_status "$verlocal" "$available")
+    local verlocal
+    local available
+    local status
+    local id
+    local name
+    local comment
+    local loc
 
-    extract_bapp_field "BAPP" "$bappfile"
-    extract_bapp_field "ID" "$bappfile"
-    extract_bapp_field "Name" "$bappfile"
-    extract_bapp_field "Comment" "$bappfile"
-    echo "$status"
-    extract_bapp_field "LOC" "$bappfile"
+    verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
+    available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
+    status=$(get_install_status "$verlocal" "$available")
+    id=$(extract_bapp_field "ID" "$bappfile")
+    name=$(extract_bapp_field "Name" "$bappfile")
+    comment=$(extract_bapp_field "Comment" "$bappfile")
+    loc=$(extract_bapp_field "LOC" "$bappfile")
+
+    printf '%s|%s|%s|%s|%s|%s\n' "FALSE" "$id" "$name" "$comment" "$status" "$loc"
 }
 
 BAP_CONFIG_MENU(){
@@ -55,14 +78,47 @@ BAP_CONFIG_MENU(){
 }
 export -f BAP_CONFIG_MENU
 
-# loops files for data to put into yad table with checkboxes. BAPP column is lost to checkbox.
-for bappfile in $BAPAPPS_FILES_LOC; do
-    emit_bapp_row "$bappfile"
-done | yad 2> /dev/null --width=1050 --height=650 --title="Build-A-Pi mark II - Ham Radio App Manager - $BAPCALL" --image="gtk-execute" \
-            --center --list --print-all --search-column=2 --multiple --checklist --grid-lines=hor --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"' \
-            --column="" --column="ID" --column="App" --column="Description" --column="Status" --column="Category" \
-            --text="Select apps to install. You can sort or search by typing. Double-click for details." --button="Cancel":1 --button="Install":2 | \
-           grep TRUE | sed 's/TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
+# Build the menu from the real recursive app list so 0-CORE/HAMLIB is not skipped.
+YAD_ARGS=(
+    --width=1050
+    --height=650
+    --title="Build-A-Pi mark II - Ham Radio App Manager - $BAPCALL"
+    --image="gtk-execute"
+    --center
+    --list
+    --separator='|'
+    --print-all
+    --search-column=2
+    --multiple
+    --checklist
+    --grid-lines=hor
+    --dclick-action='bash -c "$BAPDIR/bin/about.sh return $1"'
+    --column=""
+    --column="ID"
+    --column="App"
+    --column="Description"
+    --column="Status"
+    --column="Category"
+    --text="Select apps to install. You can sort or search by typing. Double-click for details."
+    --button="Cancel":1
+    --button="Install":2
+)
+
+while IFS= read -r bappfile; do
+    [ -n "$bappfile" ] || continue
+    verlocal=$(extract_bapp_field "VerLocal" "$bappfile")
+    available=$(extract_bapp_field "UpdateAvailable" "$bappfile")
+    status=$(get_install_status "$verlocal" "$available")
+    id=$(extract_bapp_field "ID" "$bappfile")
+    name=$(extract_bapp_field "Name" "$bappfile")
+    comment=$(extract_bapp_field "Comment" "$bappfile")
+    loc=$(extract_bapp_field "LOC" "$bappfile")
+
+    YAD_ARGS+=("FALSE" "$id" "$name" "$comment" "$status" "$loc")
+done < <(find apps/stable apps/experimental -type f -name '*.bapp' 2>/dev/null | sort)
+
+# Execute the list with discrete row arguments; this avoids the row-merging bug from pipe-delimited text.
+yad "${YAD_ARGS[@]}" 2> /dev/null | grep TRUE | sed 's/^TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
 
 wait
 unset BAP_CONFIG_MENU
