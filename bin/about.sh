@@ -15,31 +15,11 @@ DEFAULTVALUE=''
 argz="${1:-$DEFAULTVALUE}"
 id="${2:-$DEFAULTVALUE}"
 
-read_bapp_field() {
-    local field="$1"
-    local file="$2"
-    local raw
-
-    raw=$(grep -m 1 -E "^[[:space:]]*${field}=" "$file" 2>/dev/null || true)
-    raw=${raw#*=}
-    raw=${raw%$'\r'}
-    raw="${raw#"${raw%%[![:space:]]*}"}"
-    raw="${raw%"${raw##*[![:space:]]}"}"
-
-    if [ "${raw:0:1}" = "'" ] && [ "${raw: -1}" = "'" ]; then
-        raw="${raw:1:${#raw}-2}"
-    elif [ "${raw:0:1}" = '"' ] && [ "${raw: -1}" = '"' ]; then
-        raw="${raw:1:${#raw}-2}"
-    fi
-
-    printf '%s' "$raw"
-}
-
 if [ "$argz" == "return" ]; then
-    bappfile=$(grep -i "$id" "$BAPDIR/$BAPAPPS_LIST_FILE")
-    w3=$(read_bapp_field "W3" "$bappfile")
-    about=$(read_bapp_field "NOTE" "$bappfile")
-    dev=$(read_bapp_field "Author" "$bappfile")
+    bappfile=$(grep -i $id $BAPDIR/$BAPAPPS_LIST_FILE)
+    w3=$(grep -m 1 -e '^[[:blank:]]*W3' $bappfile | cut -d = -f 2)
+    about=$(grep -m 1 -e '^[[:blank:]]*NOTE' $bappfile | cut -d = -f 2)
+    dev=$(grep -m 1 -e '^[[:blank:]]*Author' $bappfile | cut -d = -f 2)
 
     action=$(yad --width=480 --height=200 --fixed --center --title "About - $id" --image "dialog-question" --button="gtk-ok" \
     --text "Developer Notes and Support for: $id \n $about \n For Support Please see: $w3 \n bapp provided by $dev")
