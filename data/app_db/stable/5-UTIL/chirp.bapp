@@ -16,14 +16,18 @@ INSTALL(){
     cd ${BAPSRC}
     mkdir chirp
     cd chirp
+    CHIRPDATE=$(curl --max-time 20 -fsSL https://archive.chirpmyradio.com/chirp_next/ | grep -Eo 'next-[0-9]{8}/' | sed 's|next-||;s|/||' | sort -r | head -1)
+    if [[ -z "$CHIRPDATE" ]]; then
+        CHIRPDATE=20261002
+    fi
     
-    CHIRPDATE=$(curl -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
-    if [[ -z "$CHIRPDATE" ]]; then CHIRPDATE=20261002; fi
-    #danplanet=$(curl -s https://trac.chirp.danplanet.com/chirp_daily/LATEST/ | grep flatpak | sed 's/.*href="//;s/">.*//' | head -1)
 
     if [[ "$BAPCPU" == "x86_64" ]]; then
-        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/Chirp-next-${CHIRPDATE}-x86_64.AppImage
-        APPIMG=Chirp-next-${CHIRPDATE}-x86_64.AppImage
+        APPIMG=$(curl --max-time 20 -fsSL "https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/" | grep -Eo 'Chirp-next-[0-9]{8}-x86_64\.AppImage' | head -1)
+        if [[ -z "$APPIMG" ]]; then
+            APPIMG=Chirp-next-${CHIRPDATE}-x86_64.AppImage
+        fi
+        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/${APPIMG}
         echo -e "Downloading Chirp AppImage"
         wget --tries 2 --connect-timeout=60 "$LINK"
         if [[ -f "$APPIMG" ]]; then
@@ -35,13 +39,17 @@ INSTALL(){
             echo -e "ERROR: Chirp AppImage failed to download"
         fi
     else
-        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/chirp-${CHIRPDATE}-py3-none-any.whl
+        WHEEL=$(curl --max-time 20 -fsSL "https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/" | grep -Eo 'chirp-[0-9]{8}-py3-none-any\.whl' | head -1)
+        if [[ -z "$WHEEL" ]]; then
+            WHEEL=chirp-${CHIRPDATE}-py3-none-any.whl
+        fi
+        LINK=https://archive.chirpmyradio.com/chirp_next/next-${CHIRPDATE}/${WHEEL}
         echo -e "Downloading Chirp wheel"
         wget --tries 2 --connect-timeout=60 "$LINK"
-        if [[ -f chirp-${CHIRPDATE}-py3-none-any.whl ]];then
+        if [[ -f "$WHEEL" ]];then
             echo -e "Installing Chirp wheel"
-            pip3 install chirp-${CHIRPDATE}-py3-none-any.whl --break-system-packages
-            rm chirp-${CHIRPDATE}-py3-none-any.whl
+            pip3 install "$WHEEL" --break-system-packages
+            rm "$WHEEL"
         else
             echo -e "ERROR: Chirp wheel failed to download"
         fi
@@ -56,7 +64,7 @@ VERSION(){
     else
         CURRENT=NONE
     fi
-    NEWVER=$(curl --max-time 20 -s https://github.com/goldstar611/chirp-appimage | grep "releases/tag/" | sed 's|.*releases/tag/||;s|">||')
+    NEWVER=$(curl --max-time 20 -fsSL https://archive.chirpmyradio.com/chirp_next/ | grep -Eo 'next-[0-9]{8}/' | sed 's|next-||;s|/||' | sort -r | head -1)
     if [[ -z "$NEWVER" ]]; then NEWVER=20261002; fi
 }
 
