@@ -1,0 +1,38 @@
+BAPP=4
+ID=modem73
+Name=modem73
+Comment='modem73 OFDM modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/RFnexus/modem73'
+Author='spud'
+NOTE='modem73 High speed software modem that works with any HF/VHF/UHF radio capable of 2400 Hz of bandwidth'
+
+INSTALL(){
+	sudo apt-get update && sudo apt-get install -y build-essential git pkg-config libncurses-dev libhidapi-dev
+
+	cd ${BAPSRC} || return
+	rm -rf modem73
+	git clone https://github.com/RFnexus/modem73
+	cd modem73
+	make
+	sudo make install
+}
+
+VERSION(){
+    if command -v modem73 >/dev/null 2>&1; then
+        CURRENT=$(modem73 --help 2>/dev/null | sed -n '1p' | sed 's/^MODEM73 build //')
+        if [[ -z "$CURRENT" ]]; then
+            CURRENT=NONE
+        fi
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=0-web
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}
