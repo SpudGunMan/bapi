@@ -102,7 +102,7 @@ VALIDATE_FILE() {
         fi
     done
     #rebuild app list file
-    find apps/* -name '*.bapp' > $BAPAPPS_LIST_FILE
+    find apps/* -name '*.bapp' 2>/dev/null | LC_ALL=C sort -t/ -k2,2r -k3,3V > $BAPAPPS_LIST_FILE
     echo -e "INFORMATIONAL: Found $(cat $BAPAPPS_LIST_FILE | grep .bapp | wc -l) app files"
 }
 

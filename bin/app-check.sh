@@ -78,8 +78,8 @@ for Job in $BAPAPPS_FILES_LOC; do
 		fi
 
 		#update and file the .bapp LOC= data string for GUI, formats the path into string
-		# removes all including the 0- infront of the folder path
-		BAPAPPTYP=$(echo $Job | sed 's/apps\///' | sed 's/\.bapp//' | sed 's/\/[0-9]-/-/' | sed 's/\/.*//')
+		# keep the category folder like 0-CORE or 7-TEST so the YAD category column is populated
+		BAPAPPTYP=$(echo "$Job" | sed 's#^apps/##; s#\.bapp$##; s#/[^/]*$##; s#^[^/]*/##')
 
 		if grep -q "^LOC=" "$Job" ;then
 			#this is intensive needs oneline
@@ -93,7 +93,7 @@ for Job in $BAPAPPS_FILES_LOC; do
 done
 
 #rebuild app list file
-find apps/* -name '*.bapp' > $BAPAPPS_LIST_FILE
+find apps/* -name '*.bapp' 2>/dev/null | LC_ALL=C sort -t/ -k2,2r -k3,3V > $BAPAPPS_LIST_FILE
 #remove duplicates
 awk '!seen[$0]++' $BAPAPPS_LIST_FILE > $BAPAPPS_LIST_FILE.tmp
 mv $BAPAPPS_LIST_FILE.tmp $BAPAPPS_LIST_FILE

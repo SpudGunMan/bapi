@@ -50,6 +50,14 @@ get_install_status() {
     fi
 }
 
+get_bapp_loc() {
+    local file="$1"
+    local rel="${file#apps/}"
+    rel="${rel%.bapp}"
+    rel="${rel%/*}"
+    printf '%s' "${rel#*/}"
+}
+
 emit_bapp_row() {
     local bappfile="$1"
     [ -f "$bappfile" ] || return 0
@@ -69,6 +77,9 @@ emit_bapp_row() {
     name=$(extract_bapp_field "Name" "$bappfile")
     comment=$(extract_bapp_field "Comment" "$bappfile")
     loc=$(extract_bapp_field "LOC" "$bappfile")
+    if [ -z "$loc" ]; then
+        loc=$(get_bapp_loc "$bappfile")
+    fi
 
     printf '%s|%s|%s|%s|%s|%s\n' "FALSE" "$id" "$name" "$comment" "$status" "$loc"
 }
@@ -113,9 +124,12 @@ while IFS= read -r bappfile; do
     name=$(extract_bapp_field "Name" "$bappfile")
     comment=$(extract_bapp_field "Comment" "$bappfile")
     loc=$(extract_bapp_field "LOC" "$bappfile")
+    if [ -z "$loc" ]; then
+        loc=$(get_bapp_loc "$bappfile")
+    fi
 
     YAD_ARGS+=("FALSE" "$id" "$name" "$comment" "$status" "$loc")
-done < <(find apps/stable apps/experimental -type f -name '*.bapp' 2>/dev/null | sort)
+done < <(find apps/stable apps/experimental -type f -name '*.bapp' 2>/dev/null | LC_ALL=C sort -t/ -k2,2r -k3,3V)
 
 # Execute the list with discrete row arguments; this avoids the row-merging bug from pipe-delimited text.
 yad "${YAD_ARGS[@]}" 2> /dev/null | grep TRUE | sed 's/^TRUE|//' | cut -f1 -d"|" > $APP_ID_FILE
