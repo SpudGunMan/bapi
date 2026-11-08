@@ -97,7 +97,7 @@ ${alignr}${if_running VARAFM.exe}${color green}VARA-FM ACTIVE${else}${color red}
 ${if_running qsstv}${color green}QSSTV ACTIVE${else}${color red}QSSTV OFF$endif \
 ${alignr}${if_running xastir}${color green}APRS ACTIVE${else}${color red}APRS OFF$endif
 #Logs
-${font Arial:bold:size=8}${color Yellow}RECENT WSJT-X LOG ENTRIES ${execi 60 awk -F',' '{c=$6; gsub(/^[ \t]+|[ \t]+$/, "", c); if(c!="") seen[toupper(c)]=1} END{print length(seen)+0}' ~/.local/share/WSJT-X/wsjtx.log 2>/dev/null}${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=8}${color Yellow}RECENT WSJT-X LOG ENTRIES ${execi 60 wc -l ~/.local/share/WSJT-X/wsjtx.log | cut -d' ' -f1}${color DarkSlateGray}${hr 2}
 ${font Arial:bold:size=7}${color White}${execi 15 tail ~/.local/share/WSJT-X/wsjtx.log -n5 | cut -d, -f5,6,7,8,9,10,12}
 #$diskio
 ]];
