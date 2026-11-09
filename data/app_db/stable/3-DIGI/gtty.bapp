@@ -1,0 +1,42 @@
+BAPP=4
+ID=GTTY
+Name=GTTY
+Comment='GTTY: Amateur radio RTTY terminal'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/gjyoung1974/GTTY'
+Author='spud'
+NOTE='RTTY terminal for Linux with parallel decoders, waterfall, AFSK/FSK, Hamlib control'
+
+INSTALL(){
+
+    sudo apt install build-essential cmake ninja-build pkg-config \
+        libgtk-4-dev libadwaita-1-dev libhamlib-dev portaudio19-dev \
+        libfftw3-dev libsamplerate0-dev libsndfile1-dev libsqlite3-dev \
+        libcurl4-openssl-dev libcodec2-dev
+    
+    cd ${BAPSRC} || return
+    sudo rm -rf GTTY
+    git clone https://github.com/gjyoung1974/GTTY
+    cd GTTY
+    
+    cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+    cmake --build build
+    ctest --test-dir build --output-on-failure
+    sudo cmake --install build
+}
+
+VERSION(){
+    if [[ $(whereis gtty | grep bin) ]];then
+        CURRENT=$(gtty --version 2>/dev/null | awk '{print $NF}' || echo '0.1.1-git')
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=git
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+
+    #apt-gets will be checked on app-check
+}
