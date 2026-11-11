@@ -13,7 +13,7 @@ INSTALL(){
     sudo apt install build-essential cmake ninja-build pkg-config \
         libgtk-4-dev libadwaita-1-dev portaudio19-dev \
         libfftw3-dev libsamplerate0-dev libsndfile1-dev libsqlite3-dev \
-        libcurl4-openssl-dev libcodec2-dev
+        libcurl4-openssl-dev libcodec2-dev -y
     
     cd ${BAPSRC} || return
     sudo rm -rf GTTY
