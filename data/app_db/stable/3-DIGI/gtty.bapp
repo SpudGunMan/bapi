@@ -11,7 +11,7 @@ NOTE='RTTY terminal for Linux with parallel decoders, waterfall, AFSK/FSK, Hamli
 INSTALL(){
 
     sudo apt install build-essential cmake ninja-build pkg-config \
-        libgtk-4-dev libadwaita-1-dev libhamlib-dev portaudio19-dev \
+        libgtk-4-dev libadwaita-1-dev portaudio19-dev \
         libfftw3-dev libsamplerate0-dev libsndfile1-dev libsqlite3-dev \
         libcurl4-openssl-dev libcodec2-dev
     
