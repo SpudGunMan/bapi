@@ -13,9 +13,9 @@ INSTALL(){
     sudo apt install -y python3-venv python3-pip
 
     cd ${BAPSRC} || return
-    rm -rf radio_arcade
+    rm -rf radio-arcade
     git clone https://github.com/tcarwash/radio_arcade.git || return
-    cd radio_arcade || return
+    cd radio-arcade || return
 
     # make venv and install app
     python3 -m venv venv
