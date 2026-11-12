@@ -23,11 +23,13 @@ INSTALL(){
     cmake -S . -B build -DCMAKE_BUILD_TYPE=Release || return
     cmake --build build -j$(nproc) || return
     
+    # Copy binary to source root
+    cp build/app/ragtime ${BAPSRC}/
 
 }
 
 VERSION(){
-    if [ -f /usr/local/bin/ragtime ];then
+    if [ -f ${BAPSRC}/ragtime ];then
         CURRENT="installed"
     else
         CURRENT="not installed"
