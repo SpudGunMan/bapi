@@ -38,7 +38,7 @@ VERSION(){
 }
 
 DEPENDS(){
-    NEEDED='DATA2G'
+    NEEDED=''
 
     #apt-gets will be checked on app-check
 }
