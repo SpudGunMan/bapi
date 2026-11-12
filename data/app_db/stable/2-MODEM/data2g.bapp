@@ -1,0 +1,50 @@
+BAPP=4
+ID=DATA2G
+Name=DATA2G
+Comment='data2g modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/arodland/Data2G/'
+Author='spud'
+NOTE='DATA2G project'
+
+INSTALL(){
+
+    cd ${BAPSRC} || return
+    rm -rf data2g
+    mkdir -p data2g || return
+    cd data2g || return
+    
+    # Determine architecture
+    if [[ $(uname -m) == 'aarch64' ]]; then
+        ARCH="aarch64"
+    else
+        ARCH="x86_64"
+    fi
+    
+    # Download latest release binary directly
+    VERSION="0.4.3"
+    FILENAME="data2g-${VERSION}-linux-${ARCH}.tar.gz"
+    URL="https://github.com/arodland/Data2G/releases/download/v${VERSION}/${FILENAME}"
+    
+    wget "$URL" -O data2g.tar.gz || return
+    tar xzf data2g.tar.gz || return
+    
+    # Move the data2g folder to ~
+    mv data2g ~
+
+}
+
+VERSION(){
+    if [ -f /usr/local/bin/data2g-host ] || [ -f /usr/local/bin/data2g-gui ];then
+        CURRENT="installed"
+    else
+        CURRENT="not installed"
+    fi
+    NEWVER=0.4.3
+}
+
+DEPENDS(){
+    NEEDED='HAMLIB'
+    #apt-gets will be checked on app-check
+}
