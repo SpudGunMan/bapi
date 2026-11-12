@@ -1,0 +1,41 @@
+BAPP=4
+ID=ARCADE
+Name=RadioArcade
+Comment='Radio Arcade is a multiplayer game engine with desktop for data2g modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/tcarwash/radio_arcade'
+Author='spud'
+NOTE=''
+
+INSTALL(){
+    # dependencies
+    sudo apt install -y python3-venv python3-pip
+
+    cd ${BAPSRC} || return
+    rm -rf radio_arcade
+    git clone https://github.com/tcarwash/radio_arcade.git || return
+    cd radio_arcade || return
+
+    # make venv and install app
+    python3 -m venv venv
+    source venv/bin/activate
+
+    python -m pip install --upgrade pip
+    python -m pip install -e '.[all]'
+}
+
+VERSION(){
+    if command -v radio-arcade >/dev/null 2>&1; then
+        CURRENT="installed"
+    else
+        CURRENT="not installed"
+    fi
+    NEWVER=git
+}
+
+DEPENDS(){
+    NEEDED=''
+
+    #apt-gets will be checked on app-check
+}
