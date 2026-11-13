@@ -12,7 +12,16 @@ INSTALL(){
     # Install dependencies
     sudo apt-get install -y libwxgtk3.2-dev libgtk-3-dev \
         libpipewire-0.3-dev libopenjp2-7-dev libwebp-dev libheif-dev \
-        libheif-plugin-libde265 git || return
+        libheif-plugin-libde265 git make cmake build-essential || return
+
+    # Build and install sotto first
+    cd ${BAPSRC} || return
+    rm -rf sotto
+    git clone https://github.com/baitisj/sotto.git || return
+    cd sotto || return
+    make || return
+    sudo make install || return
+    sudo ldconfig || return
 
     cd ${BAPSRC} || return
     rm -rf ragtime
