@@ -23,6 +23,9 @@ INSTALL(){
 
     python -m pip install --upgrade pip
     python -m pip install -e '.[all]'
+
+    #move directory to home
+    mv radio-arcade ~/
 }
 
 VERSION(){
