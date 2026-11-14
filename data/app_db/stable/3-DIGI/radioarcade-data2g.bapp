@@ -31,7 +31,7 @@ VERSION(){
     if command -v radio-arcade >/dev/null 2>&1; then
         CURRENT="installed"
     else
-        CURRENT=""
+        CURRENT=NONE
     fi
     NEWVER=git
 }

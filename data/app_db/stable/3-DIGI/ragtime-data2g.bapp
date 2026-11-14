@@ -41,7 +41,7 @@ VERSION(){
     if [ -f ${BAPSRC}/ragtime ];then
         CURRENT="installed"
     else
-        CURRENT=""
+        CURRENT=NONE
     fi
     NEWVER=git
 }

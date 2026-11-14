@@ -29,7 +29,7 @@ VERSION(){
     if [ -x /usr/local/bin/pixel-qso ] || [ -x "${BAPSRC}/pixelqso/.venv/bin/pixel-qso" ] || [ -x "${HOME}/.local/bin/pixel-qso" ]; then
         CURRENT="installed"
     else
-        CURRENT=""
+        CURRENT=NONE
     fi
 
     if [ -f "${BAPSRC}/pixelqso/pyproject.toml" ]; then
