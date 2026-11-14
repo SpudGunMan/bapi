@@ -14,21 +14,17 @@ INSTALL(){
 
     cd ${BAPSRC} || return
     rm -rf radio-arcade
-    git clone https://github.com/tcarwash/radio_arcade.git radio-arcade || return
-    cd radio-arcade || return
-
+    git clone https://github.com/tcarwash/radio_arcade.git || return
+    # move directory to home
+    mv radio_arcade ~/ || return
+    cd ~/radio_arcade
     # make venv and install app without touching system packages
     python3 -m venv venv || return
     . venv/bin/activate || return
 
-    echo "Using Python: $(which python)"
-    python -c 'import sys; print(sys.executable); print(sys.prefix)' || return
-    python -m pip install --upgrade pip setuptools wheel || return
-    python -m pip install -e '.[all]' || return
+    python -m pip install -e '.[all]'
 
-    #move directory to home
-    cd ..
-    mv radio-arcade ~/ || return
+
 }
 
 VERSION(){
