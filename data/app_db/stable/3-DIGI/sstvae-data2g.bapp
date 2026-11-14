@@ -46,7 +46,7 @@ VERSION(){
     if [ -x "${HOME}/sstvae/bin/sstvae-gui" ] || [ -x "${HOME}/sstvae/bin/sstvae-decode" ] || [ -x "/usr/local/bin/sstvae-gui" ] || [ -x "/usr/local/bin/sstvae-decode" ]; then
         CURRENT="installed"
     else
-        CURRENT="not installed"
+        CURRENT=""
     fi
 
     NEWVER=$(curl --max-time 20 -fsSL https://api.github.com/repos/arodland/SSTVAE/releases/latest | python3 -c 'import sys, json; data=json.load(sys.stdin); print(data.get("tag_name", "").lstrip("v"))') || NEWVER="unknown"
