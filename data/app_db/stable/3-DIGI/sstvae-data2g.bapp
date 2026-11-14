@@ -1,0 +1,58 @@
+BAPP=4
+ID=SSTVAE
+Name=SSTVAE
+Comment='SSTVAE for data2g modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/arodland/SSTVAE/'
+Author='spud'
+NOTE='SSTVAE project'
+
+INSTALL(){
+
+    cd ${BAPSRC} || return
+    rm -rf sstvae
+    rm -f sstvae.tar.gz
+
+    # Determine architecture
+    if [[ $(uname -m) == 'aarch64' ]]; then
+        ARCH="aarch64"
+    else
+        ARCH="x86_64"
+    fi
+
+    # Get the latest upstream GitHub release tag dynamically
+    VERSION=$(curl --max-time 20 -fsSL https://api.github.com/repos/arodland/SSTVAE/releases/latest | python3 -c 'import sys, json; data=json.load(sys.stdin); print(data.get("tag_name", "").lstrip("v"))') || return
+    if [ -z "$VERSION" ]; then
+        echo "Unable to determine latest SSTVAE release" >&2
+        return 1
+    fi
+
+    FILENAME="sstvae-${VERSION}-linux-${ARCH}.tar.gz"
+    URL="https://github.com/arodland/SSTVAE/releases/download/v${VERSION}/${FILENAME}"
+
+    wget "$URL" -O sstvae.tar.gz || return
+    tar xzf sstvae.tar.gz || return
+
+    # The upstream archive extracts to ./sstvae/; move the app directory into home
+    if [ -d "${HOME}/sstvae" ]; then
+        rm -rf "${HOME}/sstvae"
+    fi
+    mv sstvae "${HOME}/"
+
+}
+
+VERSION(){
+    if [ -x "${HOME}/sstvae/bin/sstvae-gui" ] || [ -x "${HOME}/sstvae/bin/sstvae-decode" ] || [ -x "/usr/local/bin/sstvae-gui" ] || [ -x "/usr/local/bin/sstvae-decode" ]; then
+        CURRENT="installed"
+    else
+        CURRENT="not installed"
+    fi
+
+    NEWVER=$(curl --max-time 20 -fsSL https://api.github.com/repos/arodland/SSTVAE/releases/latest | python3 -c 'import sys, json; data=json.load(sys.stdin); print(data.get("tag_name", "").lstrip("v"))') || NEWVER="unknown"
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

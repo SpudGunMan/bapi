@@ -1,0 +1,45 @@
+BAPP=4
+ID=PIXELQSO
+Name=PIXELQSO
+Comment='PIXELQSO for data2g modem'
+VerLocal=0
+VerRemote=0
+W3='https://github.com/tcarwash/pixelqso'
+Author='spud'
+NOTE='PIXELQSO project'
+
+INSTALL(){
+
+    sudo apt-get install -y portaudio19-dev python3-pip python3-venv >> errors/apt.log || return
+
+    cd ${BAPSRC} || return
+    rm -rf pixelqso
+
+    git clone --depth 1 https://github.com/tcarwash/pixelqso.git || return
+    cd pixelqso || return
+
+    python3 -m venv .venv || return
+    . .venv/bin/activate || return
+    python -m pip install --upgrade pip setuptools wheel || return
+    python -m pip install --no-cache-dir . || return
+
+}
+
+VERSION(){
+    if [ -x /usr/local/bin/pixel-qso ] || [ -x "${BAPSRC}/pixelqso/.venv/bin/pixel-qso" ] || [ -x "${HOME}/.local/bin/pixel-qso" ]; then
+        CURRENT="installed"
+    else
+        CURRENT="not installed"
+    fi
+
+    if [ -f "${BAPSRC}/pixelqso/pyproject.toml" ]; then
+        NEWVER=$(grep -E '^version = ' "${BAPSRC}/pixelqso/pyproject.toml" | head -n1 | sed -E 's/.*"([^"]+)"/\1/')
+    else
+        NEWVER="unknown"
+    fi
+}
+
+DEPENDS(){
+    NEEDED=''
+    #apt-gets will be checked on app-check
+}

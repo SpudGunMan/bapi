@@ -25,6 +25,7 @@ INSTALL(){
     python -m pip install -e '.[all]'
 
     #move directory to home
+    cd ..
     mv radio-arcade ~/
 }
 
