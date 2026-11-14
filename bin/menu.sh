@@ -41,7 +41,7 @@ get_install_status() {
     local verlocal="$1"
     local available="$2"
 
-    if [ "$verlocal" = "NONE" ]; then
+    if [ -z "$verlocal" ] || [ "$verlocal" = "NONE" ] || [ "$verlocal" = "0" ] || [ "$verlocal" = "0.0" ]; then
         echo "Not Installed"
     elif [ "$available" = "true" ]; then
         echo "Update Available"
