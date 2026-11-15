@@ -6,11 +6,12 @@ VerLocal=0
 VerRemote=0
 W3='https://github.com/Bill-Johnson/QtC'
 Author='spud'
-NOTE='Python3 + PyQt6 app. VARA HF/FM can run via Wine on Linux/Pi.'
+NOTE='Uses dedicated venv in ~/.local/share/qtc/.venv. VARA HF/FM can run via Wine on Linux/Pi.'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-	sudo apt-get -y install git python3 python3-pip python3-pyqt6 python3-pyserial >> errors/apt.log
+	sudo apt-get -y install git python3 python3-pip python3-venv python3-pyqt6 python3-serial >> errors/apt.log || \
+		sudo apt-get -y install git python3 python3-pip python3-venv python3-pyqt6 python3-pyserial >> errors/apt.log
 
 	cd "${BAPSRC}" || return
 	rm -rf qtc
@@ -93,6 +94,30 @@ INSTALL(){
 	cd "$QTC_DIR" || return
 	chmod +x install.sh uninstall.sh
 	./install.sh
+
+	QTC_INSTALL_DIR="${HOME}/.local/share/qtc"
+	QTC_VENV="${QTC_INSTALL_DIR}/.venv"
+
+	if [ ! -d "$QTC_INSTALL_DIR" ]; then
+		echo "ERROR: QtC install directory missing at ${QTC_INSTALL_DIR}"
+		return 1
+	fi
+
+	python3 -m venv "$QTC_VENV" || return 1
+	"${QTC_VENV}/bin/pip" install --upgrade pip setuptools wheel || return 1
+
+	if [ -f "${QTC_INSTALL_DIR}/requirements.txt" ]; then
+		"${QTC_VENV}/bin/pip" install -r "${QTC_INSTALL_DIR}/requirements.txt" || return 1
+	fi
+	"${QTC_VENV}/bin/pip" install pyserial PyQt6 || return 1
+
+	mkdir -p "${HOME}/.local/bin"
+	cat > "${HOME}/.local/bin/qtc" << EOF
+#!/usr/bin/env bash
+cd "${QTC_INSTALL_DIR}"
+exec "${QTC_VENV}/bin/python" "${QTC_INSTALL_DIR}/main_window.py" "\$@"
+EOF
+	chmod +x "${HOME}/.local/bin/qtc"
 
 }
 
