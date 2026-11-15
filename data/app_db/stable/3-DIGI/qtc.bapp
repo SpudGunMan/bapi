@@ -6,111 +6,66 @@ VerLocal=0
 VerRemote=0
 W3='https://github.com/Bill-Johnson/QtC'
 Author='spud'
-NOTE='Uses dedicated venv in ~/.local/share/qtc/.venv. VARA HF/FM can run via Wine on Linux/Pi.'
+NOTE='Source-only install. Uses a dedicated venv for the selected GitHub branch. VARA HF/FM can run via Wine on Linux/Pi.'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
-	sudo apt-get -y install git python3 python3-pip python3-venv python3-pyqt6 python3-serial >> errors/apt.log || \
-		sudo apt-get -y install git python3 python3-pip python3-venv python3-pyqt6 python3-pyserial >> errors/apt.log
+	sudo apt-get -y install git python3 python3-pip python3-venv >> errors/apt.log
 
 	cd "${BAPSRC}" || return
 	rm -rf qtc
 	mkdir -p qtc
 	cd qtc || return
 
-	QTC_RELEASE_JSON=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/releases/latest)
-	QTC_TAG=$(echo "$QTC_RELEASE_JSON" | grep -m 1 '"tag_name"' | cut -d '"' -f4)
-	QTC_ASSET_URL=$(echo "$QTC_RELEASE_JSON" | grep '"browser_download_url"' | grep -m 1 'QtC-.*\.tar\.gz' | cut -d '"' -f4)
 	QTC_REPO="https://github.com/Bill-Johnson/QtC.git"
-
-	if [ -z "$QTC_TAG" ]; then
-		echo "ERROR: Unable to determine QtC latest release tag."
-		return 1
-	fi
-
-	if [ -z "$QTC_ASSET_URL" ]; then
-		QTC_ASSET_URL="https://github.com/Bill-Johnson/QtC/archive/refs/tags/${QTC_TAG}.tar.gz"
-	fi
-
-	CHOICE="release:${QTC_TAG}"
+	QTC_BRANCH="main"
 	if command -v yad >/dev/null 2>&1; then
 		QTC_BRANCHES=$(git ls-remote --heads "$QTC_REPO" | sed 's#.*refs/heads/##' | sed '/^$/d' | sort)
-
-		YAD_ARGS=(
-			--title="QtC install source"
-			--list --radiolist
-			--column="Sel" --column="Key" --column="Choice"
-			TRUE "release:${QTC_TAG}" "Release tarball ${QTC_TAG}"
-		)
-
-		for BRANCH in $QTC_BRANCHES; do
-			YAD_ARGS+=(FALSE "branch:${BRANCH}" "Git branch ${BRANCH} (clone)")
-		done
-
-		CHOICE_RAW=$(yad "${YAD_ARGS[@]}" --print-column=2 --hide-column=2 --center --width=760 --height=420 2>/dev/null)
-		CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//')
-
-		if [[ "$CHOICE" == *"|"* ]]; then
-			FIRST_FIELD=$(echo "$CHOICE" | cut -d'|' -f1)
-			SECOND_FIELD=$(echo "$CHOICE" | cut -d'|' -f2)
-			if [[ "$FIRST_FIELD" == "TRUE" || "$FIRST_FIELD" == "FALSE" ]]; then
-				CHOICE="$SECOND_FIELD"
-			else
-				CHOICE="$FIRST_FIELD"
+		if [ -n "$QTC_BRANCHES" ]; then
+			YAD_ARGS=(
+				--title="QtC source branch"
+				--list --radiolist
+				--column="Sel" --column="Key" --column="Choice"
+			)
+			for BRANCH in $QTC_BRANCHES; do
+				if [ "$BRANCH" = "main" ]; then
+					YAD_ARGS+=(TRUE "$BRANCH" "Main branch ($BRANCH)")
+				else
+					YAD_ARGS+=(FALSE "$BRANCH" "Branch $BRANCH")
+				fi
+			done
+			CHOICE_RAW=$(yad "${YAD_ARGS[@]}" --print-column=2 --hide-column=2 --center --width=760 --height=420 2>/dev/null)
+			CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//')
+			if [ -n "$CHOICE" ]; then
+				QTC_BRANCH="$CHOICE"
 			fi
 		fi
 	fi
 
-	if [ -z "$CHOICE" ]; then
-		echo "ERROR: no QtC source selection made"
+	if [ -z "$QTC_BRANCH" ]; then
+		QTC_BRANCH="main"
+	fi
+
+	echo "INFORMATIONAL: cloning QtC branch ${QTC_BRANCH}"
+	git clone --depth 1 --branch "$QTC_BRANCH" --single-branch "$QTC_REPO" QtC || return 1
+	QTC_DIR="QtC"
+	if ! git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD >/dev/null 2>&1; then
+		echo "ERROR: clone completed but branch was not checked out."
 		return 1
 	fi
-
-	if [[ "$CHOICE" == branch:* ]]; then
-		QTC_BRANCH="${CHOICE#branch:}"
-		if [ -z "$QTC_BRANCH" ]; then
-			echo "ERROR: branch selection was empty."
-			return 1
-		fi
-		echo "INFORMATIONAL: cloning QtC branch ${QTC_BRANCH}"
-		git clone --depth 1 --branch "$QTC_BRANCH" --single-branch "$QTC_REPO" QtC || return 1
-		QTC_DIR="QtC"
-		if ! git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD >/dev/null 2>&1; then
-			echo "ERROR: clone completed but branch was not checked out."
-			return 1
-		fi
-		SELECTED_HEAD=$(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
-		if [ "$SELECTED_HEAD" != "$QTC_BRANCH" ]; then
-			git -C "$QTC_DIR" checkout -q "$QTC_BRANCH" || return 1
-		fi
-		echo "GH:${QTC_BRANCH}" > "${HOME}/.bap.qtc.ver"
-		echo "INFORMATIONAL: selected branch is $(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD)"
-	else
-		echo "INFORMATIONAL: installing QtC release ${QTC_TAG}"
-		wget --tries 2 --connect-timeout=60 -O qtc.tar.gz "$QTC_ASSET_URL"
-		tar -xzf qtc.tar.gz
-		rm -f qtc.tar.gz
-
-		QTC_DIR=$(find . -maxdepth 1 -type d -name 'QtC*' | head -n 1)
-		echo "REL:${QTC_TAG}" > "${HOME}/.bap.qtc.ver"
+	SELECTED_HEAD=$(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
+	if [ "$SELECTED_HEAD" != "$QTC_BRANCH" ]; then
+		git -C "$QTC_DIR" checkout -q "$QTC_BRANCH" || return 1
 	fi
-
-	if [ -z "$QTC_DIR" ]; then
-		echo "ERROR: QtC source directory not found."
-		return 1
+	if [ -n "$SELECTED_HEAD" ]; then
+		echo "INFORMATIONAL: selected branch is $SELECTED_HEAD"
 	fi
-
-	cd "$QTC_DIR" || return
-	chmod +x install.sh uninstall.sh
-	./install.sh
-
 	QTC_INSTALL_DIR="${HOME}/.local/share/qtc"
 	QTC_VENV="${QTC_INSTALL_DIR}/.venv"
 
-	if [ ! -d "$QTC_INSTALL_DIR" ]; then
-		echo "ERROR: QtC install directory missing at ${QTC_INSTALL_DIR}"
-		return 1
-	fi
+	rm -rf "$QTC_INSTALL_DIR"
+	mkdir -p "$QTC_INSTALL_DIR"
+	cp -a "$QTC_DIR"/. "$QTC_INSTALL_DIR/" || return 1
 
 	python3 -m venv "$QTC_VENV" || return 1
 	"${QTC_VENV}/bin/pip" install --upgrade pip setuptools wheel || return 1
@@ -118,7 +73,7 @@ INSTALL(){
 	if [ -f "${QTC_INSTALL_DIR}/requirements.txt" ]; then
 		"${QTC_VENV}/bin/pip" install -r "${QTC_INSTALL_DIR}/requirements.txt" || return 1
 	fi
-	"${QTC_VENV}/bin/pip" install pyserial PyQt6 || return 1
+	"${QTC_VENV}/bin/pip" install PyQt6 pyserial || return 1
 
 	mkdir -p "${HOME}/.local/bin"
 	cat > "${HOME}/.local/bin/qtc" << EOF
@@ -127,7 +82,8 @@ cd "${QTC_INSTALL_DIR}"
 exec "${QTC_VENV}/bin/python" "${QTC_INSTALL_DIR}/main_window.py" "\$@"
 EOF
 	chmod +x "${HOME}/.local/bin/qtc"
-
+	chmod +x "${QTC_INSTALL_DIR}/install.sh" "${QTC_INSTALL_DIR}/uninstall.sh" 2>/dev/null || true
+	printf '%s\n' "$QTC_BRANCH" > "${HOME}/.bap.qtc.ver"
 }
 
 VERSION(){
@@ -146,8 +102,9 @@ VERSION(){
 		CURRENT=NONE
 	fi
 
-	NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/releases/latest | grep -m 1 '"tag_name"' | cut -d '"' -f4)
-	if [ -z "$NEWVER" ]; then
+	if [ -f "${HOME}/.bap.qtc.ver" ]; then
+		NEWVER=$(cat "${HOME}/.bap.qtc.ver")
+	else
 		NEWVER=UNKNOWN
 	fi
 }
