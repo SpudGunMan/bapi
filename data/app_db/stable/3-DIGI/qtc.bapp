@@ -6,7 +6,7 @@ VerLocal=0
 VerRemote=0
 W3='https://github.com/Bill-Johnson/QtC'
 Author='spud'
-NOTE='Source-only install. Uses a dedicated venv for the selected GitHub branch. VARA HF/FM can run via Wine on Linux/Pi.'
+NOTE='Clone a chosen QtC branch from GitHub, run its source installer, then install the Python deps in a dedicated venv.'
 
 INSTALL(){
 	echo -e "INFORMATIONAL: apt-get required packages"
@@ -19,6 +19,7 @@ INSTALL(){
 
 	QTC_REPO="https://github.com/Bill-Johnson/QtC.git"
 	QTC_BRANCH="main"
+
 	if command -v yad >/dev/null 2>&1; then
 		QTC_BRANCHES=$(git ls-remote --heads "$QTC_REPO" | sed 's#.*refs/heads/##' | sed '/^$/d' | sort)
 		if [ -n "$QTC_BRANCHES" ]; then
@@ -60,19 +61,21 @@ INSTALL(){
 	if [ "$SELECTED_HEAD" != "$QTC_BRANCH" ]; then
 		git -C "$QTC_DIR" checkout -q "$QTC_BRANCH" || return 1
 	fi
-	if [ -n "$SELECTED_HEAD" ]; then
-		echo "INFORMATIONAL: selected branch is $SELECTED_HEAD"
-	fi
+	echo "INFORMATIONAL: selected branch is $(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD)"
+
+	cd "$QTC_DIR" || return
+	chmod +x install.sh uninstall.sh 2>/dev/null || true
+	./install.sh || return 1
+
 	QTC_INSTALL_DIR="${HOME}/.local/share/qtc"
 	QTC_VENV="${QTC_INSTALL_DIR}/.venv"
-
-	rm -rf "$QTC_INSTALL_DIR"
-	mkdir -p "$QTC_INSTALL_DIR"
-	cp -a "$QTC_DIR"/. "$QTC_INSTALL_DIR/" || return 1
+	if [ ! -d "$QTC_INSTALL_DIR" ]; then
+		echo "ERROR: QtC install directory missing at ${QTC_INSTALL_DIR}"
+		return 1
+	fi
 
 	python3 -m venv "$QTC_VENV" || return 1
 	"${QTC_VENV}/bin/pip" install --upgrade pip setuptools wheel || return 1
-
 	if [ -f "${QTC_INSTALL_DIR}/requirements.txt" ]; then
 		"${QTC_VENV}/bin/pip" install -r "${QTC_INSTALL_DIR}/requirements.txt" || return 1
 	fi
@@ -85,7 +88,6 @@ cd "${QTC_INSTALL_DIR}"
 exec "${QTC_VENV}/bin/python" "${QTC_INSTALL_DIR}/main_window.py" "\$@"
 EOF
 	chmod +x "${HOME}/.local/bin/qtc"
-	chmod +x "${QTC_INSTALL_DIR}/install.sh" "${QTC_INSTALL_DIR}/uninstall.sh" 2>/dev/null || true
 	printf '%s\n' "$QTC_BRANCH" > "${HOME}/.bap.qtc.ver"
 }
 
