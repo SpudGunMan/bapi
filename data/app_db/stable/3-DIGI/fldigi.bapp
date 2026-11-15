@@ -8,9 +8,39 @@ W3='http://www.w1hkj.org'
 Author='spud'
 NOTE=''
 
+INSTALL_FLTK_14(){
+	if command -v fltk-config >/dev/null 2>&1; then
+		if [ "$(fltk-config --api-version 2>/dev/null)" = "1.4" ]; then
+			echo -e "INFORMATIONAL: FLTK 1.4 already installed"
+			export PATH="/usr/local/bin:${PATH}"
+			export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:${PKG_CONFIG_PATH}"
+			return 0
+		fi
+	fi
+
+	echo -e "INFORMATIONAL: installing FLTK 1.4 from GitHub"
+	sudo apt-get install -y cmake git libx11-dev libxext-dev libxfixes-dev libxrender-dev libglu1-mesa-dev >> errors/apt.log
+
+	cd ${BAPSRC} || return
+	rm -rf fltk-src
+	git clone --depth 1 --branch release-1.4.5 https://github.com/fltk/fltk.git fltk-src || return
+	cmake -S fltk-src -B fltk-src/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local || return
+	cmake --build fltk-src/build -j$BAPCORE || return
+	sudo cmake --install fltk-src/build || return
+	sudo ldconfig
+
+	export PATH="/usr/local/bin:${PATH}"
+	export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig:${PKG_CONFIG_PATH}"
+}
+
 INSTALL(){
+	#Choice for Alpha or Release with yad
+	action=$(yad --center --title "Question: Look for Alpha Code?" --image "dialog-question"\
+        --button="Alpha:0" --button="Release:2" \
+        --text "Use Alpha or Normal Release (recomend: Release)")
+    return_code="${?:-'2'}"
+
 	echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get install -y libfltk1.4-dev >> errors/apt.log
     sudo apt-get install -y libxft-dev >> errors/apt.log
     sudo apt-get install -y libxinerama-dev >> errors/apt.log
     sudo apt-get install -y libxcursor-dev >> errors/apt.log
@@ -18,6 +48,12 @@ INSTALL(){
     sudo apt-get install -y libsamplerate0-dev >> errors/apt.log
     sudo apt-get install -y texinfo >> errors/apt.log
 	sudo apt-get -y install libudev-dev >> errors/apt.log
+
+	if [ "$return_code" -eq 0 ]; then
+		INSTALL_FLTK_14 || return
+	else
+		sudo apt-get install -y libfltk1.3-dev >> errors/apt.log
+	fi
 	
 	if [[ "$BAPCPU" == *"ar"* ]]; then
 		sudo apt-get install -y libjpeg62-turbo-dev >> errors/apt.log
@@ -55,12 +91,6 @@ INSTALL(){
 		sudo make install
 		sudo ldconfig
 	fi
-
-	#Choice for Alpha or Release with yad
-	action=$(yad --center --title "Question: Look for Alpha Code?" --image "dialog-question"\
-        --button="Alpha:0" --button="Release:2" \
-        --text "Use Alpha or Normal Release (recomend: Release)")
-    return_code="${?:-'2'}"
 
     if [ "$return_code" -eq 0 ]; then
 		#alpha of FLRIG
