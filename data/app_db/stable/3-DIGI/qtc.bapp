@@ -73,9 +73,18 @@ INSTALL(){
 			return 1
 		fi
 		echo "INFORMATIONAL: cloning QtC branch ${QTC_BRANCH}"
-		git clone --depth 1 --branch "$QTC_BRANCH" "$QTC_REPO" QtC || return 1
+		git clone --depth 1 --branch "$QTC_BRANCH" --single-branch "$QTC_REPO" QtC || return 1
 		QTC_DIR="QtC"
+		if ! git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD >/dev/null 2>&1; then
+			echo "ERROR: clone completed but branch was not checked out."
+			return 1
+		fi
+		SELECTED_HEAD=$(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
+		if [ "$SELECTED_HEAD" != "$QTC_BRANCH" ]; then
+			git -C "$QTC_DIR" checkout -q "$QTC_BRANCH" || return 1
+		fi
 		echo "GH:${QTC_BRANCH}" > "${HOME}/.bap.qtc.ver"
+		echo "INFORMATIONAL: selected branch is $(git -C "$QTC_DIR" rev-parse --abbrev-ref HEAD)"
 	else
 		echo "INFORMATIONAL: installing QtC release ${QTC_TAG}"
 		wget --tries 2 --connect-timeout=60 -O qtc.tar.gz "$QTC_ASSET_URL"
