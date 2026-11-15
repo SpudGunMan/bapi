@@ -37,7 +37,10 @@ INSTALL(){
 			CHOICE_RAW=$(yad "${YAD_ARGS[@]}" --print-column=2 --hide-column=2 --center --width=760 --height=420 2>/dev/null)
 			CHOICE=$(echo "$CHOICE_RAW" | tr -d '\r' | sed 's/[[:space:]]*$//')
 			if [ -n "$CHOICE" ]; then
-				QTC_BRANCH="$CHOICE"
+				CHOICE=$(printf '%s\n' "$CHOICE" | sed -E 's/^(TRUE|FALSE)[[:space:]]*\|?//; s/\|.*$//')
+				if [ -n "$CHOICE" ]; then
+					QTC_BRANCH="$CHOICE"
+				fi
 			fi
 		fi
 	fi
