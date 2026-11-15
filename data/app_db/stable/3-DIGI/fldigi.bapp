@@ -9,6 +9,7 @@ Author='spud'
 NOTE=''
 
 INSTALL_FLTK_14(){
+	sudo apt-get install -y libjpeg-dev
 	if command -v fltk-config >/dev/null 2>&1; then
 		if [ "$(fltk-config --api-version 2>/dev/null)" = "1.4" ]; then
 			echo -e "INFORMATIONAL: FLTK 1.4 already installed"
