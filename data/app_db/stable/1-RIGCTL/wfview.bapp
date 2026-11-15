@@ -1,41 +1,41 @@
 BAPP=4
 ID=WFVIEW
 Name=wfview
-Comment='icom rig controller'
+Comment='wfview (Qt6 build from source)'
 VerLocal=0
 VerRemote=0
 W3='https://wfview.org'
 Author='spud'
-NOTE=''
+NOTE='Builds from the upstream GitHub repo using Qt 6.'
 
 INSTALL(){
-    echo -e "INFORMATIONAL: apt-get required packages"
-    sudo apt-get -y install libopus-dev >> errors/apt.log
-    sudo apt-get -y install libeigen3-dev >> errors/apt.log
-    sudo apt-get -y install libqt5gamepad5-dev >> errors/apt.log
-    sudo apt-get -y install libhidapi-dev >> errors/apt.log
-    sudo apt-get -y install libqcustomplot1.3 >> errors/apt.log
-    sudo apt-get -y install libqcustomplot2.0 >> errors/apt.log
+    echo -e "INFORMATIONAL: installing required packages for wfview v3/Qt 6"
+    sudo apt-get update >> errors/apt.log 2>&1 || true
 
-    sudo apt-get -y install libqcustomplot-doc >> errors/apt.log
-    sudo apt-get -y install libqcustomplot-dev >> errors/apt.log
-
-    sudo apt-get -y install librtaudio-dev librtaudio6 
-    
-    #echo -e "INFORMATIONAL: if you see a failure on the next apt-get request its ok"
-    sudo apt-get -y install libqcustomplot1.3 libqcustomplot-doc libqcustomplot-dev >> errors/apt.log
-    sudo apt-get -y install libqcustomplot2.0 libqcustomplot-doc libqcustomplot-dev >> errors/apt.log
-    sudo apt-get -y install libqcustomplot2.1 libqcustomplot-dev >> errors/apt.log
+    sudo apt-get -y install build-essential git pkg-config ca-certificates \
+        qmake6 qt6-base-dev qt6-base-dev-tools qt6-declarative-dev \
+        qt6-serialport-dev qt6-multimedia-dev qt6-websockets-dev \
+        qml6-module-qtqml qml6-module-qtqml-models qml6-module-qtqml-workerscript \
+        qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-templates \
+        qml6-module-qtquick-layouts qml6-module-qtquick-window qml6-module-qtquick-dialogs \
+        qt6-qpa-plugins libgl-dev libopengl-dev libopus-dev libeigen3-dev \
+        portaudio19-dev librtaudio-dev libpulse-dev libhidapi-dev libudev-dev \
+        libqt6svg6 >> errors/apt.log 2>&1 || true
 
     cd ${BAPSRC} || return
-    sudo rm -rf wfview
-    git clone https://gitlab.com/eliggett/wfview.git
-    cd wfview
-    mkdir build
-    cd build
-    qmake ../wfview.pro
-    make -j$BAPCORE
+    rm -rf wfview
+    git clone --depth 1 --recurse-submodules --shallow-submodules -b main https://github.com/wf-group/wfview.git
+    cd wfview || return
+    mkdir -p build
+    cd build || return
 
+    if command -v qmake6 >/dev/null 2>&1; then
+        qmake6 ../wfview.pro
+    else
+        qmake ../wfview.pro
+    fi
+
+    make -j$BAPCORE
     if [ $? -ne 0 ]; then
         echo "Error in make step."
         echo "wfview was not compiled."
@@ -47,8 +47,7 @@ INSTALL(){
 }
 
 VERSION(){
-
-    if [[ $(whereis wfview | grep bin) ]];then
+    if command -v wfview >/dev/null 2>&1; then
         CURRENT=$(wfview -v 2>/dev/null | tr -d '\r' | grep -Eo '[0-9]+([.][0-9]+)+' | head -n1)
         if [ -z "$CURRENT" ]; then
             CURRENT=NONE
@@ -57,7 +56,7 @@ VERSION(){
         CURRENT=NONE
     fi
 
-    NEWVER=$(curl --max-time 20 -s https://gitlab.com/eliggett/wfview/-/raw/master/wfview.pro | tr -d '\r' | grep -E 'WFVIEW_VERSION=' | head -n1 | sed -E 's/.*WFVIEW_VERSION="?([^"[:space:]]+).*/\1/')
+    NEWVER=$(curl --max-time 20 -s https://raw.githubusercontent.com/wf-group/wfview/main/wfview.pro | tr -d '\r' | grep -E 'WFVIEW_VERSION=' | head -n1 | sed -E 's/.*WFVIEW_VERSION="?([^"[:space:]]+).*/\1/')
     if [ -z "$NEWVER" ]; then
         NEWVER=NONE
     fi
