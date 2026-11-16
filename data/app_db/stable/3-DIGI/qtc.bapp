@@ -74,9 +74,7 @@ VERSION(){
 		NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/tags?per_page=20 | grep -m 1 '"name"' | cut -d '"' -f4)
 	fi
 	if [ -z "$NEWVER" ]; then
-		QTC_LATEST_URL=$(curl --max-time 20 -sL -o /dev/null -w '%{url_effective}' https://github.com/Bill-Johnson/QtC/releases/latest)
-		NEWVER=$(echo "$QTC_LATEST_URL" | sed -n 's#.*/tag/\([^/?]*\).*#\1#p')
-	fi
+		NEWVER=UNKNOWN
 	if [ -z "$NEWVER" ]; then
 		NEWVER=UNKNOWN
 	fi
