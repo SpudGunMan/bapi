@@ -22,6 +22,15 @@ INSTALL(){
 	QTC_ASSET_URL=$(echo "$QTC_RELEASE_JSON" | grep '"browser_download_url"' | grep -m 1 'QtC-.*\.tar\.gz' | cut -d '"' -f4)
 
 	if [ -z "$QTC_TAG" ]; then
+		QTC_TAG=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/tags?per_page=20 | grep -m 1 '"name"' | cut -d '"' -f4)
+	fi
+
+	if [ -z "$QTC_TAG" ]; then
+		QTC_LATEST_URL=$(curl --max-time 20 -sL -o /dev/null -w '%{url_effective}' https://github.com/Bill-Johnson/QtC/releases/latest)
+		QTC_TAG=$(echo "$QTC_LATEST_URL" | sed -n 's#.*/tag/\([^/?]*\).*#\1#p')
+	fi
+
+	if [ -z "$QTC_TAG" ]; then
 		echo "ERROR: Unable to determine QtC latest release tag."
 		return 1
 	fi
@@ -61,6 +70,13 @@ VERSION(){
 	fi
 
 	NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/releases/latest | grep -m 1 '"tag_name"' | cut -d '"' -f4)
+	if [ -z "$NEWVER" ]; then
+		NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/tags?per_page=20 | grep -m 1 '"name"' | cut -d '"' -f4)
+	fi
+	if [ -z "$NEWVER" ]; then
+		QTC_LATEST_URL=$(curl --max-time 20 -sL -o /dev/null -w '%{url_effective}' https://github.com/Bill-Johnson/QtC/releases/latest)
+		NEWVER=$(echo "$QTC_LATEST_URL" | sed -n 's#.*/tag/\([^/?]*\).*#\1#p')
+	fi
 	if [ -z "$NEWVER" ]; then
 		NEWVER=UNKNOWN
 	fi
