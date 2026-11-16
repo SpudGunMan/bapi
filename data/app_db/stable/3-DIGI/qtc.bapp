@@ -65,19 +65,10 @@ VERSION(){
 		else
 			CURRENT=INSTALLED
 		fi
-	else
-		CURRENT=NONE
-	fi
-
-	NEWVER=$(curl --max-time 20 -s https://api.github.com/repos/Bill-Johnson/QtC/releases/latest | grep -m 1 '"tag_name"' | cut -d '"' -f4)
-	if [ -z "$NEWVER" ]; then
-		NEWVER=NONE
-	fi
-	if [ -z "$NEWVER" ]; then
-		NEWVER=NONE
-	if [ -z "$NEWVER" ]; then
-		NEWVER=NONE
-	fi
+    else
+        CURRENT=NONE
+    fi
+    NEWVER=NONE
 }
 
 DEPENDS(){
